@@ -192,6 +192,10 @@ class main_class: #this has all the objects you need
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
             df.to_csv("today_data.csv" ,index=False , header = True)
+            
+            os.system("git add . ")
+            os.system("git commit -a -m  'auto update' ")
+            os.system("git push origin main ")
 
 
     def do_climate_control(self):
