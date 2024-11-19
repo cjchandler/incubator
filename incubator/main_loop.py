@@ -90,7 +90,7 @@ def init_state_dict():
     state_dict['experiment_begin_timestamp'] = -1000 #this is the beginning of the experiment
     state_dict['experiment_sec'] = 0 #this is sec seince the beginning of the experiment
     state_dict['experiment_state_timestamp'] = time.time() #for recovery
-    state_dict['save_interval_secs'] = 20
+    state_dict['save_interval_secs'] = 60*3
     state_dict['last_save_timestamp'] = 0
    
     state_dict['temperature_1_C'] = -1
