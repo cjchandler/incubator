@@ -468,7 +468,7 @@ class main_class: #this has all the objects you need
             
             dT = self.state_dict['thermocouple_2'] - self.state_dict['temperature_1_C']
             self.state_dict['target_temperature'] = 38 + dT
-            self.pid_heat = PID( self.state_dict['heating_proportional_Cf'], 10, 0.0, setpoint= self.state_dict['target_temperature'] )
+            self.pid_heat = PID( self.state_dict['heating_proportional_Cf'], 50, 0.0, setpoint= self.state_dict['target_temperature'] )
             self.pid_heat.output_limits = (0, 1)
             
             # ~ if self.state_dict['temperature_1_C'] < 37:
