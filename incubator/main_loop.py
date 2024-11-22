@@ -449,7 +449,7 @@ class main_class: #this has all the objects you need
         self.state_dict['near_switch'] = self.motor.built_in_analog_handler.signal
         self.state_dict['far_switch'] = self.motor.hub_analog_handler.signal
         
-        dT = self.state_dict['thermocouple_1'] - self.state_dict['temperature_1_C']
+        dT = self.state_dict['thermocouple_2'] - self.state_dict['temperature_1_C']
 		
         self.state_dict['target_temperature'] = 38 + dT
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'],10, 0.0, setpoint= self.state_dict['target_temperature'] )
