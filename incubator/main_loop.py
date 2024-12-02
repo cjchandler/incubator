@@ -192,10 +192,13 @@ class main_class: #this has all the objects you need
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
             df.to_csv("today_data.csv" ,index=False , header = True)
-            
-            os.system("git add . ")
-            os.system("git commit -a -m  'auto update' ")
-            os.system("git push origin main ")
+            try: 
+                
+                os.system("git add . ")
+                os.system("git commit -a -m  'auto update' ")
+                os.system("git push origin main ")
+            except: 
+                print("git not pushing right")
 
 
     def do_climate_control(self):
@@ -450,7 +453,7 @@ class main_class: #this has all the objects you need
         self.state_dict['far_switch'] = self.motor.hub_analog_handler.signal
         
         dT = self.state_dict['thermocouple_2'] - self.state_dict['temperature_1_C']
-		
+        
         # ~ self.state_dict['target_temperature'] = 38 + dT 
         # ~ self.pid_heat = PID( self.state_dict['heating_proportional_Cf'],10, 0.0, setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
