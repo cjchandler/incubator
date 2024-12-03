@@ -9,4 +9,4 @@ while True:
 	except: 
 		print("git not pushing right")
 		
-	time.sleep(3*60)
+	time.sleep(60)
