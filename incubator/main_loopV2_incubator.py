@@ -217,8 +217,8 @@ class main_class: #this has all the objects you need
                 #turn off humidifyer
                 self.state_dict['humidifyer_on'] = False
                 #turn on exhaust fan if it's really hot 
-                if( self.state_dict['temperature_1_C'] > state_dict['cooling_start_temperature'] ):
-                     state_dict['exhaust_on'] = 0.1
+                if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
+                     self.state_dict['exhaust_on'] = 0.1
                 
                 #turn heater off
                 self.state_dict['heater_on'] = 0; 
@@ -274,7 +274,7 @@ class main_class: #this has all the objects you need
                 self.state_dict['humidifyer_on'] = 0
                 #turn on exhasut fan if it's really hot, otherwise cool naturally work 
                 if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
-                    state_dict['exhaust_on'] = 0.1
+                    self.state_dict['exhaust_on'] = 0.1
                 
                 #turn heater off
                 self.state_dict['heater_on'] = 0;
