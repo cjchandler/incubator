@@ -326,7 +326,7 @@ class main_class: #this has all the objects you need
             print("no data file")
     
     def cycle_lights(self):
-        
+        n = 10 
         if( self.state_dict['heater_on'] < 0.01):
             self.heater.command_heater( 0)
             #this leaves time to do something else, like run fan 
