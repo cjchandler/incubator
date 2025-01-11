@@ -99,7 +99,7 @@ def init_state_dict():
     state_dict['target_temperature'] = 38.33
     state_dict['cooling_start_temperature'] = 38.7
 
-    state_dict['heating_proportional_Cf'] = 9.0 
+    state_dict['heating_proportional_Cf'] = 4.0 
     state_dict['heating_integral_Cf'] = 0 
     state_dict['heating_derivitive_Cf'] = 0 
     state_dict['target_humidity'] = 0.37
