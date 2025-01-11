@@ -241,7 +241,7 @@ class main_class: #this has all the objects you need
                 
             
         #if humidity is too low- two cases
-        elif self.state_dict['humidity_1'] < self.state_dict['target_humidity_low'] - self.state_dict['range_humidity']:
+        elif self.state_dict['humidity_1'] < self.state_dict['target_humidity'] - self.state_dict['range_humidity']:
             print("too dry")
             #if it's too hot and too dry, turn on the exhaust fan to move air through, turn on the fogger, turn off heat
             if self.state_dict['temperature_1_C'] > self.state_dict['target_temperature']:
