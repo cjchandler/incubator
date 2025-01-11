@@ -11,7 +11,8 @@ import os
 # header with names
 path = "/home/cjchandler/Git_Projects/incubator/"
 
-df = pd.read_csv(path + "2024-12-03_state.csv")
+v = "V2"
+df = pd.read_csv(path + "2025-01-11_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
@@ -19,7 +20,7 @@ df = df.drop(['last_save_timestamp'], axis=1)
 
 df1 = df
 
-df = pd.read_csv( path + "2024-12-03_state.csv")
+df = pd.read_csv( path + "2025-01-11_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
