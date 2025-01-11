@@ -447,7 +447,7 @@ class main_class: #this has all the objects you need
             if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
                 self.turn_eggs()
             
-            self.fan.command_fan( 0.1)  
+            self.exhaust_fan.command_fan( 0.1)  
             time.sleep(1)
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
