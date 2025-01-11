@@ -74,7 +74,7 @@ class motor_channel: #I use this for PAR reading in, analog input
     
     def switchtraystart(self):
         #near side coming up 
-        if( self.front_handler.signal < 0.5 and self.rear_analog_handler.signal > 0.5):
+        if( self.front_analog_handler.signal < 0.5 and self.rear_analog_handler.signal > 0.5):
             #if far contacted, other open
             self.direction = -1
             self.dcMotor0.setTargetVelocity(-0.25)
