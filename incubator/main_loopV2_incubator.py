@@ -196,11 +196,11 @@ class main_class: #this has all the objects you need
         self.state_dict['temperature_1_C'] = self.insideTemperatureHumidity_1.getTemperature() 
         self.state_dict['humidity_1'] = self.insideTemperatureHumidity_1.getHumidity() 
    
-        state_dict['front_switch'] = self.motor.front_analog_handler.signal
-        state_dict['rear_switch'] = self.motor.rear_analog_handler.signal
+        self.state_dict['front_switch'] = self.motor.front_analog_handler.signal
+        self.state_dict['rear_switch'] = self.motor.rear_analog_handler.signal
    
-        state_dict['near_switch'] = state_dict['front_switch']#update for server monitor
-        state_dict['far_switch'] = state_dict['rear_switch']
+        self.state_dict['near_switch'] = self.state_dict['front_switch']#update for server monitor
+        self.state_dict['far_switch'] = self.state_dict['rear_switch']
         
         
         pprint.pprint( self.state_dict, width = 1)
