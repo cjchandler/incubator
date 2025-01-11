@@ -90,7 +90,7 @@ def init_state_dict():
     state_dict['experiment_begin_timestamp'] = -1000 #this is the beginning of the experiment
     state_dict['experiment_sec'] = 0 #this is sec seince the beginning of the experiment
     state_dict['experiment_state_timestamp'] = time.time() #for recovery
-    state_dict['save_interval_secs'] = 20
+    state_dict['save_interval_secs'] = 60*3
     state_dict['last_save_timestamp'] = 0
    
     state_dict['temperature_1_C'] = -1
@@ -192,6 +192,7 @@ class main_class: #this has all the objects you need
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
             df.to_csv("today_data.csv" ,index=False , header = True)
+           
 
 
     def do_climate_control(self):
@@ -204,8 +205,8 @@ class main_class: #this has all the objects you need
         
         self.state_dict['thermocouple_1'] = self.thermocouple_1.getTemperature() 
         self.state_dict['thermocouple_2'] = self.thermocouple_2.getTemperature() 
-        self.pid_heat(self.state_dict['thermocouple_1'])
-        self.pid_cool(self.state_dict['thermocouple_1'])
+        self.pid_heat(self.state_dict['thermocouple_2'])
+        self.pid_cool(self.state_dict['thermocouple_2'])
         
         
         pprint.pprint( self.state_dict, width = 1)
@@ -218,24 +219,24 @@ class main_class: #this has all the objects you need
         if self.state_dict['humidity_1'] > self.state_dict['target_humidity_high']:
             #if it's too hot and too humid, turn on the exhaust fan, turn off the swamp cooler, off heat
             print("too wet")
-            if self.state_dict['thermocouple_1'] > self.state_dict['target_temperature']:
+            if self.state_dict['thermocouple_2'] > self.state_dict['target_temperature']:
                 #turn off humidifyer
                 self.state_dict['humidifyer_on'] = False
                 #turn on fan 
                 #how much fan power? depends on temperature 
                 # ~ dT =  abs(self.state_dict['temperature_1_C'] - self.state_dict['target_temperature']) 
-                self.state_dict['fan_on'] = self.pid_cool( self.state_dict['thermocouple_1'])
+                self.state_dict['fan_on'] = self.pid_cool( self.state_dict['thermocouple_2'])
                 
                 #turn heater off
                 self.state_dict['heater_on'] = 0; 
                 self.state_dict['last_control_change_timestamp'] = time.time()
             
             #if it's too cold and too humid, turn on the heat, fan off, swamp cooler off
-            if self.state_dict['thermocouple_1'] < self.state_dict['target_temperature']:
+            if self.state_dict['thermocouple_2'] < self.state_dict['target_temperature']:
                 #turn heater on
                 #how much heater power? depends on temperature
                 # ~ dT =  self.state_dict['target_temperature'] - self.state_dict['temperature_1_C'] 
-                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['thermocouple_1'])
+                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['thermocouple_2'])
 
 
                 
@@ -250,24 +251,24 @@ class main_class: #this has all the objects you need
         elif self.state_dict['humidity_1'] < self.state_dict['target_humidity_low']:
             print("too dry")
             #if it's too hot and too dry, turn on the exhaust fan to move air through, turn on the swamp cooler, turn off heat
-            if self.state_dict['thermocouple_1'] > self.state_dict['target_temperature']:
+            if self.state_dict['thermocouple_2'] > self.state_dict['target_temperature']:
                 #turn on humidifyer
                 self.state_dict['humidifyer_on'] = 1
                 #turn on fan 
                 #how much fan? depends on temperature 
                 # ~ dT =  abs(self.state_dict['temperature_1_C'] - self.state_dict['target_temperature'] )
-                self.state_dict['fan_on'] = self.pid_cool( self.state_dict['thermocouple_1'])
+                self.state_dict['fan_on'] = self.pid_cool( self.state_dict['thermocouple_2'])
                 
                 #turn heater off
                 self.state_dict['heater_on'] = 0;
                 self.state_dict['last_control_change_timestamp'] = time.time()
             
             #if it's too cold and too dry, turn on the heat and the swamp cooler, vent fan off
-            if self.state_dict['thermocouple_1'] < self.state_dict['target_temperature']:
+            if self.state_dict['thermocouple_2'] < self.state_dict['target_temperature']:
                 #turn heater on
                 #how much heater power? depends on temperature
                 # ~ dT =  self.state_dict['target_temperature'] - self.state_dict['temperature_1_C'] 
-                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['thermocouple_1'])
+                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['thermocouple_2'])
                 #turn on humidifyer
                 self.state_dict['humidifyer_on'] = True
                 #turn off fan 
@@ -275,7 +276,7 @@ class main_class: #this has all the objects you need
                 self.state_dict['last_control_change_timestamp'] = time.time()
         else: 
             print( "humidity ok")
-            if self.state_dict['thermocouple_1'] > self.state_dict['target_temperature']:
+            if self.state_dict['thermocouple_2'] > self.state_dict['target_temperature']:
                 #turn on humidifyer
                 self.state_dict['humidifyer_on'] = 1
                 #turn on fan 
@@ -288,11 +289,11 @@ class main_class: #this has all the objects you need
                 self.state_dict['last_control_change_timestamp'] = time.time()
             
             #if it's too cold and too dry, turn on the heat and the swamp cooler, vent fan off
-            if self.state_dict['thermocouple_1'] < self.state_dict['target_temperature']:
+            if self.state_dict['thermocouple_2'] < self.state_dict['target_temperature']:
                 #turn heater on
                 #how much heater power? depends on temperature
                 # ~ dT =  self.state_dict['target_temperature'] - self.state_dict['temperature_1_C'] 
-                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['thermocouple_1'])
+                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['thermocouple_2'])
                 #turn on humidifyer
                 self.state_dict['humidifyer_on'] = False
                 #turn off fan 
@@ -445,7 +446,12 @@ class main_class: #this has all the objects you need
         self.state_dict['near_switch'] = self.motor.built_in_analog_handler.signal
         self.state_dict['far_switch'] = self.motor.hub_analog_handler.signal
         
-       
+        dT = self.state_dict['thermocouple_2'] - self.state_dict['temperature_1_C']
+        
+        # ~ self.state_dict['target_temperature'] = 38 + dT 
+        # ~ self.pid_heat = PID( self.state_dict['heating_proportional_Cf'],10, 0.0, setpoint= self.state_dict['target_temperature'] )
+        self.pid_heat.output_limits = (0, 1)
+            
         
         
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
@@ -458,8 +464,8 @@ class main_class: #this has all the objects you need
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
             dT = self.state_dict['thermocouple_2'] - self.state_dict['temperature_1_C']
-            self.state_dict['target_temperature'] = 38.33 +0.3+ dT
-            self.pid_heat = PID( self.state_dict['heating_proportional_Cf'], 0, 0.0, setpoint= self.state_dict['target_temperature'] )
+            self.state_dict['target_temperature'] = 38 + dT
+            self.pid_heat = PID( self.state_dict['heating_proportional_Cf'], 10, 0.0, setpoint= self.state_dict['target_temperature'] )
             self.pid_heat.output_limits = (0, 1)
             
             # ~ if self.state_dict['temperature_1_C'] < 37:
