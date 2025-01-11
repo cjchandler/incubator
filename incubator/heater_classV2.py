@@ -31,9 +31,9 @@ class heater:
 
 # ~ h = heater()
 # ~ while True:
-	# ~ h.command_heater(0)
-	# ~ time.sleep(0.0001)
+    # ~ h.command_heater(0)
+    # ~ time.sleep(0.0001)
 
-	# ~ h.command_heater(0.0)
+    # ~ h.command_heater(0.0)
 
-	# ~ time.sleep(0.0001)
+    # ~ time.sleep(0.0001)
