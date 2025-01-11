@@ -30,7 +30,6 @@ class humidifyer:
     def __init__(self):
         self.fog_on = 0
         self.digitalOutput1 = DigitalOutput()
-        self.startup()
         
     def startup(self,hubserial, hubport , channel):
     
