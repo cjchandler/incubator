@@ -448,7 +448,7 @@ class main_class: #this has all the objects you need
                 self.turn_eggs()
             
             self.exhaust_fan.command_fan( 0.3)  
-            time.sleep(1)
+            time.sleep(0.5)
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
             
