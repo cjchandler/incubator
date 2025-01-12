@@ -100,7 +100,7 @@ def init_state_dict():
     state_dict['cooling_start_temperature'] = 38.7
 
     state_dict['heating_proportional_Cf'] = 2.0 
-    state_dict['heating_integral_Cf'] = 0 
+    state_dict['heating_integral_Cf'] = 0.01 
     state_dict['heating_derivitive_Cf'] = 0 
     state_dict['target_humidity'] = 0.37
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
@@ -485,7 +485,7 @@ mainC.state_dict['heater_on'] = False
 
 
 while True:
-	mainC.exhaust_fan.command_fan( 0.3)  
-	time.sleep(1)
+	mainC.exhaust_fan.command_fan( 1)  
+	time.sleep(3)
 	mainC.do_one_cycle()
 
