@@ -100,7 +100,7 @@ def init_state_dict():
     state_dict['cooling_start_temperature'] = 38.7
 
     state_dict['heating_proportional_Cf'] = 2.0 
-    state_dict['heating_integral_Cf'] = 0.01 
+    state_dict['heating_integral_Cf'] = 0.001 
     state_dict['heating_derivitive_Cf'] = 0 
     state_dict['target_humidity'] = 0.37
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
@@ -218,7 +218,7 @@ class main_class: #this has all the objects you need
                 self.state_dict['humidifyer_on'] = False
                 #turn on exhaust fan if it's really hot 
                 if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
-                     self.state_dict['exhaust_on'] = 0.1
+                     self.state_dict['exhaust_on'] = 0.3
                 
                 #turn heater off
                 self.state_dict['heater_on'] = 0; 
@@ -248,7 +248,7 @@ class main_class: #this has all the objects you need
                 #turn on humidifyer
                 self.state_dict['humidifyer_on'] = 1
                 #turn on exhasut fan if it's really hot, otherwise the fog alone might work 
-                if( self.state_dict['temperature_1_C'] > state_dict['cooling_start_temperature'] ):
+                if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
                     state_dict['exhaust_on'] = 0.1
                 
                 #turn heater off
