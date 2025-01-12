@@ -485,5 +485,7 @@ mainC.state_dict['heater_on'] = False
 
 
 while True:
+	mainC.exhaust_fan.command_fan( 0.3)  
+	time.sleep(1)
     mainC.do_one_cycle()
 
