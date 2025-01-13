@@ -37,7 +37,7 @@ final_df.drop(final_df.index[:5], inplace=True)
 # ~ final_df["deltaTthermocouple"] = final_df["thermocouple_1"] - final_df["thermocouple_2"] 
 # ~ final_df = final_df[["temperature_1_C" , "humidity_1", "temperature_2_C" , "humidity_2" , "deltaT" , "deltaTthermocouple", "near_switch" , "far_switch"]].copy()
 
-final_df = final_df[["temperature_1_C" , "humidity_1","near_switch" , "heater_on", "far_switch"]].copy()
+final_df = final_df[["temperature_1_C" , "humidity_1","near_switch" , "heater_on","target_temperature",  "far_switch"]].copy()
 
 
 final_df.plot()
