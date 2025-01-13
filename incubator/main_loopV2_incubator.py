@@ -96,8 +96,8 @@ def init_state_dict():
     state_dict['humidity_1'] = -0.01
 
     
-    state_dict['target_temperature'] = 38.33
-    state_dict['cooling_start_temperature'] = 38.7
+    state_dict['target_temperature'] = 37.5
+    state_dict['cooling_start_temperature'] = 38
 
     state_dict['heating_proportional_Cf'] = 1.0 
     state_dict['heating_integral_Cf'] = 0.0002 #2 p , 0.001i was too big perhaps 
