@@ -101,7 +101,7 @@ def init_state_dict():
 
     state_dict['heating_proportional_Cf'] = 1.0 
     state_dict['heating_integral_Cf'] = 0.0004 #2 p , 0.001i was too big perhaps 
-    state_dict['heating_derivitive_Cf'] = 0.1
+    state_dict['heating_derivitive_Cf'] = 1
     state_dict['target_humidity'] = 0.37
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
