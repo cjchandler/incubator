@@ -249,7 +249,7 @@ class main_class: #this has all the objects you need
                 self.state_dict['humidifyer_on'] = 1
                 #turn on exhasut fan if it's really hot, otherwise the fog alone might work 
                 if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
-                    state_dict['exhaust_on'] = 0.1
+                    self.state_dict['exhaust_on'] = 0.1
                 
                 #turn heater off
                 self.state_dict['heater_on'] = 0;
