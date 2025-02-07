@@ -106,11 +106,11 @@ class motor_channel: #I use this for PAR reading in, analog input
         
     def switchtray_update(self):
         if self.direction == -1 and self.rear_analog_handler.signal<0.5:
-            self.dcMotor0.setTargetVelocity(0)
+            self.digitalmotorOutput.setDutyCycle(0)
             self.direction = 1
             
         elif self.direction == 1 and self.front_analog_handler.signal<0.5:
-            self.dcMotor0.setTargetVelocity(0)
+            self.digitalmotorOutput.setDutyCycle(0)
             self.direction = -1
 
 
