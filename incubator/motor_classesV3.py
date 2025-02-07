@@ -1,5 +1,5 @@
 from Phidget22.Phidget import *
-from Phidget22.Devices.DCMotor import *
+from Phidget22.Devices.DigitalOutput import *
 from Phidget22.Devices.CurrentInput import *
 from Phidget22.Devices.VoltageRatioInput import *
 import time
