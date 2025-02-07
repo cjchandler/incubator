@@ -40,6 +40,7 @@ class motor_channel: #I use this for PAR reading in, analog input
         self.rear_analog_handler = handler_HUB_analog_in()
         self.limit_switch_front = VoltageRatioInput()
         self.limit_switch_rear= VoltageRatioInput()
+        self.direction = 0
         
 
 
@@ -83,6 +84,7 @@ class motor_channel: #I use this for PAR reading in, analog input
         #near side coming up 
         if( self.front_analog_handler.signal < 0.5 and self.rear_analog_handler.signal > 0.5):
             #if far contacted, other open
+            self.direction = -1
             self.digitalmotorOutput.setDutyCycle(1)
             time.sleep(0.5)
             
@@ -91,17 +93,25 @@ class motor_channel: #I use this for PAR reading in, analog input
         #near side going down 
         if( self.front_analog_handler.signal > 0.5 and self.rear_analog_handler.signal < 0.5):
             self.digitalmotorOutput.setDutyCycle(1)
+            self.direction = 1
             time.sleep(0.5)
             return
             
         #stuck in the middle, just pick a random direction and do it
         if( self.front_analog_handler.signal > 0.5 and self.rear_analog_handler.signal > 0.5):
             self.digitalmotorOutput.setDutyCycle(1)
+            self.direction = 1
             time.sleep(0.5)
             return
         
     def switchtray_update(self):
-        return
+        if self.direction == -1 and self.rear_analog_handler.signal<0.5:
+            self.dcMotor0.setTargetVelocity(0)
+            self.direction = 1
+            
+        elif self.direction == 1 and self.front_analog_handler.signal<0.5:
+            self.dcMotor0.setTargetVelocity(0)
+            self.direction = -1
 
 
 
