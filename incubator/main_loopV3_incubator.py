@@ -295,7 +295,7 @@ class main_class: #this has all the objects you need
 
         #set fan 
         self.exhaust_fan.command_fan( self.state_dict['exhaust_on'])
-        self.recirc_fan.command_fan( True)
+        
         #set humidifyer
         self.humidifyer.command_humidifyer( self.state_dict['humidifyer_on'])
         #set heater
