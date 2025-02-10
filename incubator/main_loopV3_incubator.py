@@ -326,7 +326,7 @@ class main_class: #this has all the objects you need
     
     def cycle_lights(self):
         
-        n = 20 
+        n = 200 
         trigger_n  = int(self.state_dict['heater_on']*n)
         # ~ print(trigger_n)
         for a in range(0, n):
@@ -334,7 +334,8 @@ class main_class: #this has all the objects you need
                 self.heater.command_heater( 1)
             if a >= trigger_n: 
                 self.heater.command_heater( 0)
-        
+                
+        self.heater.command_heater( 0)
         return
                 
     def cycle_fan(self):
