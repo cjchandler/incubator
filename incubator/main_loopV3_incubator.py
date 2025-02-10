@@ -325,56 +325,15 @@ class main_class: #this has all the objects you need
             print("no data file")
     
     def cycle_lights(self):
-        n = 10 
-        if( self.state_dict['heater_on'] < 0.01):
-            self.heater.command_heater( 0)
-            #this leaves time to do something else, like run fan 
-            return
-                
-                
-        if( self.state_dict['heater_on'] >= 0.01 and self.state_dict['heater_on'] < 0.2 ):
-            #flicker lights as required: 
-            for x in range(0 , 1): 
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                
-        if( self.state_dict['heater_on'] > 0.2 and self.state_dict['heater_on'] < 0.4 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 0)
-        if( self.state_dict['heater_on'] > 0.4 and self.state_dict['heater_on'] < 0.6 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 0)
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 0)
-
-        if( self.state_dict['heater_on'] > 0.6 and self.state_dict['heater_on'] < 0.8 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 0)
-                
-        if( self.state_dict['heater_on'] > 0.8 and self.state_dict['heater_on'] <= 1 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 1)
-                self.heater.command_heater( 1)      
-                
+		
+        n = 20 
+        trigger_n  = int(self.state_dict['heater_on']*n)
+        for a range in range(0, n):
+			if a < trigger_n: 
+				self.heater.command_heater( 1)
+			if a >= trigger_n: 
+				self.heater.command_heater( 0)
+        
         return
                 
     def cycle_fan(self):
