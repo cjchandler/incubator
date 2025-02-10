@@ -328,6 +328,7 @@ class main_class: #this has all the objects you need
         
         n = 20 
         trigger_n  = int(self.state_dict['heater_on']*n)
+        print(trigger_n)
         for a in range(0, n):
             if a < trigger_n: 
                 self.heater.command_heater( 1)
