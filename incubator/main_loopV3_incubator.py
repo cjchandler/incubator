@@ -455,7 +455,7 @@ mainC.exhaust_fan.command_fan( 1)
 time.sleep(1)
 mainC.exhaust_fan.command_fan( 0)  
 
-told = 0 
+told = time.time()
 while True:
 	tnow = time.time()
 	if tnow - 7000 > told:
