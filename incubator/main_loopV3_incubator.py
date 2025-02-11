@@ -461,6 +461,10 @@ while True:
 	if tnow - 7000 > told:
 		told = tnow
 		mainC.state_dict['heating_proportional_Cf'] += 0.1
+		mainC.pid_heat = PID( mainC.state_dict['heating_proportional_Cf'] , mainC.state_dict['heating_integral_Cf'],  mainC.state_dict['heating_derivitive_Cf'], setpoint= mainC.state_dict['target_temperature'] )
+		mainC.exhaust_fan.command_fan( 1)
+		time.sleep(100)
+		
 
 	mainC.do_one_cycle()
 
