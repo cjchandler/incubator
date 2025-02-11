@@ -436,6 +436,9 @@ class main_class: #this has all the objects you need
             
         #save data as needed:
         self.save_data_state_as_needed()
+        
+        
+        
     
       
         
@@ -452,8 +455,12 @@ mainC.exhaust_fan.command_fan( 1)
 time.sleep(1)
 mainC.exhaust_fan.command_fan( 0)  
 
+told = 0 
 while True:
-	
+	tnow = time.time()
+	if tnow - 7000 > told:
+		told = tnow
+		mainC.state_dict['heating_proportional_Cf'] += 0.1
 
 	mainC.do_one_cycle()
 
