@@ -400,8 +400,8 @@ class main_class: #this has all the objects you need
         self.cycle_lights()
         self.motor.switchtray_update()
         
-        
-       
+        p,i,d = self.pid_heat.components
+		print( "p,i,d  = " , p , i , d)
         
         
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
