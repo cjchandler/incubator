@@ -143,7 +143,7 @@ class main_class: #this has all the objects you need
         self.path = "/home/cjchandler/Git_Projects/incubator/"
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
-        self.pid_heat.output_limits = (0, 1)
+        self.pid_heat.output_limits = (-1, 1)
         self.pid_heat.proportional_on_measurement = True
         self.pid_heat( 35)
 
