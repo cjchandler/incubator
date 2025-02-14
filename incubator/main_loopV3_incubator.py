@@ -394,42 +394,43 @@ class main_class: #this has all the objects you need
         time_log = collections.deque(maxlen=100) 
         power_log = collections.deque(maxlen=100)
         
-        
-        #do a cycle:
-        dT = self.state_dict['target_temperature'] - self.state_dict['temperature_1_C']
-        duty_cycle = self.state_dict['steady_state_heater_duty_guess'] + self.state_dict['mass_x_specific_heat_guess']*dT
-        if duty_cycle > 1:
-            duty_cycle = 1 
-        if duty_cycle < 0: 
-            duty_cycle  = 0 
-        
-        #extreme overrides:
-        if self.state_dict['temperature_1_C'] > self.state_dict['target_temperature'] +1: 
-            duty_cycle  = 0
-        
-        if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature'] -3: 
-            duty_cycle  = 1
+        for n in range( 0 , ncycles):
+            #do a cycle:
+            dT = self.state_dict['target_temperature'] - self.state_dict['temperature_1_C']
+            duty_cycle = self.state_dict['steady_state_heater_duty_guess'] + self.state_dict['mass_x_specific_heat_guess']*dT
+            if duty_cycle > 1:
+                duty_cycle = 1 
+            if duty_cycle < 0: 
+                duty_cycle  = 0 
             
-        
-        self.do_one_cycle()
-        temperature_log.append(  self.state_dict['temperature_1_C'])
-        time_log.append( time.time())
-        power_log.append( duty_cycle)
-        
-        if len(power_log) == 100: 
-            #look at all the past data in a graph of E_in on the y and deltaT on the x
-            #look at intervals that are 50 cycles long... 
-            Ein_sums = []*50
-            dT_sums = []*50
-            for a in range(0 , 50):
-                Ein_sums[a] = sum( power_log[a:a+50] )
-                dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[50+a]
+            #extreme overrides:
+            if self.state_dict['temperature_1_C'] > self.state_dict['target_temperature'] +1: 
+                duty_cycle  = 0
             
-            res = stats.linregress(dT_sums, Ein_sums)
-            self.state_dict['mass_x_specific_heat_guess'] =res.slope
-            self.state_dict['steady_state_heater_duty_guess'] = res.intercept
-        
-        
+            if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature'] -3: 
+                duty_cycle  = 1
+                print( "way too cold")
+                
+            
+            self.do_one_cycle()
+            temperature_log.append(  self.state_dict['temperature_1_C'])
+            time_log.append( time.time())
+            power_log.append( duty_cycle)
+            
+            if len(power_log) == 100: 
+                #look at all the past data in a graph of E_in on the y and deltaT on the x
+                #look at intervals that are 50 cycles long... 
+                Ein_sums = []*50
+                dT_sums = []*50
+                for a in range(0 , 50):
+                    Ein_sums[a] = sum( power_log[a:a+50] )
+                    dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[50+a]
+                
+                res = stats.linregress(dT_sums, Ein_sums)
+                self.state_dict['mass_x_specific_heat_guess'] =res.slope
+                self.state_dict['steady_state_heater_duty_guess'] = res.intercept
+            
+            
         
         
     
@@ -448,6 +449,6 @@ mainC.exhaust_fan.command_fan( 0)
 
 told = time.time()
 while True:
-	
-	mainC.do_cycle_group(10000)
+    
+    mainC.do_cycle_group(10000)
 
