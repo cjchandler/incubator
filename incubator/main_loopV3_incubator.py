@@ -7,6 +7,8 @@
 #check if it's time to do a PAR data sweep
 #check if it's time to do irrigation
 import pprint
+from scipy import stats
+
 
 import os.path as Pathc
 import datetime
@@ -99,9 +101,8 @@ def init_state_dict():
     state_dict['target_temperature'] = 37.5
     state_dict['cooling_start_temperature'] = 38
 
-    state_dict['heating_proportional_Cf'] = 0.05
-    state_dict['heating_integral_Cf'] = 0.0000 #2 p 
-    state_dict['heating_derivitive_Cf'] = 0.00
+    state_dict['steady_state_heater_duty_guess'] = 0.17
+    state_dict['mass_x_specific_heat_guess'] = 4.44444 
     state_dict['target_humidity'] = 0.37
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
@@ -142,10 +143,10 @@ class main_class: #this has all the objects you need
             
         self.path = "/home/cjchandler/Git_Projects/incubator/"
        
-        self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
-        self.pid_heat.output_limits = (0.0, 1)
-        self.pid_heat.proportional_on_measurement = False
-        self.pid_heat( 35)
+        # ~ self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
+        # ~ self.pid_heat.output_limits = (0.0, 1)
+        # ~ self.pid_heat.proportional_on_measurement = False
+        # ~ self.pid_heat( 35)
 
         
         #fan startup
@@ -221,18 +222,10 @@ class main_class: #this has all the objects you need
                 if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
                      self.state_dict['exhaust_on'] = 0.3
                 
-                #turn heater off
-                self.state_dict['heater_on'] = 0; 
-                self.state_dict['last_control_change_timestamp'] = time.time()
+                
             
             #if it's too cold and too humid, turn on the heat, fan off, fogging off
             if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature']:
-                #turn heater on
-                #how much heater power? depends on temperature
-                # ~ dT =  self.state_dict['target_temperature'] - self.state_dict['temperature_1_C'] 
-                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['temperature_1_C'] )
-
-
                 
                 #turn off humidifyer
                 self.state_dict['humidifyer_on'] = 0
@@ -252,16 +245,11 @@ class main_class: #this has all the objects you need
                 if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
                     self.state_dict['exhaust_on'] = 0.1
                 
-                #turn heater off
-                self.state_dict['heater_on'] = 0;
-                self.state_dict['last_control_change_timestamp'] = time.time()
+                
             
             #if it's too cold and too dry, turn on the heat and the swamp cooler, vent fan off
             if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature']:
-                #turn heater on
-                #how much heater power? depends on temperature
-                # ~ dT =  self.state_dict['target_temperature'] - self.state_dict['temperature_1_C'] 
-                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['temperature_1_C'] )
+                
                 #turn on humidifyer
                 self.state_dict['humidifyer_on'] = True
                 #turn off fan 
@@ -270,27 +258,7 @@ class main_class: #this has all the objects you need
                 
         else: 
             print( "humidity ok")
-            if self.state_dict['temperature_1_C'] > self.state_dict['target_temperature']:
-                #turn on humidifyer
-                self.state_dict['humidifyer_on'] = 0
-                #turn on exhasut fan if it's really hot, otherwise cool naturally work 
-                if( self.state_dict['temperature_1_C'] > self.state_dict['cooling_start_temperature'] ):
-                    self.state_dict['exhaust_on'] = 0.1
                 
-                #turn heater off
-                self.state_dict['heater_on'] = 0;
-                self.state_dict['last_control_change_timestamp'] = time.time()
-            
-            #if it's too cold , turn on the heat and the swamp cooler, vent fan off
-            if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature']:
-                #turn heater on
-                #how much heater power? depends on temperature
-                self.state_dict['heater_on'] =  self.pid_heat( self.state_dict['temperature_1_C'])
-                #turn on humidifyer
-                self.state_dict['humidifyer_on'] = 0
-                #turn off fan 
-                self.state_dict['exhaust_on'] = 0
-                self.state_dict['last_control_change_timestamp'] = time.time()     
                 
                      
         ###end of fan heat humiditifyer state changes###############################################################  
@@ -400,8 +368,6 @@ class main_class: #this has all the objects you need
         self.cycle_lights()
         self.motor.switchtray_update()
         
-        p,i,d = self.pid_heat.components
-        print( "p,i,d  = " , p , i , d)
         
         
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
@@ -410,29 +376,10 @@ class main_class: #this has all the objects you need
                 self.turn_eggs()
             
             self.exhaust_fan.command_fan( 1)  
-            time.sleep(1.5)
+            # ~ time.sleep(1.5)
             self.exhaust_fan.command_fan( 0)  
 
             self.state_dict['last_fan_on_timestamp'] = time.time()
-            
-            
-            
-            # ~ if self.state_dict['temperature_1_C'] < 37:
-                # ~ self.temperature_alarm.sound_alarm( "incubator temperature is low " + str(self.state_dict['temperature_1_C']) +"  " +  time.ctime() )
-                
-            # ~ if self.state_dict['temperature_1_C'] > 38.6:
-                # ~ self.temperature_alarm.sound_alarm( "incubator temperature is high " + str(self.state_dict['temperature_1_C']) +"  " +  time.ctime() )
-                
-            # ~ if self.state_dict['humidity_1'] <  self.state_dict['target_humidity_low'] - 0.05 :
-                # ~ self.humidity_alarm.sound_alarm( "incubator humidity is low  " + str(self.state_dict['humidity_1']) +"  " +  time.ctime() )
-            
-            # ~ if self.state_dict['humidity_1'] > self.state_dict['target_humidity_high'] + 0.05 :
-                # ~ self.humidity_alarm.sound_alarm( "incubator humidity is high " + str(self.state_dict['humidity_1']) +"  " +  time.ctime() )
-                
-            
-            
-    
-
             
         #save data as needed:
         self.save_data_state_as_needed()
@@ -441,7 +388,51 @@ class main_class: #this has all the objects you need
         
     
       
+    def do_cycle_group(self , ncycles):
+        tstart = time.time()
+        temperature_log = collections.deque(maxlen=100)
+        time_log = collections.deque(maxlen=100) 
+        power_log = collections.deque(maxlen=100)
         
+        
+        #do a cycle:
+        dT = self.state_dict['target_temperature'] - self.state_dict['temperature_1_C']
+        duty_cycle = self.state_dict['steady_state_heater_duty_guess'] + self.state_dict['mass_x_specific_heat_guess']*dT
+        if duty_cycle > 1:
+            duty_cycle = 1 
+        if duty_cycle < 0: 
+            duty_cycle  = 0 
+        
+        #extreme overrides:
+        if self.state_dict['temperature_1_C'] > self.state_dict['target_temperature'] +1: 
+            duty_cycle  = 0
+        
+        if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature'] -3: 
+            duty_cycle  = 1
+            
+        
+        self.do_one_cycle()
+        temperature_log.append(  state_dict['temperature_1_C'])
+        time_log.append( time.time())
+        power_log.append( duty_cycle)
+        
+        if len(power_log) == 100: 
+            #look at all the past data in a graph of E_in on the y and deltaT on the x
+            #look at intervals that are 50 cycles long... 
+            Ein_sums = []*50
+            dT_sums = []*50
+            for a in range(0 , 50):
+                Ein_sums[a] = sum( power_log[a:a+50] )
+                dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[50+a]
+            
+            res = stats.linregress(dT_sums, Ein_sums)
+            self.state_dict['mass_x_specific_heat_guess'] =res.slope
+            self.state_dict['steady_state_heater_duty_guess'] = res.intercept
+        
+        
+        
+        
+    
     
 
 mainC = main_class()
