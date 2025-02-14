@@ -101,8 +101,8 @@ def init_state_dict():
     state_dict['target_temperature'] = 37.5
     state_dict['cooling_start_temperature'] = 38
 
-    state_dict['steady_state_heater_duty_guess'] = 0.17
-    state_dict['mass_x_specific_heat_guess'] = 4.44444 
+    state_dict['steady_state_heater_duty_guess'] = 0.17777777777
+    state_dict['mass_x_specific_heat_guess'] =0.11111111
     state_dict['target_humidity'] = 0.37
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
