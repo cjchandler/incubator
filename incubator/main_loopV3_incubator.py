@@ -423,7 +423,12 @@ class main_class: #this has all the objects you need
                 Ein_sums = []*50
                 dT_sums = []*50
                 for a in range(0 , 50):
-                    Ein_sums[a] = sum( power_log[a:a+50] )
+					
+					sumEin = 0 
+					for b in range(a , a+50):
+						sumEin += power_log[b] 
+					
+                    Ein_sums[a] = sumEin
                     dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[50+a]
                 
                 res = stats.linregress(dT_sums, Ein_sums)
