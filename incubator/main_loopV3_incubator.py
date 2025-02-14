@@ -412,7 +412,7 @@ class main_class: #this has all the objects you need
                 duty_cycle  = 0
             
             if self.state_dict['temperature_1_C'] < self.state_dict['target_temperature'] -3: 
-                duty_cycle  = 1
+                # ~ duty_cycle  = 1
                 print( "way too cold")
                 
             self.state_dict['heater_on'] = duty_cycle
