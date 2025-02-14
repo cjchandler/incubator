@@ -418,8 +418,8 @@ class main_class: #this has all the objects you need
             power_log.append( duty_cycle)
             
             data_n = 10
-			half_data_n = 5 
-				
+            half_data_n = 5 
+                
             if len(power_log) == data_n: 
                 #look at all the past data in a graph of E_in on the y and deltaT on the x
                 #look at intervals that are 50 cycles long... 
