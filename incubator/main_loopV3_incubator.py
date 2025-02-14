@@ -417,19 +417,21 @@ class main_class: #this has all the objects you need
             time_log.append( time.time())
             power_log.append( duty_cycle)
             
-            if len(power_log) == 100: 
+            data_n = 10
+            
+            if len(power_log) == data_n: 
                 #look at all the past data in a graph of E_in on the y and deltaT on the x
                 #look at intervals that are 50 cycles long... 
-                Ein_sums = []*50
-                dT_sums = []*50
-                for a in range(0 , 50):
+                Ein_sums = np.zeros(data_n/2)
+                dT_sums = np.zeros(data_n/2)
+                for a in range(0 , data_n/2):
                     
                     sumEin = 0 
-                    for b in range(a , a+50):
+                    for b in range(a , (data_n/2)+a):
                         sumEin += power_log[b] 
                     
                     Ein_sums[a] = sumEin
-                    dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[50+a]
+                    dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[(data_n/2) +a]
                 
                 res = stats.linregress(dT_sums, Ein_sums)
                 self.state_dict['mass_x_specific_heat_guess'] =res.slope
