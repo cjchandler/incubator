@@ -391,8 +391,8 @@ class main_class: #this has all the objects you need
     def do_cycle_group(self , ncycles):
         tstart = time.time()
         
-        data_n = 10
-        half_data_n = 5 
+        data_n = 100
+        half_data_n = 50 
         
         temperature_log = collections.deque(maxlen=data_n)
         time_log = collections.deque(maxlen=data_n) 
