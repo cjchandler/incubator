@@ -434,6 +434,10 @@ class main_class: #this has all the objects you need
                     Ein_sums[a] = sumEin
                     dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[(half_data_n) +a]
                 
+                print( "temperature_log")
+                print( temperature_log)
+                print( "power log")
+                print( power_log )
                 print( " Ein_sums" ) 
                 print( Ein_sums)
                 print( " dT_sums" ) 
