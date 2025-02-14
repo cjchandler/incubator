@@ -434,6 +434,11 @@ class main_class: #this has all the objects you need
                     Ein_sums[a] = sumEin
                     dT_sums[a] = -1.0*temperature_log[a] +  temperature_log[(half_data_n) +a]
                 
+                print( " Ein_sums" ) 
+                print( Ein_sums)
+                print( " dT_sums" ) 
+                print( dT_sums)
+                
                 res = stats.linregress(dT_sums, Ein_sums)
                 self.state_dict['mass_x_specific_heat_guess'] =res.slope
                 self.state_dict['steady_state_heater_duty_guess'] = res.intercept
