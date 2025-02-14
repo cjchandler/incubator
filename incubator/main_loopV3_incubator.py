@@ -390,9 +390,13 @@ class main_class: #this has all the objects you need
       
     def do_cycle_group(self , ncycles):
         tstart = time.time()
-        temperature_log = collections.deque(maxlen=100)
-        time_log = collections.deque(maxlen=100) 
-        power_log = collections.deque(maxlen=100)
+        
+        data_n = 10
+        half_data_n = 5 
+        
+        temperature_log = collections.deque(maxlen=data_n)
+        time_log = collections.deque(maxlen=data_n) 
+        power_log = collections.deque(maxlen=data_n)
         
         for n in range( 0 , ncycles):
             #do a cycle:
@@ -417,8 +421,7 @@ class main_class: #this has all the objects you need
             time_log.append( time.time())
             power_log.append( duty_cycle)
             
-            data_n = 10
-            half_data_n = 5 
+            
                 
             if len(power_log) == data_n: 
                 #look at all the past data in a graph of E_in on the y and deltaT on the x
