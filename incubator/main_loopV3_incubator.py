@@ -447,8 +447,8 @@ class main_class: #this has all the objects you need
                 print( dT_sums)
                 
                 res = stats.linregress(dT_sums, Ein_sums)
-                self.state_dict['mass_x_specific_heat_guess'] =res.slope
-                self.state_dict['steady_state_heater_duty_guess'] = res.intercept
+                self.state_dict['mass_x_specific_heat_guess'] =res.slope/half_data_n #divide here because the plot for lin fit in units of heat over hlaf_dat_n duty cycles
+                self.state_dict['steady_state_heater_duty_guess'] = res.intercept/half_data_n
             
             
         
