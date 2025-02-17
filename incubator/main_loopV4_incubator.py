@@ -449,7 +449,7 @@ mainC.state_dict['heater_on'] = False
 
 mainC.exhaust_fan.command_fan( 1) 
 print("venting") 
-time.sleep(50)
+time.sleep(1)
 mainC.exhaust_fan.command_fan( 0)  
 
 while True:
