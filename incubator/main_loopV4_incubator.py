@@ -384,51 +384,11 @@ class main_class: #this has all the objects you need
             self.exhaust_fan.command_fan( 0)
             #this leaves time to do something else, like run fan
             return
+        if( self.state_dict['fan_on'] > 0):
+            self.exhaust_fan.command_fan( 1)    
+            return 
         
-        if( self.state_dict['fan_on'] < 0.2):
-            for x in range(0 , 1): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-               
-                
-                
-        if( self.state_dict['fan_on'] > 0.2 and self.state_dict['fan_on'] < 0.4 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-        if( self.state_dict['fan_on'] > 0.4 and self.state_dict['fan_on'] < 0.6 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-
-        if( self.state_dict['fan_on'] > 0.6 and self.state_dict['fan_on'] < 0.8 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                
-        if( self.state_dict['fan_on'] > 0.8 and self.state_dict['fan_on'] <= 1 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)    
-        return  
+        return -1 
 
     def do_one_cycle(self):
         print("cycle start")
@@ -441,18 +401,19 @@ class main_class: #this has all the objects you need
         
        
         
-        
+        #start exhuast fan turning code 
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
             
             if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
                 self.turn_eggs()
             
-            self.exhaust_fan.command_fan( 1)  
-            time.sleep(0.5)
-            self.exhaust_fan.command_fan( 0)  
-
+            self.state_dict['fan_on'] = True
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
+        #end exhaust fan code 
+        if self.state_dict['fan_on'] == True:
+            if time.time() > self.state_dict['last_fan_on_timestamp'] + 5:
+                self.state_dict['fan_on'] = False
             
             
             # ~ if self.state_dict['temperature_1_C'] < 37:
@@ -492,7 +453,7 @@ time.sleep(50)
 mainC.exhaust_fan.command_fan( 0)  
 
 while True:
-	
+    
 
-	mainC.do_one_cycle()
+    mainC.do_one_cycle()
 
