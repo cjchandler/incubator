@@ -149,7 +149,8 @@ class main_class: #this has all the objects you need
         #fan startup
         self.exhaust_fan  = fan()
         self.exhaust_fan.startup(hubserial , 0 , 2)
-       
+        self.recirc_fan  = fan()
+        self.recirc_fan.startup(hubserial , 0 , 3)
         #humidifyer startup
         self.humidifyer = humidifyer()
         self.humidifyer.startup(hubserial , 0 , 1)#0 is the channel, 0 is hub port connecting to the digital output phidget 
