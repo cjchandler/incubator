@@ -135,7 +135,7 @@ class main_class: #this has all the objects you need
         self.state_dict = init_state_dict()
         hubserial = 671958
 
-        self.insideTemperatureHumidity_1 = temperature_humidity_phidget_channel(hubserial, 3)
+        self.insideTemperatureHumidity_1 = temperature_humidity_phidget_channel(hubserial, 4)
         self.insideTemperatureHumidity_1.startup()
         
 
