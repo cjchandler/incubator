@@ -133,7 +133,7 @@ class main_class: #this has all the objects you need
     
     def __init__(self):
         self.state_dict = init_state_dict()
-        hubserial = 682978
+        hubserial = 671958
 
         self.insideTemperatureHumidity_1 = temperature_humidity_phidget_channel(hubserial, 3)
         self.insideTemperatureHumidity_1.startup()
@@ -153,12 +153,12 @@ class main_class: #this has all the objects you need
         self.recirc_fan.startup(hubserial , 0 , 2)
         #humidifyer startup
         self.humidifyer = humidifyer()
-        self.humidifyer.startup(hubserial , 0 , 0)#0 is the channel, 0 is hub port connecting to the digital output phidget 
+        self.humidifyer.startup(hubserial , 0 , 1)#0 is the channel, 0 is hub port connecting to the digital output phidget 
         #heater 
         self.heater = heater()
-        self.heater.startup( hubserial, 0 , 1 )# 1 is the channel, 0 is hub port connecting to the digital output phidget 
+        self.heater.startup( hubserial, 0 , 0 )# 1 is the channel, 0 is hub port connecting to the digital output phidget 
         
-        self.motor = motor_channel(hubserial, 1 , 4 , 5) #hub port 4 is front switch, hub port 5 is rear switch 
+        self.motor = motor_channel(hubserial, 3 , 2 , 1) #hub port 4 is front switch, hub port 5 is rear switch 
         self.motor.startup()
 
 
