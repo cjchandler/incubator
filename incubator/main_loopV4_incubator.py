@@ -486,7 +486,8 @@ mainC.state_dict['humidifyer_on'] = False
 mainC.state_dict['heater_on'] = False
 
 
-mainC.exhaust_fan.command_fan( 1)  
+mainC.exhaust_fan.command_fan( 1) 
+print("venting") 
 time.sleep(50)
 mainC.exhaust_fan.command_fan( 0)  
 
