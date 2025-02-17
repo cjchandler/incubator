@@ -176,7 +176,7 @@ class main_class: #this has all the objects you need
             
             
             now_time =  datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV2.csv"
+            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV4.csv"
             
             
             
@@ -188,7 +188,7 @@ class main_class: #this has all the objects you need
                 
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
-            df.to_csv("today_dataV2.csv" ,index=False , header = True)
+            df.to_csv("today_dataV4.csv" ,index=False , header = True)
 
 
     def do_climate_control(self):
@@ -309,7 +309,7 @@ class main_class: #this has all the objects you need
         ##check that it's been turning properly: 
         try: 
             now_time =  datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV2.csv"
+            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV4.csv"
             if now_time.hour > 2: 
                 #load datafime
                 df = pd.read_csv( filename )
