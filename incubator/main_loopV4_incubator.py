@@ -407,7 +407,13 @@ class main_class: #this has all the objects you need
             if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
                 self.turn_eggs()
             
-            self.state_dict['fan_on'] = True
+            self.state_dict['fan_on'] = False
+            
+            ##############FAN OFF!  #################jst for testing
+            
+            
+            
+            
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
         #end exhaust fan code 
