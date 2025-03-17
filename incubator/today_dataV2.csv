@@ -1,2 +1,2 @@
 experiment_state_timestamp,save_interval_secs,last_save_timestamp,temperature_1_C,humidity_1,target_temperature,cooling_start_temperature,heating_proportional_Cf,heating_integral_Cf,heating_derivitive_Cf,target_humidity,range_humidity,control_change_minimum_secs,last_control_change_timestamp,last_fan_on_timestamp,last_turner_change_timestamp,front_switch,rear_switch,near_switch,far_switch,exhaust_on,humidifyer_on,heater_on,fan_on
-1739555238.826531,20,1742200081.33596,37.46,0.3456,37.5,38,1.9,0.004,0.0,0.37,0.03,2,1742200101.242062,1742199948.3232472,1742197058.082166,0.00183,1.0,0.00183,1.0,0,0,1,False
+1739555238.826531,20,1742200142.2476385,37.43,0.3401,37.5,38,1.9,0.004,0.0,0.37,0.03,2,1742200162.20793,1742200129.754723,1742200129.2126386,1.0,1.0,1.0,1.0,0,0,1,False
