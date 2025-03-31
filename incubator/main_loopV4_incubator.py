@@ -189,7 +189,10 @@ class main_class: #this has all the objects you need
                 
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
-            df.to_csv("today_dataV4.csv" ,index=False , header = True)
+            if now_time.hour == 8 and now_time.minute == 1: 
+                df.to_csv("today_dataV4.csv" ,index=False , header = True)
+            else: 
+                df.to_csv("today_dataV4.csv" , mode = 'a' ,index=False , header = False)
 
 
     def do_climate_control(self):
