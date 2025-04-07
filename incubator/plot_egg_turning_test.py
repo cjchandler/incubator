@@ -36,7 +36,7 @@ path = "/home/cjchandler/Git_Projects/incubator/incubator/"
 # ~ path = "/home/carl/Git_Projects/incubator_public/incubator/incubator/"
 
 print( check_turning(path , 'V4' ))
-quit()
+
 
 v = "V4"
 df = pd.read_csv(path + "today_data"+ v+".csv")
@@ -60,7 +60,7 @@ print(final_df.head(10))
 sample2hr = pd.DataFrame()
 sample2hr['mean_turn'] = df.far_switch.resample('2H').mean() 
 print(sample2hr['mean_turn'].iloc[-1])
-quit()
+
 
 sample2hr.plot()
 plt.show()
