@@ -31,7 +31,9 @@ print(final_df.head(10))
 
 
 #test if egg turning was working, 2 hr window
-sample2hr = df.far_switch.resample('2H').mean() 
+sample2hr['mean_turn'] = df.far_switch.resample('2H').mean() 
+print(sample2hr)
+quit()
 
 sample2hr.plot()
 plt.show()
