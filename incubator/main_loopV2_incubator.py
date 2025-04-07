@@ -169,6 +169,7 @@ class main_class: #this has all the objects you need
 
    
         
+        
     def save_data_state_as_needed(self):
         if time.time() > self.state_dict['save_interval_secs'] + self.state_dict['last_save_timestamp']:
             df = pd.DataFrame(self.state_dict , index = [0])
@@ -188,7 +189,10 @@ class main_class: #this has all the objects you need
                 
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
-            df.to_csv("today_dataV2.csv" ,index=False , header = True)
+            if now_time.hour == 8 and now_time.minute == 1: 
+                df.to_csv("today_dataV2.csv" ,index=False , header = True)
+            else: 
+                df.to_csv("today_dataV2.csv" , mode = 'a' ,index=False , header = False)
 
 
     def do_climate_control(self):
