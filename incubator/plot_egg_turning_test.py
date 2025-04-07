@@ -35,10 +35,10 @@ def check_turning( path, v):
 path = "/home/cjchandler/Git_Projects/incubator/incubator/"
 # ~ path = "/home/carl/Git_Projects/incubator_public/incubator/incubator/"
 
-print( check_turning(path , 'V2' ))
+print( check_turning(path , 'V4' ))
 
 
-v = "V2"
+v = "V4"
 df = pd.read_csv(path + "today_data"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
