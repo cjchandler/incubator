@@ -10,7 +10,7 @@ import os
 
 # header with names
 path = "/home/cjchandler/Git_Projects/incubator/"
-path = "/home/carl/Git_Projects/incubator_public/incubator/incubator/"
+# ~ path = "/home/carl/Git_Projects/incubator_public/incubator/incubator/"
 
 v = "V4"
 df = pd.read_csv(path + "today_data"+ v+".csv")
