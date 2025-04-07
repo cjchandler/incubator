@@ -8,9 +8,35 @@ utc = timezone('UTC')
 from pysolar.solar import *
 import os
 
+def check_turning( path, v):
+	df = pd.read_csv(path + "today_data"+ v+".csv")
+	df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
+	df = df.set_index('datetime')
+
+	print(df)
+	df = df.drop(['last_save_timestamp'], axis=1)
+
+	df2 = df
+
+
+	final_df = pd.concat([  df2] )
+	final_df = final_df.sort_index()
+	final_df.drop(final_df.index[:5], inplace=True)
+
+	print(final_df.head(10))
+
+
+	#test if egg turning was working, 2 hr window
+	sample2hr = pd.DataFrame()
+	sample2hr['mean_turn'] = df.far_switch.resample('2H').mean() 
+	return(sample2hr['mean_turn'].iloc[-1])
+
 # header with names
 path = "/home/cjchandler/Git_Projects/incubator/incubator/"
 # ~ path = "/home/carl/Git_Projects/incubator_public/incubator/incubator/"
+
+print( check_turning(path , 'V4' ))
+quit()
 
 v = "V4"
 df = pd.read_csv(path + "today_data"+ v+".csv")
