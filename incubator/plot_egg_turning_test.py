@@ -9,7 +9,7 @@ from pysolar.solar import *
 import os
 
 # header with names
-path = "/home/cjchandler/Git_Projects/incubator/"
+path = "/home/cjchandler/Git_Projects/incubator/incubator/"
 # ~ path = "/home/carl/Git_Projects/incubator_public/incubator/incubator/"
 
 v = "V4"
