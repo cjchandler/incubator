@@ -94,6 +94,7 @@ def init_state_dict():
    
     state_dict['temperature_1_C'] = -1
     state_dict['humidity_1'] = -0.01
+    state_dict['egg_turning_on'] = False
 
     
     state_dict['target_temperature'] = 37.5
@@ -409,7 +410,8 @@ class main_class: #this has all the objects you need
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
             
             if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
-                self.turn_eggs()
+                if self. state_dict['egg_turning_on'] == True: 
+					self.turn_eggs()
             
             self.state_dict['fan_on'] = False
             
