@@ -12,7 +12,7 @@ import os
 path = "/home/cjchandler/Git_Projects/incubator/"
 
 v = "V4"
-df = pd.read_csv(path + "2025-04-17_state"+ v+".csv")
+df = pd.read_csv(path + "2025-04-09_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
@@ -20,7 +20,7 @@ df = df.drop(['last_save_timestamp'], axis=1)
 
 df1 = df
 
-df = pd.read_csv( path + "2025-04-18_state"+ v+".csv")
+df = pd.read_csv( path + "2025-04-09_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
@@ -30,7 +30,7 @@ df2 = df
 
 
 
-final_df = pd.concat([  df2, ] )
+final_df = pd.concat([  df2 ] )
 final_df = final_df.sort_index()
 final_df.drop(final_df.index[:5], inplace=True)
 # ~ final_df["deltaT"] = final_df["temperature_1_C"] - final_df["temperature_2_C"] 
