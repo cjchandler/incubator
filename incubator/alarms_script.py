@@ -287,7 +287,7 @@ class server_monitor:
                     print("sent an alarm for " , key)
                     send_message( self.today_filename+"incubator: " + key + " " + self.alarm_message_dict[key] + "  " + time.ctime() + "GMT, this is server alarm" )
                     self.alarm_last_send_dict[key] = time.time()
-                    
+                    self.alarm_next_send_dict[key] = time.time() + self.repeat_interval
 
 
     def check_incoming_messages(self):
@@ -296,7 +296,10 @@ class server_monitor:
         #look at all active alarms
         for key in self.alarms_active_dict:
             if self.alarms_active_dict[key] == True:
-                self.alarm_next_send_dict[key] = incoming_timestamp + hrs_alarm_paused*60*60
+                current_scheduled_next_message = self.alarm_next_send_dict[key]
+                next_allowed_next_message = incoming_timestamp + hrs_alarm_paused*60*60
+                if next_allowed_next_message > current_scheduled_next_message:
+                    self.alarm_next_send_dict[key] = next_allowed_next_message
 
 
 
