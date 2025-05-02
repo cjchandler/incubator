@@ -35,49 +35,14 @@ import pandas as pd
 import csv
 import collections
 
-from twilio.rest import Client
 import sys
 import select
 import power
 
+from alarms_script import *
 
 
-#####twilio stuff
-account_sid = ' '
-auth_token = ' '
-client = Client(account_sid, auth_token)
 
-
-def is_plugged_in():
-    ans = power.PowerManagement().get_providing_power_source_type()
-    if ans == False:
-        return True
-    else:
-        return False
-
-class alarm:
-
-    def __init__(self, alarm_repeat_secs ):
-
-        self.repeat_interval = alarm_repeat_secs
-        self.last_alarm_time = 0.0
-
-
-    def sound_alarm( self , message_string):
-        if( time.time() > self.last_alarm_time + self.repeat_interval ):
-            try:
-                message = client.messages.create(
-                from_='+dfsdfgffg',
-                body=message_string,
-                to='+dffgfgfd')
-                self.last_alarm_time = time.time()
-            except:
-                print("twillo not working")
-        else:
-            pass
-            # print("didn't send sms because we just sent one at : " )
-            # print( self.last_alarm_time)
-        return
 
 
 
@@ -85,8 +50,10 @@ class alarm:
 
 
 def init_state_dict():
-    
+    alarm_unit = server_monitor( "today_dataV4.csv" , True) #server monitor with turning checking
+    uptime_unit = last_update_repo(  "/home/cjchandler/Git_Projects/last_update_repo" ,  ) 
     state_dict = {}
+    
   
     state_dict['experiment_state_timestamp'] = time.time() #for recovery
     state_dict['save_interval_secs'] = 20
@@ -448,8 +415,10 @@ class main_class: #this has all the objects you need
         #save data as needed:
         self.save_data_state_as_needed()
     
-      
+        #do alarms 
+        self.alarm_unit.do_all()
         
+
     
 
 mainC = main_class()
