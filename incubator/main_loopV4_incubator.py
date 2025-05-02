@@ -24,7 +24,6 @@ from fan_and_humidifyer_classesV2 import *
 
 
 from inputimeout import inputimeout , TimeoutOccurred
-from datetime import datetime 
 
 #all alarms
 
@@ -50,8 +49,7 @@ from alarms_script import *
 
 
 def init_state_dict():
-    alarm_unit = server_monitor( "today_dataV4.csv" , True) #server monitor with turning checking
-    uptime_unit = last_update_repo(  "/home/cjchandler/Git_Projects/last_update_repo" ,  ) 
+     
     state_dict = {}
     
   
@@ -100,6 +98,9 @@ def init_state_dict():
 class main_class: #this has all the objects you need
     
     def __init__(self):
+        self.alarm_unit = server_monitor( "today_dataV4.csv" , True) #server monitor with turning checking
+        self.uptime_unit = last_update_repo(  60*2 ,"/home/cjchandler/Git_Projects/last_update_repo/" , "incubator_v4.txt" )
+    
         self.state_dict = init_state_dict()
         hubserial = 671958
 
@@ -144,7 +145,7 @@ class main_class: #this has all the objects you need
             self.state_dict['last_save_timestamp'] = time.time()
             
             
-            now_time =  datetime.today() 
+            now_time =  datetime.datetime.today() 
             filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV4.csv"
             
             
@@ -280,7 +281,7 @@ class main_class: #this has all the objects you need
         self.state_dict['last_turner_change_timestamp'] = time.time()
         ##check that it's been turning properly: 
         try: 
-            now_time =  datetime.today() 
+            now_time =  datetime.datetime.today() 
             filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV4.csv"
             if now_time.hour > 2: 
                 #load datafime
@@ -417,7 +418,7 @@ class main_class: #this has all the objects you need
     
         #do alarms 
         self.alarm_unit.do_all()
-        
+        self.uptime_unit.update_as_needed()
 
     
 

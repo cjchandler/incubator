@@ -15,12 +15,13 @@ import os
 from twilio.rest import Client
 
 
-
+alarms_off = True
 
 
 
 def send_message( message_string):
-    path = "/home/carl/Desktop/"
+    global alarms_off
+    path = "/home/cjchandler/Desktop/"
     filename = "twiliokey.txt"
     f = open(path + filename, "r")
     sid_string = (f.readline())
@@ -33,11 +34,12 @@ def send_message( message_string):
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
     try:
-        message = client.messages.create(
-        from_='+19854974121',
-        body=message_string,
-        to='+19023077435')
-        return 0
+        if alarms_off == False: 
+            message = client.messages.create(
+            from_='+19854974121',
+            body=message_string,
+            to='+19023077435')
+            return 0
 
     except:
         print("twillo not working")
@@ -50,7 +52,7 @@ def send_message( message_string):
 
 def parse_incoming_texts():
 
-    path = "/home/carl/Desktop/"
+    path = "/home/cjchandler/Desktop/"
     filename = "twiliokey.txt"
     f = open(path + filename, "r")
     sid_string = (f.readline())
@@ -90,111 +92,6 @@ def parse_incoming_texts():
 
 
 
-class basic_monitor: #this looks at a time file and sends alarm itf it's been too long without updates
-    def __init__(self , filein , check_sec):
-        if os.path.isdir('last_update_repo') == False:
-            print("cloning the last update repo git archive , it's public ")
-            os.system('git clone https://github.com/cjchandler/last_update_repo.git')
-        else:
-            print("pull the latest version")
-            os.system("cd last_update_repo \n git pull origin main")
-        self.filename = filein
-        self.backup_interval = check_sec
-
-        self.alarms_active_dict = {}
-        self.alarm_last_send_dict= {}
-        self.alarm_next_send_dict= {}
-        self.alarm_message_dict= {}
-
-        self.alarms_active_dict['git alarm'] = False
-        self.alarms_active_dict['file update alarm'] = False
-
-
-        self.alarm_last_send_dict['file update alarm'] = 0
-
-
-
-        self.alarm_next_send_dict['file update alarm'] = 0
-
-
-        self.last_backup_time = 0
-
-
-    def pull_through_git(self ):
-
-        if( True):
-
-            try:
-                os.system("cd last_update_repo \n git pull origin main")
-                self.last_backup_time = time.time()
-                self.alarms_active_dict['git alarm'] = False
-                print("backup via git is gotten")
-
-
-            except:
-                print("failed to get data updates via git")
-                self.alarms_active_dict['git alarm'] = True
-                # ~ self.git_alarm.sound_alarm( "could not pull git to server " + time.ctime() )
-
-    def file_updated_recently(self):
-        f = open("./last_update_repo/" + self.filename, "r")
-        dstring = (f.readline())
-        if time.time() > float(dstring) + self.backup_interval:
-            return False, float(dstring)
-        else :
-            return True, float(dstring)
-
-
-    def look_at_data_update_alarm_states(self):
-        recent_file_update_bool, self.last_backup_time  = self.file_updated_recently()
-
-
-        #reset all alarms to off
-        for key in self.alarms_active_dict:
-             self.alarms_active_dict[key] = 0
-
-        #now check if any alarms are active from the current data set
-
-        time_since_last_save = time.time() - int(self.last_backup_time )
-
-        if( time_since_last_save >=  self.backup_interval     ):
-            self.alarms_active_dict['file update alarm'] = True
-            self.alarm_message_dict[  'file update alarm'] = self.filename+ " not logging data. secs without data = "+ str(time_since_last_save) +"  Probably malfunctioning seriously "
-
-            print( "no file updates in " , time_since_last_save , "seconds")
-
-
-    def send_alarms(self):
-        #look at all active alarms
-        for key in self.alarms_active_dict:
-            if self.alarms_active_dict[key] == True:
-                #look at the last time we sent an alatm
-                last_alarm =  self.alarm_last_send_dict[key]
-                #look at the next alarm send time:
-                next_alarm = self.alarm_next_send_dict[key]
-
-                #if past next alarm time, send it, update last send
-                if time.time() > next_alarm:
-                    print("sent and alarm for " , key)
-                    send_message( self.filename + key + " " + self.alarm_message_dict[key] + "  " + time.ctime() + "GMT, this is server alarm" )
-                    self.alarm_last_send_dict[key] = time.time()
-
-
-    def check_incoming_messages(self):
-        hrs_alarm_paused, incoming_timestamp = parse_incoming_texts()
-        print( "last incoming text was at " , incoming_timestamp , " with hrs pause = " , hrs_alarm_paused)
-        #look at all active alarms
-        for key in self.alarms_active_dict:
-            if self.alarms_active_dict[key] == True:
-                self.alarm_next_send_dict[key] = incoming_timestamp + hrs_alarm_paused*60*60
-
-
-    def do_all(self):
-
-        self.pull_through_git()
-        self.look_at_data_update_alarm_states()
-        self.check_incoming_messages()
-        self.send_alarms()
 
 
 class server_monitor:
@@ -208,7 +105,7 @@ class server_monitor:
             # ~ print("pull the latest version")
             # ~ os.system("cd incubator_daily/incubator_daily \n git fetch --all && git reset --hard origin/main")
 
-        self.repeat_interval = 60*7
+        self.repeat_interval = 60*7 #how often do we send alarms
         self.df_now = pd.DataFrame()
         self.df_prev = pd.DataFrame()
 
@@ -242,37 +139,37 @@ class server_monitor:
         #send_message("server monitor startup now")
 
     def check_turning( self ):
-    	df = self.df_now
-    	#df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
-    	#df = df.set_index('datetime')
+        df = self.df_now
+        #df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
+        #df = df.set_index('datetime')
 
-    	now = time.time()
-    	print(now,"now")
-    	hrsago = now - 60*60*2.0
+        now = time.time()
+        # ~ print(now,"now")
+        hrsago = now - 60*60*2.0
 
-    	vals = df['far_switch'].to_numpy()
-    	valsnear = df['near_switch'].to_numpy()
-    	times = df['last_save_timestamp'].to_numpy()
+        vals = df['far_switch'].to_numpy()
+        valsnear = df['near_switch'].to_numpy()
+        times = df['last_save_timestamp'].to_numpy()
 
 
-    	sum = 0
-    	sumnear = 0
-    	n = 0
-    	assert( len(vals) == len(times))
-    	for a in range( 0 , len(vals)):
-    	    if times[a]> hrsago:
+        sum = 0
+        sumnear = 0
+        n = 0
+        assert( len(vals) == len(times))
+        for a in range( 0 , len(vals)):
+            if times[a]> hrsago:
 
-    	        sum += vals[a]
-    	        sumnear += valsnear[a]
-    	        n += 1.0
+                sum += vals[a]
+                sumnear += valsnear[a]
+                n += 1.0
 
-    	mean = sum/n
-    	meannear = sumnear/n
-    	print( " meanfar, meannear " , mean , meannear , n   )
+        mean = sum/n
+        meannear = sumnear/n
+        # ~ print( " meanfar, meannear " , mean , meannear , n   )
 
-    	#test if egg turning was working, 2 hr window
+        #test if egg turning was working, 2 hr window
 
-    	return( mean )
+        return( mean )
 
         
 
@@ -281,7 +178,7 @@ class server_monitor:
         self.df_prev = self.df_now
         self.df_now = pd.read_csv("./"+self.today_filename)
 
-        print(self.df_now)
+        # ~ print(self.df_now)
 
         #reset all alarms to off
         for key in self.alarms_active_dict:
@@ -311,7 +208,7 @@ class server_monitor:
             self.alarms_active_dict['temperature alarm'] = True
             self.alarm_message_dict[  'temperature alarm'] = self.today_filename+"incubator temperature is high " + str(temp)
 
-        print(temp , "temp" , self.today_filename)
+        # ~ print(temp , "temp" , self.today_filename)
 
 
         try:
@@ -350,11 +247,11 @@ class server_monitor:
         try:
             if self.doturnalarms:
                 secs_data = self.df_now['last_save_timestamp'].iloc[-1] - self.df_now['last_save_timestamp'].iloc[0]
-                print("secs of data " , secs_data)
+                # ~ print("secs of data " , secs_data)
                 if secs_data > 2*60*60:
                     #load datafime
 
-                    print("checking the turning average")
+                    # ~ print("checking the turning average")
                     mean_turning = self.check_turning()
 
                     if mean_turning > 0.6 or mean_turning < 0.4:
@@ -387,9 +284,10 @@ class server_monitor:
 
                 #if past next alarm time, send it, update last send
                 if time.time() > next_alarm:
-                    print("sent and alarm for " , key)
+                    print("sent an alarm for " , key)
                     send_message( self.today_filename+"incubator: " + key + " " + self.alarm_message_dict[key] + "  " + time.ctime() + "GMT, this is server alarm" )
                     self.alarm_last_send_dict[key] = time.time()
+                    
 
 
     def check_incoming_messages(self):
@@ -421,27 +319,27 @@ class last_update_repo:
     def update_as_needed(self):
         if( time.time() > self.last_backup_time + self.backup_interval):
 
-        try:
+            try:
+                print("writting time for last update repo  "  + self.last_update_repo_path + self.last_update_repo_file)
+                f = open(self.last_update_repo_path + self.last_update_repo_file , "w")
+                f.write(str(time.time()))
+                f.close()
             
-            f = open(self.last_update_repo_path + self.last_update_repo_file , "w")
-            f.write(str(time.time()))
-            f.close()
+				
             
             
-            
-            
-        except:
-            print("didn't write time")
+            except:
+                print("didn't write time for last pdate repo")
 
-        try:
-            os.system('cd '+self.last_update_repo_path+' \n git pull origin main')
-            os.system('cd '+self.last_update_repo_path+' \n git commit -a -m "auto" ')
-            os.system('cd '+self.last_update_repo_path+' \n git push origin main')
-            self.last_backup_time = time.time()
-            print("backup via git is done")
+            try:
+                os.system('cd '+self.last_update_repo_path+' \n git pull origin main')
+                os.system('cd '+self.last_update_repo_path+' \n git commit -a -m "auto" ')
+                os.system('cd '+self.last_update_repo_path+' \n git push origin main')
+                self.last_backup_time = time.time()
+                print("backup via git is done")
 
-        except:
-            print("failed to push data updates via git")
+            except:
+                print("failed to push data updates via git")
         
 
 
