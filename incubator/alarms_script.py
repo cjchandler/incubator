@@ -29,7 +29,7 @@ def send_message( message_string):
         
     
     TWILIO_ACCOUNT_SID = sid_string
-    TWILIO_AUTH_TOKEN = auth_string
+    TWILIO_AUTH_TOKEN = auth_string.rstrip()
     twilio_api = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
