@@ -274,12 +274,21 @@ class main_class: #this has all the objects you need
         self.heater.command_heater( self.state_dict['heater_on'])
        
 
-    def turn_eggs(self):
-        self.motor.switchtraystart()
-        self.state_dict['last_turner_change_timestamp'] = time.time()
+    def turn_eggs_as_needed(self):
+        
         
         #if the hour is even, tilt near, if off, tilt rear
-        
+        now_time =  datetime.datetime.today() 
+        #check this every min
+        if now_time.hour.second < 10:  
+            if now_time.hour%2 == 1
+                #tilt rear down, rear switch ==0 
+                self.motor.hold_rear_down()
+            else:
+                self.motor.hold_near_down()
+                
+        self.motor.stop_motors_on_contact()
+
         
         ##check that it's been turning properly: 
         try: 
@@ -371,34 +380,17 @@ class main_class: #this has all the objects you need
         self.do_climate_control()
         self.cycle_fan()
         self.cycle_lights()
-        self.motor.switchtray_update()
         
         
+        #update the turning
+        self.turn_eggs_as_needed()
         
-       
         
-        #start exhuast fan turning code 
+
+        
+        #start exhuast fan every 3 min
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
-            near_low = False
-            #check turning state. 
-			if datetime.hour%2 == 0 :
-				near_low = True
-			if datetime.hour%2 == 1 :
-				near_low = False
-				
-                if self. state_dict['egg_turning_on'] == True: 
-					
-					
-                    self.turn_eggs()
-                    print("star turnig")
-            
-            self.state_dict['fan_on'] = False
-            
-            ##############FAN OFF!  #################jst for testing
-            
-            
-            
-            
+            self.state_dict['fan_on'] = True
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
         #end exhaust fan code 
@@ -406,23 +398,6 @@ class main_class: #this has all the objects you need
             if time.time() > self.state_dict['last_fan_on_timestamp'] + 5:
                 self.state_dict['fan_on'] = False
             
-            
-            # ~ if self.state_dict['temperature_1_C'] < 37:
-                # ~ self.temperature_alarm.sound_alarm( "incubator temperature is low " + str(self.state_dict['temperature_1_C']) +"  " +  time.ctime() )
-                
-            # ~ if self.state_dict['temperature_1_C'] > 38.6:
-                # ~ self.temperature_alarm.sound_alarm( "incubator temperature is high " + str(self.state_dict['temperature_1_C']) +"  " +  time.ctime() )
-                
-            # ~ if self.state_dict['humidity_1'] <  self.state_dict['target_humidity_low'] - 0.05 :
-                # ~ self.humidity_alarm.sound_alarm( "incubator humidity is low  " + str(self.state_dict['humidity_1']) +"  " +  time.ctime() )
-            
-            # ~ if self.state_dict['humidity_1'] > self.state_dict['target_humidity_high'] + 0.05 :
-                # ~ self.humidity_alarm.sound_alarm( "incubator humidity is high " + str(self.state_dict['humidity_1']) +"  " +  time.ctime() )
-                
-            
-            
-    
-
             
         #save data as needed:
         self.save_data_state_as_needed()

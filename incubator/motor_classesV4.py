@@ -96,31 +96,28 @@ class motor_channel: #I use this for PAR reading in, analog input
             time.sleep(0.5)
             return
         
-    def switchtray_update(self):
+    def stop_motors_on_contact(self):
         if self.direction == -1 and self.rear_analog_handler.signal<0.5:
             self.dcMotor0.setTargetVelocity(0)
-            self.direction = 1
             
         elif self.direction == 1 and self.front_analog_handler.signal<0.5:
             self.dcMotor0.setTargetVelocity(0)
-            self.direction = -1
+            
 
     def hold_near_down(self):
         if self.front_analog_handler.signal > 0.5:
-            while self.front_analog_handler.signal > 0.5:
-                self.direction = 1
-                self.dcMotor0.setTargetVelocity(1)
-                time.sleep(0.1)
-                
+            self.direction = 1
+            self.dcMotor0.setTargetVelocity(1)
+            time.sleep(0.1)
+        else:
             self.dcMotor0.setTargetVelocity(0)
     
     def hold_rear_down(self):
         if self.rear_analog_handler.signal > 0.5:
-            while self.rear_analog_handler.signal > 0.5:
-                self.direction = -1
-                self.dcMotor0.setTargetVelocity(-1)
-                time.sleep(0.1)
-                
+            self.direction = -1
+            self.dcMotor0.setTargetVelocity(-1)
+            time.sleep(0.1)
+        else:
             self.dcMotor0.setTargetVelocity(0)
 
 
