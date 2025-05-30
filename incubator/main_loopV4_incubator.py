@@ -275,7 +275,8 @@ class main_class: #this has all the objects you need
        
 
     def turn_eggs_as_needed(self):
-        
+        if state_dict['egg_turning_on'] == False:
+            return
         
         #if the hour is even, tilt near, if off, tilt rear
         now_time =  datetime.datetime.today() 
@@ -289,25 +290,10 @@ class main_class: #this has all the objects you need
                 
         self.motor.stop_motors_on_contact()
 
+
+        return
         
-        ##check that it's been turning properly: 
-        try: 
-            now_time =  datetime.datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV4.csv"
-            if now_time.hour > 2: 
-                #load datafime
-                df = pd.read_csv( filename )
-                df = df.tail( 50*2*3  )#60/self.state_dict['save_interval_secs']
-                mean_near = np.mean(df['front_switch'].to_numpy())
-                mean_far = np.mean(df['rear_switch'].to_numpy())
-                
-                # ~ if mean_near > 0.6 or mean_near < 0.4:
-                    # ~ self.turning_alarm.sound_alarm(" turning maybe not working, near switch = " + str(mean_near )+" . " + time.ctime())
-                
-                # ~ if mean_far > 0.6 or mean_far < 0.4:
-                    # ~ self.turning_alarm.sound_alarm(" turning maybe not working, far switch = " + str(mean_far )+" . " + time.ctime())
-        except:
-            print("no data file")
+        
     
     def cycle_lights(self):
         n = 10 
