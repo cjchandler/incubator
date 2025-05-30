@@ -18,7 +18,7 @@ from simple_pid import PID
 
 
 from temperature_and_humidity_classes import *
-from motor_classesV2 import *
+from motor_classesV4 import *
 from heater_classV2 import *
 from fan_and_humidifyer_classesV2 import *
 
@@ -38,7 +38,6 @@ import sys
 import select
 import power
 
-from alarms_script import *
 
 
 
@@ -62,13 +61,13 @@ def init_state_dict():
     state_dict['egg_turning_on'] = True
 
     
-    state_dict['target_temperature'] = 37.5
-    state_dict['cooling_start_temperature'] = 38
+    state_dict['target_temperature'] = 50.5
+    state_dict['cooling_start_temperature'] = 55
 
     state_dict['heating_proportional_Cf'] = 1.30
     state_dict['heating_integral_Cf'] = 0.006 #2 p , 0.001i was too big perhaps 
     state_dict['heating_derivitive_Cf'] = 0.0
-    state_dict['target_humidity'] = 0.6
+    state_dict['target_humidity'] = 0.0
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
     state_dict['last_control_change_timestamp'] = 0
@@ -98,8 +97,7 @@ def init_state_dict():
 class main_class: #this has all the objects you need
     
     def __init__(self):
-        self.alarm_unit = server_monitor( "today_dataV4.csv" , True) #server monitor with turning checking
-        self.uptime_unit = last_update_repo(  60*2 ,"/home/cjchandler/Git_Projects/last_update_repo/" , "incubator_v4.txt" )
+        
     
         self.state_dict = init_state_dict()
         hubserial = 671958
@@ -169,8 +167,8 @@ class main_class: #this has all the objects you need
         self.state_dict['temperature_1_C'] = self.insideTemperatureHumidity_1.getTemperature() 
         self.state_dict['humidity_1'] = self.insideTemperatureHumidity_1.getHumidity() 
    
-        self.state_dict['front_switch'] = self.motor.front_analog_handler.signal
-        self.state_dict['rear_switch'] = self.motor.rear_analog_handler.signal
+        self.state_dict['front_switch'] = round(self.motor.front_analog_handler.signal)
+        self.state_dict['rear_switch'] = round(self.motor.rear_analog_handler.signal)
    
         self.state_dict['near_switch'] = self.state_dict['front_switch']#update for server monitor
         self.state_dict['far_switch'] = self.state_dict['rear_switch']
@@ -279,6 +277,10 @@ class main_class: #this has all the objects you need
     def turn_eggs(self):
         self.motor.switchtraystart()
         self.state_dict['last_turner_change_timestamp'] = time.time()
+        
+        #if the hour is even, tilt near, if off, tilt rear
+        
+        
         ##check that it's been turning properly: 
         try: 
             now_time =  datetime.datetime.today() 
@@ -372,14 +374,23 @@ class main_class: #this has all the objects you need
         self.motor.switchtray_update()
         
         
+        
        
         
         #start exhuast fan turning code 
         if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
-            
-            if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
+            near_low = False
+            #check turning state. 
+			if datetime.hour%2 == 0 :
+				near_low = True
+			if datetime.hour%2 == 1 :
+				near_low = False
+				
                 if self. state_dict['egg_turning_on'] == True: 
+					
+					
                     self.turn_eggs()
+                    print("star turnig")
             
             self.state_dict['fan_on'] = False
             
@@ -416,9 +427,7 @@ class main_class: #this has all the objects you need
         #save data as needed:
         self.save_data_state_as_needed()
     
-        #do alarms 
-        self.alarm_unit.do_all()
-        self.uptime_unit.update_as_needed()
+        
 
     
 
