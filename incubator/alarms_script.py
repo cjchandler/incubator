@@ -15,7 +15,7 @@ import os
 from twilio.rest import Client
 
 
-alarms_off = True
+alarms_off = False
 
 
 
@@ -70,8 +70,8 @@ def parse_incoming_texts():
     for x in smslist:
         if(x.direction == 'inbound'):
             #get the most recent message that I texted to twilio number
-            print( x.date_sent.timestamp() )
-            print( x.direction)
+            #print( x.date_sent.timestamp() )
+            #print( x.direction)
             timestamp = x.date_sent.timestamp()
             try:
                 partslist =  x.body.split(' ')
@@ -95,9 +95,12 @@ def parse_incoming_texts():
 
 
 class server_monitor:
-    def __init__(self , today_filename, doturnalarms):
+    def __init__(self , today_filename, doturnalarms , last_repo_path , last_repo_file):
         self.today_filename = today_filename
         self.doturnalarms = doturnalarms
+        
+        self.last_update_repo_path  = last_repo_path
+        self.last_update_repo_file = last_repo_file 
         # ~ if os.path.isdir('incubator_daily') == False:
             # ~ print("cloning the incubator git archive , it's public ")
             # ~ os.system('git clone https://github.com/cjchandler/incubator_daily.git')
@@ -178,7 +181,7 @@ class server_monitor:
         self.df_prev = self.df_now
         self.df_now = pd.read_csv("./"+self.today_filename)
 
-        # ~ print(self.df_now)
+        #print(self.df_now.tail(10) )
 
         #reset all alarms to off
         for key in self.alarms_active_dict:
@@ -189,11 +192,29 @@ class server_monitor:
         humidity = self.df_now['humidity_1'].iloc[-1]
         timestamp = self.df_now ['last_save_timestamp'].iloc[-1]
         time_since_last_save = time.time() - int(self.df_now['last_save_timestamp'].iloc[-1])
+        
+        #log last timestamp in last update repo
+        try:
+                print("writting time for last update repo  "  + self.last_update_repo_path + self.last_update_repo_file)
+                f = open(self.last_update_repo_path + self.last_update_repo_file , "w")
+                f.write(str(  int(self.df_now['last_save_timestamp'].iloc[-1])  ))
+                f.close()
+            
+				
+            
+            
+        except:
+                print("didn't write time for last pdate repo")
+        
+        
+        # ~ print( "time_since_last_save" , time_since_last_save , self.df_now['last_save_timestamp'].iloc[-1])
 
-        if( time_since_last_save >=  self.repeat_interval + 60*5    ):
+        if( time_since_last_save >=  self.repeat_interval     ):
             self.alarms_active_dict['file update alarm'] = True
             self.alarm_message_dict[  'file update alarm'] = self.today_filename+ "incubator not logging data. secs without data = "+ str(time_since_last_save) +"  Probably malfunctioning seriously "
 
+
+		
             print( "no file updates in " , time_since_last_save , "seconds")
 
 
@@ -285,7 +306,7 @@ class server_monitor:
                 #if past next alarm time, send it, update last send
                 if time.time() > next_alarm:
                     print("sent an alarm for " , key)
-                    send_message( self.today_filename+"incubator: " + key + " " + self.alarm_message_dict[key] + "  " + time.ctime() + "GMT, this is server alarm" )
+                    send_message( self.today_filename+"incubator: " + key + " " + self.alarm_message_dict[key] + "  " + time.ctime() + "GMT, this is laptop alarm" )
                     self.alarm_last_send_dict[key] = time.time()
                     self.alarm_next_send_dict[key] = time.time() + self.repeat_interval
 
@@ -322,20 +343,10 @@ class last_update_repo:
     def update_as_needed(self):
         if( time.time() > self.last_backup_time + self.backup_interval):
 
-            try:
-                print("writting time for last update repo  "  + self.last_update_repo_path + self.last_update_repo_file)
-                f = open(self.last_update_repo_path + self.last_update_repo_file , "w")
-                f.write(str(time.time()))
-                f.close()
             
-				
-            
-            
-            except:
-                print("didn't write time for last pdate repo")
 
             try:
-                os.system('cd '+self.last_update_repo_path+' \n git pull origin main')
+                os.system('cd '+self.last_update_repo_path+' \n git pull origin main --no-edit')
                 os.system('cd '+self.last_update_repo_path+' \n git commit -a -m "auto" ')
                 os.system('cd '+self.last_update_repo_path+' \n git push origin main')
                 self.last_backup_time = time.time()
