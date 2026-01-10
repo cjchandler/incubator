@@ -1,4 +1,4 @@
-#loop v4 alarms 
+#loop v2 alarms 
 from alarms_script import *
 
 alarm_unit = server_monitor( "today_dataV2.csv" , True , "/home/cjchandler/Git_Projects/last_update_repo/" , "incubator_v2.txt") #server monitor with turning checking

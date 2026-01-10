@@ -218,13 +218,13 @@ class server_monitor:
             print( "no file updates in " , time_since_last_save , "seconds")
 
 
-        if temp < 37.2:
+        if temp < self.df_now['target_temperature'].iloc[-1]- 0.3:
             print( "temperature low. " , temp)
             self.alarms_active_dict['temperature alarm'] = True
             self.alarm_message_dict[  'temperature alarm'] = self.today_filename+"incubator temperature is low " + str(temp)
 
 
-        if temp > 37.8:
+        if temp > self.df_now['target_temperature'].iloc[-1]+ 0.3:
             print( "temperature high. " , temp)
             self.alarms_active_dict['temperature alarm'] = True
             self.alarm_message_dict[  'temperature alarm'] = self.today_filename+"incubator temperature is high " + str(temp)

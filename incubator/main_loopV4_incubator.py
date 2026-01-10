@@ -1,11 +1,4 @@
-#control loop for growth chamber
-
-#loop:
-#read sensors: mass, humidity, temperature, co2 
-#change fan or humidifyer for control of climate
-#check if it's time to adjust light levels
-#check if it's time to do a PAR data sweep
-#check if it's time to do irrigation
+#2025 nov 1 v4 incubator update
 import pprint
 
 import os.path as Pathc
@@ -61,13 +54,13 @@ def init_state_dict():
     state_dict['egg_turning_on'] = True
 
     
-    state_dict['target_temperature'] = 50.5
-    state_dict['cooling_start_temperature'] = 55
+    state_dict['target_temperature'] =37.5
+    state_dict['cooling_start_temperature'] = 38.2
 
-    state_dict['heating_proportional_Cf'] = 1.30
-    state_dict['heating_integral_Cf'] = 0.006 #2 p , 0.001i was too big perhaps 
+    state_dict['heating_proportional_Cf'] =   .95
+    state_dict['heating_integral_Cf'] = 0.005 #2 p , 0.001i was too big perhaps 
     state_dict['heating_derivitive_Cf'] = 0.0
-    state_dict['target_humidity'] = 0.0
+    state_dict['target_humidity'] = 0.6
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
     state_dict['last_control_change_timestamp'] = 0
@@ -275,14 +268,14 @@ class main_class: #this has all the objects you need
        
 
     def turn_eggs_as_needed(self):
-        if state_dict['egg_turning_on'] == False:
+        if self.state_dict['egg_turning_on'] == False:
             return
         
         #if the hour is even, tilt near, if off, tilt rear
         now_time =  datetime.datetime.today() 
         #check this every min
-        if now_time.hour.second < 10:  
-            if now_time.hour%2 == 1
+        if now_time.second < 10:  
+            if now_time.hour%2 == 1:
                 #tilt rear down, rear switch ==0 
                 self.motor.hold_rear_down()
             else:

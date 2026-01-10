@@ -1,11 +1,5 @@
-#control loop for growth chamber
+#2025 nov 1 v2 incubator update
 
-#loop:
-#read sensors: mass, humidity, temperature, co2 
-#change fan or humidifyer for control of climate
-#check if it's time to adjust light levels
-#check if it's time to do a PAR data sweep
-#check if it's time to do irrigation
 import pprint
 
 import os.path as Pathc
@@ -481,22 +475,31 @@ class main_class: #this has all the objects you need
     
       
         
-    
+while True: 
+	try: 
+		print("starting mainC")
+		mainC = main_class()
 
-mainC = main_class()
-
-mainC.state_dict['fan_on'] = False
-mainC.state_dict['humidifyer_on'] = False
-mainC.state_dict['heater_on'] = False
+		mainC.state_dict['fan_on'] = False
+		mainC.state_dict['humidifyer_on'] = False
+		mainC.state_dict['heater_on'] = False
 
 
-mainC.exhaust_fan.command_fan( 1)  
-time.sleep(1)
-mainC.exhaust_fan.command_fan( 0)  
+		mainC.exhaust_fan.command_fan( 1)  
+		time.sleep(1)
+		mainC.exhaust_fan.command_fan( 0)  
 
-while True:
-	
+		while True:
+			
 
-	mainC.do_one_cycle()
-	print("v2 main loop")
+			mainC.do_one_cycle()
+			print("v2 main loop")
+			
+	except:
+		print ("fatal error: restarting")
+		
+		#send sms alarm
+		os.execl(sys.executable, sys.executable, *sys.argv)
+
+
 
