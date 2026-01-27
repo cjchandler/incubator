@@ -162,11 +162,11 @@ class server_monitor:
         for a in range( 0 , len(vals)):
             if times[a]> hrsago:
 
-                sum += vals[a]
+                sumval += vals[a]
                 sumnear += valsnear[a]
                 n += 1.0
 
-        mean = sum/n
+        mean = sumval/n
         meannear = sumnear/n
         # ~ print( " meanfar, meannear " , mean , meannear , n   )
 
