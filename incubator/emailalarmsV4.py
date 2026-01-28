@@ -214,7 +214,7 @@ class alarm_loop:
         self.humidity_alarm.update_alarm_states()
 
 
-AL = alarm_loop("V2" , True)
+AL = alarm_loop("V4" , True)
         
 while True: 
     AL.update_alarm_value_from_file()
