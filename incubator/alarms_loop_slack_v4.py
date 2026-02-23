@@ -6,14 +6,15 @@ uptime_unit = last_update_repo(  60*2 ,"/home/cjchandler/Git_Projects/last_updat
 
 #do alarms 
 while True: 
-	try: 
-		alarm_unit.do_all()
-	except:
-		print("alarms v4 no working")	
-	try: 
-		uptime_unit.update_as_needed()
-	except:
-		print("uptime v4 no working")
-	
-	print("alarms for v4")
-	time.sleep(10)
+    try:
+        alarm_unit.do_all()
+    except:
+        print("alarms v4 not working")   
+    
+    try: 
+        uptime_unit.update_as_needed()
+    except:
+        print("uptime v4 not working")
+    
+    print("slack alarms for v4")
+    time.sleep(10)

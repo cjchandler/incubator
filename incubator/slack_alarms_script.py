@@ -9,10 +9,11 @@ from twilio.rest import Client
 import sys
 import select
 import numpy as np
+import requests
+import json
 
 
 import os
-from twilio.rest import Client
 
 
 alarms_off = False
@@ -68,14 +69,12 @@ def send_message( message_string):
 
 	
 
-    try:
-        if alarms_off == False: 
+    
+    if alarms_off == False: 
             
-            SS.send_message(message_string)
+        SS.send_message(message_string)
 
-    except:
-        print("slack send not working")
-
+    
         return 1
         
 
@@ -176,8 +175,11 @@ class server_monitor:
         valsnear = df['near_switch'].to_numpy()
         times = df['last_save_timestamp'].to_numpy()
 
+        if times[-1] - times[0] < 60*60*2:
+            print("not enough data for turning alarm to work, time on today_data file = " ,times[-1] - times[0])
+            return( 0.511111111111111 , 0.5111111111111111111)  
 
-        sum = 0
+        sumval = 0
         sumnear = 0
         n = 0
         assert( len(vals) == len(times))
@@ -194,7 +196,7 @@ class server_monitor:
 
         #test if egg turning was working, 2 hr window
 
-        return( mean )
+        return( mean , meannear )
 
         
 
@@ -233,7 +235,7 @@ class server_monitor:
 
         if( time_since_last_save >=  self.repeat_interval     ):
             self.alarms_active_dict['file update alarm'] = True
-            self.alarm_message_dict[  'file update alarm'] = self.today_filename+ "incubator not logging data. secs without data = "+ str(time_since_last_save) +"  Probably malfunctioning seriously "
+            self.alarm_message_dict[  'file update alarm'] = self.today_filename+ "incubator not logging data. mins without data = "+ str(time_since_last_save/60.0) +"  Probably malfunctioning seriously "
 
 
 		
@@ -290,21 +292,23 @@ class server_monitor:
         try:
             if self.doturnalarms:
                 secs_data = self.df_now['last_save_timestamp'].iloc[-1] - self.df_now['last_save_timestamp'].iloc[0]
-                # ~ print("secs of data " , secs_data)
+                print("secs of data " , secs_data)
                 if secs_data > 2*60*60:
                     #load datafime
 
-                    # ~ print("checking the turning average")
-                    mean_turning = self.check_turning()
+                    print("checking the turning average")
+                    mean_turning, mean_turning2 = self.check_turning()
+                    print( "mean_turning  = " , mean_turning)
+                    print( "mean_turning2  = " , mean_turning2)
 
-                    if mean_turning > 0.6 or mean_turning < 0.4:
+                    if mean_turning > 0.6 or mean_turning < 0.4 or mean_turning2 > 0.6 or mean_turning2 < 0.4 :
                         self.alarms_active_dict['turning alarm'] = True
                         print("mean_turning is " , mean_turning)
                         self.alarm_message_dict[  'turning alarm'] = self.today_filename+"mean_turning = " + str(mean_turning )
 
                         # ~ self.turning_alarm.sound_alarm(" turning maybe not working, near switch = " + str(mean_near )+" . " + time.ctime())
 
-                    if mean_turning < 0.6 and mean_turning > 0.4:
+                    if mean_turning < 0.6 and mean_turning > 0.4 and mean_turning2 < 0.6 and mean_turning2 > 0.4 :
                         self.alarms_active_dict['turning alarm'] = False
 
                         print("turning is fine" , self.today_filename)
@@ -313,7 +317,7 @@ class server_monitor:
                 else:
                     print("not enough data on file to check turning")
         except:
-            print("no data file to test turning action" , self.today_filename)
+            print("no data file to test turning action" , self.today_filename  , " hrs of data = " , secs_data/3600.0 )
 
 
     def send_alarms(self):
@@ -333,23 +337,23 @@ class server_monitor:
                     self.alarm_next_send_dict[key] = time.time() + self.repeat_interval
 
 
-    def check_incoming_messages(self):
-        hrs_alarm_paused, incoming_timestamp = parse_incoming_texts()
-        print( "last incoming text was at " , incoming_timestamp , " with hrs pause = " , hrs_alarm_paused)
-        #look at all active alarms
-        for key in self.alarms_active_dict:
-            if self.alarms_active_dict[key] == True:
-                current_scheduled_next_message = self.alarm_next_send_dict[key]
-                next_allowed_next_message = incoming_timestamp + hrs_alarm_paused*60*60
-                if next_allowed_next_message > current_scheduled_next_message:
-                    self.alarm_next_send_dict[key] = next_allowed_next_message
+    # ~ def check_incoming_messages(self):
+        # ~ hrs_alarm_paused, incoming_timestamp = parse_incoming_texts()
+        # ~ print( "last incoming text was at " , incoming_timestamp , " with hrs pause = " , hrs_alarm_paused)
+        # ~ #look at all active alarms
+        # ~ for key in self.alarms_active_dict:
+            # ~ if self.alarms_active_dict[key] == True:
+                # ~ current_scheduled_next_message = self.alarm_next_send_dict[key]
+                # ~ next_allowed_next_message = incoming_timestamp + hrs_alarm_paused*60*60
+                # ~ if next_allowed_next_message > current_scheduled_next_message:
+                    # ~ self.alarm_next_send_dict[key] = next_allowed_next_message
 
 
 
     def do_all(self):
 
         self.look_at_data_update_alarm_states()
-        self.check_incoming_messages()
+        # ~ self.check_incoming_messages()
         self.send_alarms()
 
 

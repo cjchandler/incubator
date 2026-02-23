@@ -5,7 +5,6 @@ import pandas as pd
 from scipy.interpolate import CubicSpline
 from pytz import timezone
 utc = timezone('UTC')
-from pysolar.solar import *
 import os
 
 # header with names
@@ -13,8 +12,9 @@ path = "/home/cjchandler/Git_Projects/incubator/"
 
 v = "V4"
 
+#"2026-02-20_state
 
-df = pd.read_csv( path + "2025-11-02_state"+ v+".csv")
+df = pd.read_csv( path + "2026-02-18_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
