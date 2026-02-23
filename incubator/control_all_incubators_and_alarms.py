@@ -4,14 +4,16 @@ import subprocess
 import time
 import sys
 import pandas as pd
+from inputimeout import inputimeout , TimeoutOccurred
+
 
 
 #global params
 timeout= 30 #if no saved data in this many sec, then restart the control process
 
 #incubator v5a 
-processV5a = subprocess.Popen("./python main_loopV5a_incubator.py")
-processV5a_alarms = subprocess.Popen"./python alarms_loop_slack_v5a.py")
+processV5a = subprocess.Popen(["python3", "main_loopV5a_incubator.py"] )
+processV5a_alarms = subprocess.Popen( ["python3","alarms_loop_slack_v5a.py")
 today_file_v5a = "today_dataV5a.csv"
 
 while True: 
@@ -23,8 +25,22 @@ while True:
 	if time_since_last_save > timeout:
 		processV5a.kill()
 		processV5a.wait()
-		processV5a = subprocess.Popen("./python main_loopV5a_incubator.py")
-	        
+		processV5a = subprocess.Popen(["python3", "main_loopV5a_incubator.py"] )
 
-	sleep( 10)
+	        
+	
+	try:
+		c = inputimeout(prompt="type q to stop all processes " , timeout = 10)
+	except TimeoutOccurred:
+		c = 'timeout'  
+		return      
+		
+
+	if c == "q" or c=="Q":
+		processV5a.kill()
+		processV5a.wait()
+		processV5a_alarms.kill()
+		processV5a_alarms.wait()
+		quit()
+
 	
