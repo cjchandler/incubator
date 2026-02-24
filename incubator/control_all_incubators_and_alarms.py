@@ -9,13 +9,15 @@ from inputimeout import inputimeout , TimeoutOccurred
 
 
 #global params
-timeout= 30 #if no saved data in this many sec, then restart the control process
+timeout= 60*2 #if no saved data in this many sec, then restart the control process
 
 #incubator v5a 
 
 processV5a = subprocess.Popen(["python3", "main_loopV5a_incubator.py"] )
-processV5a_alarms = subprocess.Popen( ["python3","alarms_loop_slack_v5a.py")
+processV5a_alarms = subprocess.Popen( ["python3","alarms_loop_slack_v5a.py"])
 today_file_v5a = "today_dataV5a.csv"
+
+time.sleep(60)
 
 while True: 
 	#try ...
@@ -34,7 +36,7 @@ while True:
 		c = inputimeout(prompt="type q to stop all processes " , timeout = 10)
 	except TimeoutOccurred:
 		c = 'timeout'  
-		return      
+		      
 		
 
 	if c == "q" or c=="Q":

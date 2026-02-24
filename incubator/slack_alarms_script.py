@@ -304,7 +304,7 @@ class server_monitor:
                     if mean_turning > 0.6 or mean_turning < 0.4 or mean_turning2 > 0.6 or mean_turning2 < 0.4 :
                         self.alarms_active_dict['turning alarm'] = True
                         print("mean_turning is " , mean_turning)
-                        self.alarm_message_dict[  'turning alarm'] = self.today_filename+"mean_turning = " + str(mean_turning )
+                        self.alarm_message_dict[  'turning alarm'] = self.today_filename+"mean_turning = " + str(mean_turning ) + "mean turning 2= " + str(mean_turning2)
 
                         # ~ self.turning_alarm.sound_alarm(" turning maybe not working, near switch = " + str(mean_near )+" . " + time.ctime())
 
