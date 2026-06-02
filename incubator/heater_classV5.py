@@ -36,7 +36,7 @@ class heater:
         self.digitalOutput2.setDutyCycle(0)
         
     def command_heater(self, state_wanted1 , state_wanted2):
-        self.heater_on = state_wanted
+        
         self.digitalOutput1.setDutyCycle(state_wanted1)
         self.digitalOutput2.setDutyCycle(state_wanted2)
 

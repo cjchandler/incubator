@@ -5,17 +5,29 @@ import pandas as pd
 from scipy.interpolate import CubicSpline
 from pytz import timezone
 utc = timezone('UTC')
+<<<<<<< HEAD
 # ~ from pysolar.solar import *
+=======
+>>>>>>> 8f046999263f983ce2b82b7062cbfa38c90aa40b
 import os
 
 # header with names
 path = "/home/cjchandler/Git_Projects/incubator/"
 path = "/home/cjchandler/Git_Projects/incubator_public/incubator/"
 
+<<<<<<< HEAD
 v = "VDP"
+=======
+v = "V5a"
+>>>>>>> 8f046999263f983ce2b82b7062cbfa38c90aa40b
 
+#"2026-02-20_state
 
+<<<<<<< HEAD
 df = pd.read_csv( path + "2026-05-20_state"+ v+".csv")
+=======
+df = pd.read_csv( path + "2026-02-23_state"+ v+".csv")
+>>>>>>> 8f046999263f983ce2b82b7062cbfa38c90aa40b
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
