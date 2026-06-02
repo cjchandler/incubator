@@ -1,6 +1,6 @@
 #2025 nov 1 v4 incubator update
 import pprint
-
+import traceback
 import os.path as Pathc
 import datetime
 import numpy as np
@@ -57,9 +57,9 @@ def init_state_dict():
     state_dict['target_temperature'] =37.5
     state_dict['cooling_start_temperature'] = 38.2
 
-    state_dict['heating_proportional_Cf'] =   .95
-    state_dict['heating_integral_Cf'] = 0.005 #2 p , 0.001i was too big perhaps 
-    state_dict['heating_derivitive_Cf'] = 0.0
+    state_dict['heating_proportional_Cf'] =   .3
+    state_dict['heating_integral_Cf'] = 0.0001 #2 p , 0.001i was too big perhaps 
+    state_dict['heating_derivitive_Cf'] = 0.000
     state_dict['target_humidity'] = 0.6
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
@@ -79,6 +79,7 @@ def init_state_dict():
     state_dict['exhaust_on'] = 0
     state_dict['humidifyer_on'] = 0
     state_dict['heater_on'] = 0
+    state_dict['motor_direction'] = 0
  
 
     
@@ -162,8 +163,8 @@ class main_class: #this has all the objects you need
         self.state_dict['temperature_1_C'] = self.insideTemperatureHumidity_1.getTemperature() 
         self.state_dict['humidity_1'] = self.insideTemperatureHumidity_1.getHumidity() 
    
-        self.state_dict['front_switch'] = round(self.motor.front_analog_handler.signal)
-        self.state_dict['rear_switch'] = round(self.motor.rear_analog_handler.signal)
+        self.state_dict['front_switch'] = round(self.motor.front_switch_state)
+        self.state_dict['rear_switch'] = round(self.motor.rear_switch_state)
    
         self.state_dict['near_switch'] = self.state_dict['front_switch']#update for server monitor
         self.state_dict['far_switch'] = self.state_dict['rear_switch']
@@ -282,11 +283,11 @@ class main_class: #this has all the objects you need
         if self.state_dict['egg_turning_on'] == False:
             return
         
-        #if the hour is even, tilt near, if off, tilt rear
+        #if the hour is even, tilt toward front/near, if off, tilt toward rear
         now_time =  datetime.datetime.today() 
         #check this every min
         if now_time.second < 10:  
-            if now_time.hour%2 == 1:
+            if now_time.hour%2 == 0:
                 #tilt rear down, rear switch ==0 
                 self.motor.hold_near_down()
             else:
@@ -378,14 +379,25 @@ class main_class: #this has all the objects you need
                 if tnow > self.state_dict['last_fan_on_timestamp'] + 5:
                     self.state_dict['fan_on'] = False
             
-            #test code to run exhaust constantly
+            # ~ #test code to run exhaust constantly
             # ~ self.state_dict['fan_on'] = True
             # ~ self.cycle_fan()
         
             # ~ #update the turning
             self.turn_eggs_as_needed()
-            self.motor.stop_motors_on_contact()        
+            self.motor.stop_motors_on_contact()   
+            self.state_dict['motor_direction'] = self.motor.direction
 
+            
+            if self.motor.door_switch_state == 0:
+                self.motor.swing_to_middle()  
+                self.state_dict['motor_direction'] = self.motor.direction
+
+                self.heater.command_heater( 1 , 1 )#door is open, so we should blast heat   
+                while self.motor.door_switch_state == 0: #while door stays open, just keep saving data, blasting heat. No need to do anything else
+                    self.state_dict['motor_direction'] = self.motor.direction
+                    self.do_climate_control() #this updates sensor values
+                    self.save_data_state_as_needed()#save that data as needed
         
         
             
@@ -417,9 +429,7 @@ class main_class: #this has all the objects you need
     
     # ~ mainC.do_one_cycle()
     # ~ print("v5a main loop")
-    # ~ print( "front", mainC.motor.front_analog_handler.signal)
-    # ~ print( "rear",mainC.motor.rear_analog_handler.signal)
-    # ~ print( "door",mainC.motor.door_analog_handler.signal)
+
 
 # ~ quit()
 
@@ -431,11 +441,21 @@ while True:
         mainC.state_dict['fan_on'] = False
         mainC.state_dict['humidifyer_on'] = False
         mainC.state_dict['heater_on'] = False
-
-
+        
+        mainC.state_dict['fan_on'] = True
+        mainC.cycle_fan()
+            
+        mainC.do_climate_control()
+        if mainC.state_dict['temperature_1_C'] < 35:
+            mainC.state_dict['heater_on'] = True
+            mainC.heater.command_heater( 1 , 1 )
+            print("blasting heat while the tray turning calibrates")
+        
         mainC.exhaust_fan.command_fan( 1)  
         time.sleep(1)
         mainC.exhaust_fan.command_fan( 0)  
+        mainC.motor.calibrate_trays_to_centre()
+        print( "door " ,  mainC.motor.door_switch_state)
 
         while True:
             
@@ -444,6 +464,8 @@ while True:
             print("v5a main loop")
             
     except:
+        print("Detailed error information:")
+        traceback.print_exc()
         print ("fatal error: restarting")
         
         #send sms alarm

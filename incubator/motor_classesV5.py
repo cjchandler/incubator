@@ -30,8 +30,9 @@ class handler_Digital_in_stop_motor:
         self.time_of_last_signal_change = time.time()
         
 
-#note direction +1 is ccw when looking at the motor shaft when it's mounted in it's box.
-#+1 direction turns so rear of tray is down low
+##note direction +1 is ccw when looking at the motor shaft when it's mounted in it's box.
+##+1 direction turns so rear of tray is down low
+##door open is 0
 
 
 class motor_channel: #I use this for PAR reading in, analog input
@@ -53,26 +54,32 @@ class motor_channel: #I use this for PAR reading in, analog input
         self.dcMotor0 = DCMotor()
         self.front_switch_state = 0 
         self.rear_switch_state = 0 
-        self.door_analog_handler = handler_Digital_in(  )
+        self.door_switch_state = 0 
         self.limit_switch_front = DigitalInput()
         self.limit_switch_rear= DigitalInput()
         self.limit_switch_door= DigitalInput()
         self.direction = 0
+        self.half_swing_secs = 0
 
 
     def onFrontSwitchChange(self, self2 , signal):
         self.front_switch_state = signal
         print( "front signal = " , signal)
-        if self.direction == -1 and self.front_switch_state > 0.5:
+        if self.direction == 1 and self.front_switch_state > 0.5:
             print("stop! hit front switch")
             self.dcMotor0.setTargetVelocity(0)
             
     def onRearSwitchChange(self, self2 , signal):
         self.rear_switch_state = signal
         print( "rear signal = ", signal)
-        if self.direction == +1 and self.rear_switch_state > 0.5:
+        if self.direction == -1 and self.rear_switch_state > 0.5:
             print("stop! hit rear switch")
             self.dcMotor0.setTargetVelocity(0)
+            
+    def onDoorSwitchChange(self, self2 , signal):
+        self.door_switch_state = signal
+        print( "door signal = ", signal)
+        
 
     def startup(self ):
         self.dcMotor0.setHubPort(self.hub_port_motor)
@@ -98,7 +105,7 @@ class motor_channel: #I use this for PAR reading in, analog input
         self.limit_switch_door.setDeviceSerialNumber(self.hub_serial_number)
         self.limit_switch_door.setIsHubPortDevice(True)
 
-        self.limit_switch_door.setOnStateChangeHandler(self.door_analog_handler.onSignalChange)
+        self.limit_switch_door.setOnStateChangeHandler(self.onDoorSwitchChange)
         self.limit_switch_door.openWaitForAttachment(5000)
 
 
@@ -111,43 +118,49 @@ class motor_channel: #I use this for PAR reading in, analog input
         
         
     def stop_motors_on_contact(self):
-        if self.direction == 1 and self.rear_switch_state>0.5:
+        if self.direction == -1 and self.rear_switch_state>0.5:
+            self.direction = 0
             self.dcMotor0.setTargetVelocity(0)
             
-        elif self.direction == -1 and self.front_switch_state>0.5:
+        elif self.direction == 1 and self.front_switch_state>0.5:
+            self.direction = 0
             self.dcMotor0.setTargetVelocity(0)
             
 
     def hold_near_down(self):
         if self.front_switch_state < 0.5:
-            self.direction = -1
+            self.direction = 1
+            #direction -1 is moving front down
             self.dcMotor0.setTargetVelocity(self.direction)
+            self.stop_motors_on_contact()
         
     
     def hold_rear_down(self):
         if self.rear_switch_state < 0.5:
-            self.direction = 1
+            self.direction = -1
+            #direction 1 is moving rear down
             self.dcMotor0.setTargetVelocity(self.direction)
+            self.stop_motors_on_contact()
         
             
-    # ~ def bring_trays_to_centre(self): 
-        # ~ #first, more trays to near down: 
-        # ~ print("moving to near down" , self.front_analog_handler.signal , "<- self.front_analog_handler.signal")
-        # ~ while self.front_analog_handler.signal < 0.5:
-            # ~ self.hold_near_down()
-        # ~ self.hold_near_down()
+    def calibrate_trays_to_centre(self): 
+        #first, more trays to near down: 
+        while self.front_switch_state < 0.5:
+            self.hold_near_down()
+        self.hold_near_down()
 
         
-        # ~ #then flip to rear down, but time it
-        # ~ print("moving to rear down for timing")
+        #then flip to rear down, but time it
+        print("moving to rear down for timing")
 
-        # ~ tstart = time.time()
-        # ~ while self.rear_analog_handler.signal < 0.5:
-            # ~ self.hold_rear_down()
-        # ~ self.hold_rear_down()
+        tstart = time.time()
+        while self.rear_switch_state < 0.5:
+            self.hold_rear_down()
+        self.hold_rear_down()
         
-        # ~ tend = time.time()
-        # ~ tswing=  tend - tstart
+        tend = time.time()
+        tswing=  tend - tstart
+        self.half_swing_secs = tswing/2.0
         # ~ #now run hold near down for half that time: 
         # ~ print("swinging to half ")
         # ~ tstarthalfswing = time.time()
@@ -157,36 +170,70 @@ class motor_channel: #I use this for PAR reading in, analog input
         # ~ #stop the motor when it's in the middle
         # ~ self.dcMotor0.setTargetVelocity(0)
         
+    def swing_to_middle(self):
+        if self.front_switch_state == 1:
+            self.direction = -1
+            tstart = time.time()
+            while time.time() < tstart+ self.half_swing_secs:
+                self.dcMotor0.setTargetVelocity(self.direction)
+                self.stop_motors_on_contact()
+            self.direction = 0
+            self.dcMotor0.setTargetVelocity(self.direction)
         
+        elif self.rear_switch_state == 1:
+            self.direction = 1
+            tstart = time.time()
+            while time.time() < tstart+ self.half_swing_secs:
+                self.dcMotor0.setTargetVelocity(self.direction)
+                self.stop_motors_on_contact()
+
+            self.direction = 0
+            self.dcMotor0.setTargetVelocity(self.direction)
         
+        else: #we're in the middle. So pull to front down, then count back to middle from there
+            self.direction = 1
+            tstart = time.time()
+            while time.time() < tstart+ self.half_swing_secs*2.0:
+                self.dcMotor0.setTargetVelocity(self.direction)
+                self.stop_motors_on_contact()
+        
+            self.direction = 1
+            tstart = time.time()
+            while time.time() < tstart+ self.half_swing_secs:
+                self.dcMotor0.setTargetVelocity(self.direction)
+                self.stop_motors_on_contact()
+            self.direction = 0
+            self.dcMotor0.setTargetVelocity(self.direction)
+
+            
 
 #note direction +1 is ccw when looking at the motor shaft when it's mounted in it's box. 
-
+#door open is 0
 # ~ ####test one
 
-hubserial = 743247
+# ~ hubserial = 743247
 
-m = motor_channel(hubserial, 1 , 3 , 4 , 2, 8.0 ) #hub port 3 is front switch, hub port 4 is rear switch, 2 is door switch, 2.0 is time to center the trays 
+# ~ m = motor_channel(hubserial, 1 , 3 , 4 , 2, 8.0 ) #hub port 3 is front switch, hub port 4 is rear switch, 2 is door switch, 2.0 is time to center the trays 
       
-m.startup()
+# ~ m.startup()
 
-# ~ ###test 2, switches more
+###test 2, switches more
 
 # ~ while True: 
     # ~ print( "front val : " , m.front_analog_handler.signal)
     # ~ print( "rear val : " , m.rear_analog_handler.signal)
     # ~ time.sleep(2)
 
-# ~ ##test 3 find centre
+##test 3 find centre
 # ~ m.bring_trays_to_centre()
 # ~ time.sleep(50)
-m.direction = -1
-m.dcMotor0.setTargetVelocity(m.direction)
+# ~ m.calibrate_trays_to_centre()
+# ~ m.swing_to_middle()
 
 
-while True: 
-    pass
+# ~ while True: 
+    # ~ pass
     # ~ print( "while loop front state: " , m.front_switch_state)
-    # ~ ##### ~ m.hold_near_down()
+    ##### ~ m.hold_near_down()
     
 

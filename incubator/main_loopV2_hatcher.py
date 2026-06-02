@@ -90,7 +90,7 @@ def init_state_dict():
     state_dict['humidity_1'] = -0.01
 
     
-    state_dict['target_temperature'] = 37.0
+    state_dict['target_temperature'] = 36.8
     state_dict['cooling_start_temperature'] = 38
 
     state_dict['heating_proportional_Cf'] = 1.90
@@ -440,7 +440,7 @@ class main_class: #this has all the objects you need
        
         
         
-        if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
+        if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*1.5: #3 is orignal min 
             
             if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
                 #self.turn_eggs()
@@ -494,7 +494,7 @@ while True:
             
 
             mainC.do_one_cycle()
-            print("v2 main loop")
+            print("v2 main loop hatcher")
             
     except:
         print ("fatal error: restarting")
