@@ -5,16 +5,17 @@ import pandas as pd
 from scipy.interpolate import CubicSpline
 from pytz import timezone
 utc = timezone('UTC')
-from pysolar.solar import *
+# ~ from pysolar.solar import *
 import os
 
 # header with names
 path = "/home/cjchandler/Git_Projects/incubator/"
+path = "/home/cjchandler/Git_Projects/incubator_public/incubator/"
 
-v = "V4"
+v = "VDP"
 
 
-df = pd.read_csv( path + "2025-11-02_state"+ v+".csv")
+df = pd.read_csv( path + "2026-05-20_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
@@ -30,8 +31,9 @@ final_df.drop(final_df.index[:5], inplace=True)
 # ~ final_df["deltaT"] = final_df["temperature_1_C"] - final_df["temperature_2_C"] 
 # ~ final_df["deltaTthermocouple"] = final_df["thermocouple_1"] - final_df["thermocouple_2"] 
 # ~ final_df = final_df[["temperature_1_C" , "humidity_1", "temperature_2_C" , "humidity_2" , "deltaT" , "deltaTthermocouple", "near_switch" , "far_switch"]].copy()
-
-final_df = final_df[["temperature_1_C" , "humidity_1","near_switch" , "heater_on","target_temperature",  "far_switch"]].copy()
+final_df['tdelta'] = final_df["temperature_1_C"] - final_df["temperature_2_C"]
+final_df['boost_on'] = final_df['boost_on']*10
+final_df = final_df[["temperature_1_C" , "humidity_1", "temperature_2_C" , "humidity_2", "heater_on","target_temperature" , 'tdelta', "boost_on"]].copy()
 # ~ final_df = final_df[["near_switch" ,  "far_switch"]].copy()
 
  # ~ state_dict['heating_proportional_Cf'] = 0.2
