@@ -63,7 +63,7 @@ def init_state_dict():
     state_dict['heating_proportional_Cf'] =   .95
     state_dict['heating_integral_Cf'] = 0.005 #2 p , 0.001i was too big perhaps 
     state_dict['heating_derivitive_Cf'] = 0.0
-    state_dict['target_humidity'] = 0.4
+    state_dict['target_humidity'] = 0.7
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
     state_dict['last_control_change_timestamp'] = 0
@@ -106,7 +106,7 @@ class main_class: #this has all the objects you need
         self.insideTemperatureHumidity_2.startup()
 
             
-        self.path = "/home/cjchandler/Git_Projects/incubator_public/incubator/"
+        self.path = "/home/cjchandler/Git_Projects/incubator/incubator/"
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
@@ -355,7 +355,7 @@ class main_class: #this has all the objects you need
                 
             #end exhaust fan code 
             if self.state_dict['fan_on'] == True:
-                if time.time() > self.state_dict['last_fan_on_timestamp'] + 10:
+                if time.time() > self.state_dict['last_fan_on_timestamp'] + 60*2:
                     self.state_dict['fan_on'] = False
             
         

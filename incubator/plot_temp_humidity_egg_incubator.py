@@ -8,13 +8,13 @@ utc = timezone('UTC')
 import os
 
 # header with names
-path = "/home/cjchandler/Git_Projects/incubator/"
+path = "/home/cjchandler/Git_Projects/incubator/incubator/"
 
-v = "V4"
+v = "VDP"
 
 #"2026-03-25_state
 
-df = pd.read_csv( path + "2026-06-01_state"+ v+".csv")
+df = pd.read_csv( path + "2026-06-12_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df)
