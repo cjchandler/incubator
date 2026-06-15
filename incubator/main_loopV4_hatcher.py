@@ -1,5 +1,4 @@
-#2025 nov 1 v2 incubator update
-
+#2025 nov 1 v4 incubator update
 import pprint
 
 import os.path as Pathc
@@ -12,13 +11,12 @@ from simple_pid import PID
 
 
 from temperature_and_humidity_classes import *
-from motor_classesV2 import *
+from motor_classesV4 import *
 from heater_classV2 import *
 from fan_and_humidifyer_classesV2 import *
 
 
 from inputimeout import inputimeout , TimeoutOccurred
-from datetime import datetime 
 
 #all alarms
 
@@ -29,49 +27,13 @@ import pandas as pd
 import csv
 import collections
 
-from twilio.rest import Client
 import sys
 import select
 import power
 
 
 
-#####twilio stuff
-account_sid = ' '
-auth_token = ' '
-client = Client(account_sid, auth_token)
 
-
-def is_plugged_in():
-    ans = power.PowerManagement().get_providing_power_source_type()
-    if ans == False:
-        return True
-    else:
-        return False
-
-class alarm:
-
-    def __init__(self, alarm_repeat_secs ):
-
-        self.repeat_interval = alarm_repeat_secs
-        self.last_alarm_time = 0.0
-
-
-    def sound_alarm( self , message_string):
-        if( time.time() > self.last_alarm_time + self.repeat_interval ):
-            try:
-                message = client.messages.create(
-                from_='+dfsdfgffg',
-                body=message_string,
-                to='+dffgfgfd')
-                self.last_alarm_time = time.time()
-            except:
-                print("twillo not working")
-        else:
-            pass
-            # print("didn't send sms because we just sent one at : " )
-            # print( self.last_alarm_time)
-        return
 
 
 
@@ -79,8 +41,9 @@ class alarm:
 
 
 def init_state_dict():
-    
+     
     state_dict = {}
+    
   
     state_dict['experiment_state_timestamp'] = time.time() #for recovery
     state_dict['save_interval_secs'] = 20
@@ -88,13 +51,14 @@ def init_state_dict():
    
     state_dict['temperature_1_C'] = -1
     state_dict['humidity_1'] = -0.01
+    state_dict['egg_turning_on'] = True
 
     
-    state_dict['target_temperature'] = 36.8
-    state_dict['cooling_start_temperature'] = 38
+    state_dict['target_temperature'] =37.
+    state_dict['cooling_start_temperature'] = 38.2
 
-    state_dict['heating_proportional_Cf'] = 1.90
-    state_dict['heating_integral_Cf'] = 0.004 #2 p , 0.001i was too big perhaps 
+    state_dict['heating_proportional_Cf'] = 0.07#this is 300 watt  #.95 200 watt
+    state_dict['heating_integral_Cf'] = 0.00006 #2 p , 0.001i was too big perhaps 
     state_dict['heating_derivitive_Cf'] = 0.0
     state_dict['target_humidity'] = 0.8
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
@@ -126,10 +90,12 @@ def init_state_dict():
 class main_class: #this has all the objects you need
     
     def __init__(self):
+        
+    
         self.state_dict = init_state_dict()
-        hubserial = 682978
+        hubserial = 671958
 
-        self.insideTemperatureHumidity_1 = temperature_humidity_phidget_channel(hubserial, 3)
+        self.insideTemperatureHumidity_1 = temperature_humidity_phidget_channel(hubserial, 4)
         self.insideTemperatureHumidity_1.startup()
         
 
@@ -138,21 +104,22 @@ class main_class: #this has all the objects you need
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
+        self.pid_heat.proportional_on_measurement = False
 
         
         #fan startup
         self.exhaust_fan  = fan()
-        self.exhaust_fan.startup(hubserial , 0 , 3)
+        self.exhaust_fan.startup(hubserial , 0 , 2)
         self.recirc_fan  = fan()
-        self.recirc_fan.startup(hubserial , 0 , 2)
+        self.recirc_fan.startup(hubserial , 0 , 3)
         #humidifyer startup
         self.humidifyer = humidifyer()
-        self.humidifyer.startup(hubserial , 0 , 0)#0 is the channel, 0 is hub port connecting to the digital output phidget 
+        self.humidifyer.startup(hubserial , 0 , 1)#0 is the channel, 0 is hub port connecting to the digital output phidget 
         #heater 
         self.heater = heater()
-        self.heater.startup( hubserial, 0 , 1 )# 1 is the channel, 0 is hub port connecting to the digital output phidget 
+        self.heater.startup( hubserial, 0 , 0 )# 1 is the channel, 0 is hub port connecting to the digital output phidget 
         
-        self.motor = motor_channel(hubserial, 1 , 4 , 5) #hub port 4 is front switch, hub port 5 is rear switch 
+        self.motor = motor_channel(hubserial, 3 , 2 , 1) #hub port 4 is front switch, hub port 5 is rear switch 
         self.motor.startup()
 
 
@@ -163,15 +130,14 @@ class main_class: #this has all the objects you need
 
    
         
-        
     def save_data_state_as_needed(self):
         if time.time() > self.state_dict['save_interval_secs'] + self.state_dict['last_save_timestamp']:
             df = pd.DataFrame(self.state_dict , index = [0])
             self.state_dict['last_save_timestamp'] = time.time()
             
             
-            now_time =  datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV2.csv"
+            now_time =  datetime.datetime.today() 
+            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV4.csv"
             
             
             
@@ -184,9 +150,9 @@ class main_class: #this has all the objects you need
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
             if now_time.hour == 8 and now_time.minute == 1: 
-                df.to_csv("today_dataV2.csv" ,index=False , header = True)
+                df.to_csv("today_dataV4.csv" ,index=False , header = True)
             else: 
-                df.to_csv("today_dataV2.csv" , mode = 'a' ,index=False , header = False)
+                df.to_csv("today_dataV4.csv" , mode = 'a' ,index=False , header = False)
 
 
     def do_climate_control(self):
@@ -194,8 +160,8 @@ class main_class: #this has all the objects you need
         self.state_dict['temperature_1_C'] = self.insideTemperatureHumidity_1.getTemperature() 
         self.state_dict['humidity_1'] = self.insideTemperatureHumidity_1.getHumidity() 
    
-        self.state_dict['front_switch'] = self.motor.front_analog_handler.signal
-        self.state_dict['rear_switch'] = self.motor.rear_analog_handler.signal
+        self.state_dict['front_switch'] = round(self.motor.front_analog_handler.signal)
+        self.state_dict['rear_switch'] = round(self.motor.rear_analog_handler.signal)
    
         self.state_dict['near_switch'] = self.state_dict['front_switch']#update for server monitor
         self.state_dict['far_switch'] = self.state_dict['rear_switch']
@@ -301,27 +267,26 @@ class main_class: #this has all the objects you need
         self.heater.command_heater( self.state_dict['heater_on'])
        
 
-    def turn_eggs(self):
-        self.motor.switchtraystart()
-        self.state_dict['last_turner_change_timestamp'] = time.time()
-        ##check that it's been turning properly: 
-        try: 
-            now_time =  datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateV2.csv"
-            if now_time.hour > 2: 
-                #load datafime
-                df = pd.read_csv( filename )
-                df = df.tail( 50*2*3  )#60/self.state_dict['save_interval_secs']
-                mean_near = np.mean(df['front_switch'].to_numpy())
-                mean_far = np.mean(df['rear_switch'].to_numpy())
+    def turn_eggs_as_needed(self):
+        if self.state_dict['egg_turning_on'] == False:
+            return
+        
+        #if the hour is even, tilt near, if off, tilt rear
+        now_time =  datetime.datetime.today() 
+        #check this every min
+        if now_time.second < 10:  
+            if now_time.hour%2 == 1:
+                #tilt rear down, rear switch ==0 
+                self.motor.hold_rear_down()
+            else:
+                self.motor.hold_near_down()
                 
-                # ~ if mean_near > 0.6 or mean_near < 0.4:
-                    # ~ self.turning_alarm.sound_alarm(" turning maybe not working, near switch = " + str(mean_near )+" . " + time.ctime())
-                
-                # ~ if mean_far > 0.6 or mean_far < 0.4:
-                    # ~ self.turning_alarm.sound_alarm(" turning maybe not working, far switch = " + str(mean_far )+" . " + time.ctime())
-        except:
-            print("no data file")
+        self.motor.stop_motors_on_contact()
+
+
+        return
+        
+        
     
     def cycle_lights(self):
         n = 10 
@@ -382,51 +347,11 @@ class main_class: #this has all the objects you need
             self.exhaust_fan.command_fan( 0)
             #this leaves time to do something else, like run fan
             return
+        if( self.state_dict['fan_on'] > 0):
+            self.exhaust_fan.command_fan( 1)    
+            return 
         
-        if( self.state_dict['fan_on'] < 0.2):
-            for x in range(0 , 1): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-               
-                
-                
-        if( self.state_dict['fan_on'] > 0.2 and self.state_dict['fan_on'] < 0.4 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 0)
-        if( self.state_dict['fan_on'] > 0.4 and self.state_dict['fan_on'] < 0.6 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-
-        if( self.state_dict['fan_on'] > 0.6 and self.state_dict['fan_on'] < 0.8 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 0)
-                
-        if( self.state_dict['fan_on'] > 0.8 and self.state_dict['fan_on'] <= 1 ):
-            #flicker lights as required: 
-            for x in range(0 , n): 
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)
-                self.exhaust_fan.command_fan( 1)    
-        return  
+        return -1 
 
     def do_one_cycle(self):
         print("cycle start")
@@ -434,73 +359,57 @@ class main_class: #this has all the objects you need
         self.do_climate_control()
         self.cycle_fan()
         self.cycle_lights()
-        self.motor.switchtray_update()
         
         
-       
+        #update the turning
+        # ~ self.turn_eggs_as_needed()
         
         
-        if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*1.5: #3 is orignal min 
-            
-            if time.time() - self.state_dict['last_turner_change_timestamp'] > 60*50:
-                #self.turn_eggs()
-                pass
-            
-            self.exhaust_fan.command_fan( 1)  
-            time.sleep(0.5)
-            self.exhaust_fan.command_fan( 0)  
 
+        
+        #start exhuast fan every 3 min
+        if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
+            self.state_dict['fan_on'] = True
             self.state_dict['last_fan_on_timestamp'] = time.time()
             
+        #end exhaust fan code 
+        if self.state_dict['fan_on'] == True:
+            if time.time() > self.state_dict['last_fan_on_timestamp'] + 5:
+                self.state_dict['fan_on'] = False
             
-            
-            # ~ if self.state_dict['temperature_1_C'] < 37:
-                # ~ self.temperature_alarm.sound_alarm( "incubator temperature is low " + str(self.state_dict['temperature_1_C']) +"  " +  time.ctime() )
-                
-            # ~ if self.state_dict['temperature_1_C'] > 38.6:
-                # ~ self.temperature_alarm.sound_alarm( "incubator temperature is high " + str(self.state_dict['temperature_1_C']) +"  " +  time.ctime() )
-                
-            # ~ if self.state_dict['humidity_1'] <  self.state_dict['target_humidity_low'] - 0.05 :
-                # ~ self.humidity_alarm.sound_alarm( "incubator humidity is low  " + str(self.state_dict['humidity_1']) +"  " +  time.ctime() )
-            
-            # ~ if self.state_dict['humidity_1'] > self.state_dict['target_humidity_high'] + 0.05 :
-                # ~ self.humidity_alarm.sound_alarm( "incubator humidity is high " + str(self.state_dict['humidity_1']) +"  " +  time.ctime() )
-                
-            
-            
-    
-
             
         #save data as needed:
         self.save_data_state_as_needed()
     
-      
         
+
+    
+
+
+
+
 while True: 
-    try: 
-        print("starting mainC")
-        mainC = main_class()
+	try: 
+		print("starting mainC")
+		mainC = main_class()
 
-        mainC.state_dict['fan_on'] = False
-        mainC.state_dict['humidifyer_on'] = False
-        mainC.state_dict['heater_on'] = False
-
-
-        mainC.exhaust_fan.command_fan( 1)  
-        time.sleep(1)
-        mainC.exhaust_fan.command_fan( 0)  
-
-        while True:
-            
-
-            mainC.do_one_cycle()
-            print("v2 main loop hatcher")
-            
-    except:
-        print ("fatal error: restarting")
-        
-        #send sms alarm
-        os.execl(sys.executable, sys.executable, *sys.argv)
+		mainC.state_dict['fan_on'] = False
+		mainC.state_dict['humidifyer_on'] = False
+		mainC.state_dict['heater_on'] = False
 
 
+		mainC.exhaust_fan.command_fan( 1)  
+		time.sleep(1)
+		mainC.exhaust_fan.command_fan( 0)  
 
+		while True:
+			
+
+			mainC.do_one_cycle()
+			print("v4 main loop")
+			
+	except:
+		print ("fatal error: restarting")
+		
+		#send sms alarm
+		os.execl(sys.executable, sys.executable, *sys.argv)

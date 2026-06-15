@@ -35,6 +35,11 @@ import select
 import power
 
 
+import sys
+last_update_repo_path  = "/home/cjchandler/Git_Projects/last_update_repo/"
+sys.path.append(last_update_repo_path)
+from last_update_pusher import *
+
 
 #####twilio stuff
 account_sid = ' '
@@ -473,6 +478,8 @@ class main_class: #this has all the objects you need
         #save data as needed:
         self.save_data_state_as_needed()
     
+        #push to git last update time: 
+        push_latest_timestamp_if_needed( last_update_repo_path, "incubator_v2.txt" ,  60*2)
       
         
 while True: 
