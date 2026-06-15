@@ -49,8 +49,10 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
 		
 
 while True: 
+	print("vent 1" )
 	vent(1) 
 	time.sleep(1)
+	print( "vent 0")
 	vent(0)
 	time.sleep(1)
 

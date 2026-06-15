@@ -4,3 +4,7 @@ how to setup the pi
 add these lines to the  /boot/firmware/config.txt  file on pi
 #for humidity sensor 
 dtoverlay=w1-gpio,gpioin=10
+
+
+pip install RPi.GPIO
+#this is needed for gpizero library 
