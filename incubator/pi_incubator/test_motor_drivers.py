@@ -5,12 +5,12 @@
 from gpiozero import LED
 import time
 
-		
+retract_pin = LED(6)
+extend_pin = LED(26)	
 
 
 def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
-	retract_pin = LED(6)
-	extend_pin = LED(26)
+	
 	
 	if inputval == 1 :
 		retract_pin.off()
