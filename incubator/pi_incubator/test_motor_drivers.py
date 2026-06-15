@@ -52,8 +52,8 @@ while True:
 	print("vent 1" )
 	vent(1) 
 	time.sleep(1)
-	print( "vent 0")
-	vent(0)
-	time.sleep(1)
+	# ~ print( "vent 0")
+	# ~ vent(0)
+	# ~ time.sleep(1)
 
 		
