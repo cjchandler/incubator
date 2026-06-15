@@ -5,4 +5,5 @@ led = LED(26)
 
 while True:
     led.on()
+    sleep(1)
     
