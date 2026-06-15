@@ -395,7 +395,7 @@ while True:
 	mainC.state_dict['humidifyer_on'] = False
 	mainC.state_dict['heater_on'] = False
 	
-	# ~ tilt= -1 #move top towards back wall 
+	# ~ tilt= 1 #move top towards back wall 
 	# ~ mainC.motorTray.runMotor(tilt)
 	# ~ mainC.motorTray.runMotor(tilt)
 	# ~ mainC.motorTray.runMotor(tilt)
@@ -414,5 +414,5 @@ while True:
     # ~ except:
         # ~ print ("fatal error: restarting")
         
-        # ~ #send sms alarm
+        # ~ #send sms alarm 
         # ~ os.execl(sys.executable, sys.executable, *sys.argv)
