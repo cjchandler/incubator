@@ -4,12 +4,6 @@
 
 from gpiozero import LED
 import time
-from w1thermsensor import W1ThermSensor
-from gpiozero import Button
-from signal import pause
-import board
-
-
 
 		
 
@@ -51,9 +45,9 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
 while True: 
 	print("vent 1" )
 	vent(1) 
-	time.sleep(1)
-	# ~ print( "vent 0")
-	# ~ vent(0)
-	# ~ time.sleep(1)
+	time.sleep(5)
+	print( "vent 0")
+	vent(0)
+	time.sleep(5)
 
 		
