@@ -47,3 +47,11 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
 		swing_far_pin.off()
 		swing_near_pin.off()
 		
+
+while True: 
+	vent(1) 
+	time.sleep(1)
+	vent(0)
+	time.sleep(1)
+
+		
