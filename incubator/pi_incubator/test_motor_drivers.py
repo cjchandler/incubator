@@ -3,7 +3,7 @@
 #incubator controls on pi 
 
 from gpiozero import LED
-from time import sleep
+import time
 from w1thermsensor import W1ThermSensor
 from gpiozero import Button
 from signal import pause
