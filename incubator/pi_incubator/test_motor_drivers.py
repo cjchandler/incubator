@@ -15,8 +15,8 @@ import board
 
 
 def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
-	retract_pin = LED(31)
-	extend_pin = LED(37)
+	retract_pin = LED(6)
+	extend_pin = LED(26)
 	
 	if inputval == 1 :
 		retract_pin.off()
@@ -27,8 +27,8 @@ def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not ventin
 	
 
 def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is pull to the middle   
-	swing_near_pin = LED(33)
-	swing_far_pin = LED(35)
+	swing_near_pin = LED(13)
+	swing_far_pin = LED(19)
 	
 	if inputval == -1 :
 		swing_near_pin.off()
