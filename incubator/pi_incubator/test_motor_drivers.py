@@ -8,7 +8,7 @@ from w1thermsensor import W1ThermSensor
 from gpiozero import Button
 from signal import pause
 import board
-import adafruit_dht
+
 
 
 		

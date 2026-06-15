@@ -14,28 +14,7 @@ temp2_c = sensorT.get_temperature()
 
 
 
-# Sensor data pin is connected to GPIO 15
-sensorTH = adafruit_dht.DHT22(board.D15)
 
-def read_sensorTH():
-	
-	temp1_c = -1000
-	humidity1 = -1000
-	
-    try:
-		temp1_c = sensorTH.temperature
-		humidity1 = sensorTH.humidity  
-		return temp1_c, humidity1
-
-    except RuntimeError as error:
-        # Errors happen fairly often, DHT's are hard to read, just keep going
-        print(error.args[0])
-        return temp1_c, humidity1
-        
-    except Exception as error:
-        sensor.exit()
-        raise error
-        return temp1_c, humidity1
 
     
 
