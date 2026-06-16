@@ -1,17 +1,18 @@
 from gpiozero import Button
-import time
-# Configure the limit switchs. 
-# "pull_up=True" uses the internal Pi resistor to keep the pin HIGH until grounded.
-limit_switch_S1 = Button(7, pull_up=True)
+from signal import pause
 
-def switch_triggered():
-    print("Limit switch hit! Halting movement.")
+def switch_closed():
+    print("Switch was turned ON!")
 
-def switch_cleared():
-    print("Limit switch released. Path clear.")
+def switch_opened():
+    print("Switch was turned OFF!")
 
-# Assign event callbacks for changes in state
-limit_switch_S1.when_pressed = switch_cleared     # Circuit closes (released if NC)
-limit_switch_S1.when_released = switch_triggered   # Circuit opens (pressed/broken if NC)
+switch = Button(7)
 
-time.sleep(10000)
+# Assign functions to state changes
+switch.when_pressed = switch_closed
+switch.when_released = switch_opened
+
+print("Waiting for switch events...")
+pause() # Keeps the script running efficiently in the background
+
