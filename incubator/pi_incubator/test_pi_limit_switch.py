@@ -1,17 +1,24 @@
 from gpiozero import Button
 from signal import pause
 
-def switch_closed():
-    print("Switch was turned ON!")
 
-def switch_opened():
-    print("Switch was turned OFF!")
+class switch: #0 is open, 1 is closed
+	def __init__(self , gpio):
+		self.switch_val = 0
+		self.s = Button(gpio)
+		s.when_pressed = self.switch_closed()
+		s.when_released = self.switch_opened()
+	def switch_closed():
+		self.switch_val = 1
+		print("switch closed")
+	def switch_opened():
+		self.switch_val = 0
+		print("switch opened")
 
-switch = Button(7)
+	
+s1 = switch(7)
 
-# Assign functions to state changes
-switch.when_pressed = switch_closed
-switch.when_released = switch_opened
+
 
 print("Waiting for switch events...")
 pause() # Keeps the script running efficiently in the background
