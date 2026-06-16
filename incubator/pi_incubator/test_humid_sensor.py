@@ -9,6 +9,7 @@ import adafruit_dht
 
 # Initial the dht device, with data pin connected to:
 dhtDevice = adafruit_dht.DHT22(board.D15,use_pulseio=False)
+dhtDevice2 = adafruit_dht.DHT22(board.D14,use_pulseio=False)
 
 # you can pass DHT22 use_pulseio=False if you wouldn't like to use pulseio.
 # This may be necessary on a Linux single board computer like the Raspberry Pi,
@@ -22,6 +23,13 @@ while True:
         temperature_f = temperature_c * (9 / 5) + 32
         humidity = dhtDevice.humidity
         print(f"Temp: {temperature_f:.1f} F / {temperature_c:.1f} C    Humidity: {humidity}% ")
+        print( " ")
+        # Print the values to the serial port
+        temperature_c = dhtDevice2.temperature
+        temperature_f = temperature_c * (9 / 5) + 32
+        humidity = dhtDevice2.humidity
+        print(f"Temp: {temperature_f:.1f} F / {temperature_c:.1f} C    Humidity: {humidity}% ")
+        print("-----------------------")
 
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
