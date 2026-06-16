@@ -7,4 +7,11 @@ dtoverlay=w1-gpio,gpioin=10
 
 
 pip install RPi.GPIO
-#this is needed for gpizero library 
+#this is needed for gpizero library -- but I'm not sure it worked. I mean the library works but it's using a naive fall back? .... not too worried
+
+pip3 install adafruit-circuitpython-dht
+#this is needed for the humidity sensor
+
+#sudo raspi-config 
+#turn on the one wire interface in interfaces
+
