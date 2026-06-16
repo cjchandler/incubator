@@ -13,3 +13,5 @@ def switch_cleared():
 # Assign event callbacks for changes in state
 limit_switch_S1.when_pressed = switch_cleared     # Circuit closes (released if NC)
 limit_switch_S1.when_released = switch_triggered   # Circuit opens (pressed/broken if NC)
+
+time.sleep(10000)
