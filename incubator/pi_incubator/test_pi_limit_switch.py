@@ -4,7 +4,7 @@ from gpiozero import Button
 # "pull_up=True" uses the internal Pi resistor to keep the pin HIGH until grounded.
 limit_switch_S1 = Button(7, pull_up=True)
 
-ef switch_triggered():
+def switch_triggered():
     print("Limit switch hit! Halting movement.")
 
 def switch_cleared():
