@@ -1,5 +1,5 @@
 from gpiozero import Button
-
+import time
 # Configure the limit switchs. 
 # "pull_up=True" uses the internal Pi resistor to keep the pin HIGH until grounded.
 limit_switch_S1 = Button(7, pull_up=True)
