@@ -6,8 +6,8 @@ class switch: #0 is open, 1 is closed
 	def __init__(self , gpio):
 		self.switch_val = 0
 		self.s = Button(gpio)
-		s.when_pressed = self.switch_closed()
-		s.when_released = self.switch_opened()
+		self.s.when_pressed = self.switch_closed()
+		self.s.when_released = self.switch_opened()
 	def switch_closed(self):
 		self.switch_val = 1
 		print("switch closed")
