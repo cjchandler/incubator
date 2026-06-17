@@ -43,10 +43,11 @@ from signal import pause
 
 class switch: #0 is open, 1 is closed
 	def __init__(self , gpio):
-		self.switch_val = 0
+		
 		self.s = Button(gpio)
-		self.s.when_pressed = self.on_button_pressed()
-		self.s.when_released = self.on_button_released()
+		self.s.when_pressed = self.switch_closed()
+		self.s.when_released = self.switch_opened()
+		self.switch_val = 0
 	def switch_closed(self):
 		self.switch_val = 1
 		print("switch closed")
