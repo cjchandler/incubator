@@ -12,6 +12,5 @@ pip install RPi.GPIO
 pip3 install adafruit-circuitpython-dht
 #this is needed for the humidity sensor
 
-#sudo raspi-config 
-#turn on the one wire interface in interfaces
+#i could not get the onewire interface to work... It was intermitant showing dead / unpowered sensors and trying other pull up did not help. 
 
