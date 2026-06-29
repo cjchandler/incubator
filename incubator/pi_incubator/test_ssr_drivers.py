@@ -7,7 +7,7 @@ import time
 
 
 
-ssr_pin = LED(4)     
+ssr_pin = LED(27)     
 def humidity(inputval): #0 for no water, 1 for water 
    
     
