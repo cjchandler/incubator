@@ -250,7 +250,9 @@ class main_class: #this has all the objects you need
         self.state_dict['temperature_2_C'] = -500
         
         #read switches 
-        
+        state_dict['front_turn_switch'] = s2.switch_val
+		state_dict['rear_turn_switch'] = s1.switch_val
+		state_dict['top_switch'] = s3.switch_val
    
        
         
