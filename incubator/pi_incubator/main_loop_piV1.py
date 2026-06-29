@@ -1,6 +1,7 @@
 #incubator controls on pi 
 
 from simple_pid import PID
+import pprint
 
 
 # Initialize the temperature sensor
