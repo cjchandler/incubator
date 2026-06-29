@@ -3,6 +3,8 @@
 from simple_pid import PID
 import pprint
 import datetime
+import numpy as np
+import pandas as pd
 
 # Initialize the temperature sensor
 import time
