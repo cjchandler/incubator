@@ -109,6 +109,8 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
         time.sleep(5)
         swing_far_pin.off()
         swing_near_pin.off()
+        
+###SSR pins
 
 ssr_pin = LED(17)    
 def heat_boost(inputval): #0 for no heat, 1 for heat 
