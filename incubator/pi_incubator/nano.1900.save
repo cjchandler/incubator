@@ -1,0 +1,4 @@
+carl@incubatorVpi1:~/Git_Projects/incubator/incubator/pi_incubator $ python -m venv env
+carl@incubatorVpi1:~/Git_Projects/incubator/incubator/pi_incubator $ source env/bin/activate
+(env) carl@incubatorVpi1:~/Git_Projects/incubator/incubator/pi_incubator $ ^C
+(env) carl@incubatorVpi1:~/Git_Projects/incubator/incubator/pi_incubator $ 

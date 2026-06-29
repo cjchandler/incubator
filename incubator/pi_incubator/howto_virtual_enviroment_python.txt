@@ -1,0 +1,5 @@
+if you want to use python here on pi, use command
+$source env/bin/activate
+
+to make this vitural enviroment i used 
+$python -m venv env 
