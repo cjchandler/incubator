@@ -1,16 +1,34 @@
 #incubator controls on pi 
 
-from gpiozero import LED
-from time import sleep
-from w1thermsensor import W1ThermSensor
-from gpiozero import Button
-from signal import pause
-import board
-import adafruit_dht
+
 
 # Initialize the temperature sensor
-senseT = W1ThermSensor()
-temp2_c = sensorT.get_temperature()
+import time
+import busio
+import board
+
+import adafruit_sht4x
+
+#this is the native i2c pins verion:
+#i2c = board.I2C()  # uses board.SCL and board.SDA
+
+#this is using i2c6 
+from adafruit_extended_bus import ExtendedI2C as I2C
+
+# Create library object using our Extended Bus I2C port
+i2c = I2C(6)  # Device is /dev/i2c-6
+
+###end of i2c6 stuff
+
+
+
+sht = adafruit_sht4x.SHT4x(i2c)
+print("Found SHT4x with serial number", hex(sht.serial_number))
+
+sht.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
+print("Current mode is: ", adafruit_sht4x.Mode.string[sht.mode])
+
+
 
 
 
@@ -20,29 +38,47 @@ temp2_c = sensorT.get_temperature()
 
 
 # Configure the limit switchs. 
-# "pull_up=True" uses the internal Pi resistor to keep the pin HIGH until grounded.
-limit_switch_S1 = Button(7, pull_up=True)
-limit_switch_S2 = Button(1, pull_up=True)
-limit_switch_S3 = Button(16, pull_up=True)
-limit_switch_S4 = Button(20, pull_up=True)
-limit_switch_S5 = Button(21, pull_up=True)
+from gpiozero import Button
+from signal import pause
 
-def switch_triggered():
-    print("Limit switch hit! Halting movement.")
 
-def switch_cleared():
-    print("Limit switch released. Path clear.")
-
-# Assign event callbacks for changes in state
-limit_switch_S5.when_pressed = switch_cleared     # Circuit closes (released if NC)
-limit_switch_S5.when_released = switch_triggered   # Circuit opens (pressed/broken if NC)
-
+class switch: #0 is open, 1 is closed
+	def __init__(self , gpio):
 		
+		self.s = Button(gpio,pull_up=True)
+		self.s.when_pressed = self.switch_closed
+		self.s.when_released = self.switch_opened
+		# ~ self.button.when_held = self.on_button_held
+		self.switch_val = 0
+	def switch_closed(self):
+		self.switch_val = 1
+		print("switch closed")
+	def switch_opened(self):
+		self.switch_val = 0
+		print("switch opened")
 
+	
+s1 = switch(7)
+s2 = switch(1)
+s3 = switch(16)
+
+
+
+
+
+
+###########MOTOR DRIVERS##################################
+
+from gpiozero import LED
+
+
+retract_pin = LED(13)
+extend_pin = LED(19)	
+swing_near_pin = LED(6)
+swing_far_pin = LED(16)
 
 def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
-	retract_pin = LED(31)
-	extend_pin = LED(37)
+	
 	
 	if inputval == 1 :
 		retract_pin.off()
@@ -53,8 +89,7 @@ def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not ventin
 	
 
 def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is pull to the middle   
-	swing_near_pin = LED(33)
-	swing_far_pin = LED(35)
+	
 	
 	if inputval == -1 :
 		swing_near_pin.off()
@@ -74,7 +109,7 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
 		swing_near_pin.off()
 		
 def heat_boost(inputval): #0 for no heat, 1 for heat 
-	ssr_pin = LED(2)
+	ssr_pin = LED(17)
 	
 	if inputval == 1 :
 		ssr_pin.on()
@@ -82,7 +117,7 @@ def heat_boost(inputval): #0 for no heat, 1 for heat
 		ssr_pin.off()
 		
 def heat_12v(inputval): #0 for no heat, 1 for heat 
-	ssr_pin = LED(3)
+	ssr_pin = LED(27)
 	
 	if inputval == 1 :
 		ssr_pin.on()
@@ -109,9 +144,9 @@ def init_state_dict():
     state_dict['save_interval_secs'] = 20
     state_dict['last_save_timestamp'] = 0
    
-    state_dict['temperature_1_C'] = -1
+    state_dict['temperature_1_C'] = -501
     state_dict['humidity_1'] = -0.01
-    state_dict['temperature_2_C'] = -1
+    state_dict['temperature_2_C'] = -501
     state_dict['egg_turning_on'] = True
 
     
@@ -130,11 +165,9 @@ def init_state_dict():
     
     state_dict['front_turn_switch'] = -10
     state_dict['rear_turn_switch'] = -10
-	state_dict['front_top_switch'] = -10
-    state_dict['rear_top_switch'] = -10
+	state_dict['top_switch'] = -10
 	
 
-    state_dict['turn_command'] = 0 #this means turner is stopped
     
     
     state_dict['venting_state'] = 0 #0 is closed up tight
@@ -199,8 +232,15 @@ class main_class: #this has all the objects you need
 
     def do_climate_control(self):
         ##read sensors
-        self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sensorT.get_temperature()
-        self.state_dict['temperature_2_C'] = sensorT.get_temperature() 
+        temperatureC, relative_humidity = sht.measurements
+
+        
+        self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
+        self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+        self.state_dict['temperature_2_C'] = -500
+        
+        #read switches 
+        
    
        
         
@@ -321,7 +361,7 @@ class main_class: #this has all the objects you need
         #if the hour is even, tilt near, if off, tilt rear
         now_time =  datetime.datetime.today() 
         #check this every min
-        if now_time.second < 10:  
+        if now_time.second < 10 :  
             if now_time.hour%2 == 0:
                 swing(1)
             else:
