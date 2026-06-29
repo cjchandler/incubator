@@ -251,8 +251,8 @@ class main_class: #this has all the objects you need
         
         #read switches 
         state_dict['front_turn_switch'] = s2.switch_val
-		state_dict['rear_turn_switch'] = s1.switch_val
-		state_dict['top_switch'] = s3.switch_val
+        state_dict['rear_turn_switch'] = s1.switch_val
+        state_dict['top_switch'] = s3.switch_val
    
        
         
@@ -406,6 +406,7 @@ class main_class: #this has all the objects you need
         self.turn_eggs_as_needed()
         
         
+        
         tnow = time.time()
         while tnow <= cycle_end:
             tnow = time.time()
@@ -438,28 +439,28 @@ class main_class: #this has all the objects you need
         self.save_data_state_as_needed()
         
 while True: 
-	 # ~ try: 
-	print("starting mainC")
-	mainC = main_class()
+     # ~ try: 
+    print("starting mainC")
+    mainC = main_class()
 
-	mainC.state_dict['fan_on'] = False
-	mainC.state_dict['humidifyer_on'] = False
-	mainC.state_dict['heater_on'] = False
-	
-	# ~ tilt= 1 #move top towards back wall 
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ exit()
+    mainC.state_dict['fan_on'] = False
+    mainC.state_dict['humidifyer_on'] = False
+    mainC.state_dict['heater_on'] = False
+    
+    # ~ tilt= 1 #move top towards back wall 
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ exit()
 
 
-	while True:
-		
+    while True:
+        
 
-		mainC.do_one_cycle()
-		print("piV1 main loop")
+        mainC.do_one_cycle()
+        print("piV1 main loop")
     
 
