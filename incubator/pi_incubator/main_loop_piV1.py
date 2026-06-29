@@ -424,5 +424,30 @@ class main_class: #this has all the objects you need
             
         #save data as needed:
         self.save_data_state_as_needed()
+        
+while True: 
+	 # ~ try: 
+	print("starting mainC")
+	mainC = main_class()
+
+	mainC.state_dict['fan_on'] = False
+	mainC.state_dict['humidifyer_on'] = False
+	mainC.state_dict['heater_on'] = False
+	
+	# ~ tilt= 1 #move top towards back wall 
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ exit()
+
+
+	while True:
+		
+
+		mainC.do_one_cycle()
+		print("piV1 main loop")
     
 
