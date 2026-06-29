@@ -406,9 +406,9 @@ class main_class: #this has all the objects you need
             tnow = time.time()
             
             if tnow < heater_flip_off_time :
-                heater_12v( 1  )
+                heat_12v( 1  )
             if tnow > heater_flip_off_time :
-                heater_12v( 0  )
+                heat_12v( 0  )
                     
                 
             #open exhuast vent every 3 min          
