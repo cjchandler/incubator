@@ -43,21 +43,21 @@ from signal import pause
 
 
 class switch: #0 is open, 1 is closed
-	def __init__(self , gpio):
-		
-		self.s = Button(gpio,pull_up=True)
-		self.s.when_pressed = self.switch_closed
-		self.s.when_released = self.switch_opened
-		# ~ self.button.when_held = self.on_button_held
-		self.switch_val = 0
-	def switch_closed(self):
-		self.switch_val = 1
-		print("switch closed")
-	def switch_opened(self):
-		self.switch_val = 0
-		print("switch opened")
+    def __init__(self , gpio):
+        
+        self.s = Button(gpio,pull_up=True)
+        self.s.when_pressed = self.switch_closed
+        self.s.when_released = self.switch_opened
+        # ~ self.button.when_held = self.on_button_held
+        self.switch_val = 0
+    def switch_closed(self):
+        self.switch_val = 1
+        print("switch closed")
+    def switch_opened(self):
+        self.switch_val = 0
+        print("switch opened")
 
-	
+    
 s1 = switch(7)
 s2 = switch(1)
 s3 = switch(16)
@@ -73,65 +73,65 @@ from gpiozero import LED
 
 
 retract_pin = LED(13)
-extend_pin = LED(19)	
+extend_pin = LED(19)    
 swing_near_pin = LED(6)
 swing_far_pin = LED(16)
 
 def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
-	
-	
-	if inputval == 1 :
-		retract_pin.off()
-		extend_pin.on()
-	else: 
-		retract_pin.on()
-		extend_pin.off()
-	
+    
+    
+    if inputval == 1 :
+        retract_pin.off()
+        extend_pin.on()
+    else: 
+        retract_pin.on()
+        extend_pin.off()
+    
 
 def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is pull to the middle   
-	
-	
-	if inputval == -1 :
-		swing_near_pin.off()
-		swing_far_pin.on()
-	if inputval == 1: 
-		swing_near_pin.on()
-		swing_far_pin.off()
-		
-	if inputval == 0: 
-		swing_near_pin.on()
-		swing_far_pin.off()
-		time.sleep(10)
-		swing_far_pin.on()
-		swing_near_pin.off()
-		time.sleep(5)
-		swing_far_pin.off()
-		swing_near_pin.off()
-		
+    
+    
+    if inputval == -1 :
+        swing_near_pin.off()
+        swing_far_pin.on()
+    if inputval == 1: 
+        swing_near_pin.on()
+        swing_far_pin.off()
+        
+    if inputval == 0: 
+        swing_near_pin.on()
+        swing_far_pin.off()
+        time.sleep(10)
+        swing_far_pin.on()
+        swing_near_pin.off()
+        time.sleep(5)
+        swing_far_pin.off()
+        swing_near_pin.off()
+        
 def heat_boost(inputval): #0 for no heat, 1 for heat 
-	ssr_pin = LED(17)
-	
-	if inputval == 1 :
-		ssr_pin.on()
-	if inputval == 0: 
-		ssr_pin.off()
-		
+    ssr_pin = LED(17)
+    
+    if inputval == 1 :
+        ssr_pin.on()
+    if inputval == 0: 
+        ssr_pin.off()
+        
 def heat_12v(inputval): #0 for no heat, 1 for heat 
-	ssr_pin = LED(27)
-	
-	if inputval == 1 :
-		ssr_pin.on()
-	if inputval == 0: 
-		ssr_pin.off
-		
+    ssr_pin = LED(27)
+    
+    if inputval == 1 :
+        ssr_pin.on()
+    if inputval == 0: 
+        ssr_pin.off
+        
 def humidity(inputval): #0 for no water, 1 for water 
-	ssr_pin = LED(4)
-	
-	if inputval == 1 :
-		ssr_pin.on()
-	if inputval == 0: 
-		ssr_pin.off()
-		
+    ssr_pin = LED(4)
+    
+    if inputval == 1 :
+        ssr_pin.on()
+    if inputval == 0: 
+        ssr_pin.off()
+        
 
 
 
@@ -165,8 +165,8 @@ def init_state_dict():
     
     state_dict['front_turn_switch'] = -10
     state_dict['rear_turn_switch'] = -10
-	state_dict['top_switch'] = -10
-	
+    state_dict['top_switch'] = -10
+    
 
     
     
@@ -416,7 +416,7 @@ class main_class: #this has all the objects you need
                     self.state_dict['venting_state'] = False
             
         
-			vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
+            vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
         
         
             
