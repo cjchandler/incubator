@@ -115,32 +115,32 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
         
 ###SSR pins
 
-ssr_pin = LED(17)    
+ssr_pinBO = LED(17)    
 def heat_boost(inputval): #0 for no heat, 1 for heat 
     
     
     if inputval == 1 :
-        ssr_pin.on()
+        ssr_pinBO.on()
     if inputval == 0: 
-        ssr_pin.off()
+        ssr_pinBO.off()
 
-ssr_pin = LED(27)
+ssr_pinHE = LED(27)
 def heat_12v(inputval): #0 for no heat, 1 for heat 
     
     
     if inputval == 1 :
-        ssr_pin.on()
+        ssr_pinHE.on()
     if inputval == 0: 
-        ssr_pin.off
+        ssr_pinHE.off
 
-ssr_pin = LED(4)     
+ssr_pinHU = LED(4)     
 def humidity(inputval): #0 for no water, 1 for water 
    
     
     if inputval == 1 :
-        ssr_pin.on()
+        ssr_pinHU.on()
     if inputval == 0: 
-        ssr_pin.off()
+        ssr_pinHU.off()
         
 
 
