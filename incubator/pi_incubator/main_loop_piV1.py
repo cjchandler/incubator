@@ -160,7 +160,7 @@ def init_state_dict():
     state_dict['egg_turning_on'] = True
 
     
-    state_dict['target_temperature'] =17.5
+    state_dict['target_temperature'] =24.5
     state_dict['boost_temperature'] =16.8 #turn on the big heater if it's below boost temperature. Then the little heater is just fine tuning with pid controls
     state_dict['cooling_start_temperature'] = 38.6
 
