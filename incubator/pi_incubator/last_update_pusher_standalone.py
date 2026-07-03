@@ -47,7 +47,7 @@ def push_latest_timestamp_if_needed( timein , path_to_last_update_repo , project
 
     
     #push if needed now
-    if( tnow > last_push_timestamp + push_interval_sec):
+    if( time.time() > last_push_timestamp + push_interval_sec):
         push_latest_timestamp(path_to_last_update_repo , project_name_txt)
 
 controls_path = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/datalog/"
