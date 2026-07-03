@@ -467,7 +467,17 @@ while True:
         print("piV1 main loop")
         
 
-    
-        push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
-    
+        try: 
+            push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
+        except:
+            print("--------------------------------------------------------------")
+            print("--------------------------------------------------------------")
+            print("--------------------------------------------------------------")
+            print("--------------------------------------------------------------")
+            print( "push_latest_timestamp_if_needed for last_update_repo now working"
+            print("--------------------------------------------------------------")
+            print("--------------------------------------------------------------")
+            print("--------------------------------------------------------------")
+            print("--------------------------------------------------------------")
+
 
