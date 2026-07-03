@@ -36,9 +36,9 @@ def push_latest_timestamp_if_needed( path_to_last_update_repo , project_name_txt
     # Run the command and capture its output, cwd makes sure you're using the git archive last update repo not some other dev git archive
     result = subprocess.run(["git", "log", "-1", "--format=%ct"], capture_output=True, text=True, cwd= path_to_last_update_repo)
     tpush = result.stdout.strip()
-    
+    print("last push was at in native format ",tpush)
     last_push_timestamp = float(tpush)
-    print("last push was at : ",last_push_timestamp) 
+    print("last push was at timestamp: ",last_push_timestamp) 
     print("next push is at :", last_push_timestamp + push_interval_sec)
     print("time until next push : " ,last_push_timestamp + push_interval_sec - tnow)
 
