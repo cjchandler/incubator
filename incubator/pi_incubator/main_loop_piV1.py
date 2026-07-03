@@ -2,6 +2,8 @@
 
 from last_update_pusher import *
 
+abs_path = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/"
+
 
 #incubator controls on pi 
 
@@ -206,7 +208,7 @@ class main_class: #this has all the objects you need
         self.state_dict = init_state_dict()
         
             
-        self.path = "./datalog/"
+        self.path = abs_path+"/datalog/"
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
@@ -240,9 +242,9 @@ class main_class: #this has all the objects you need
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
             if now_time.hour == 8 and now_time.minute == 1: 
-                df.to_csv("today_data_piV1.csv" ,index=False , header = True)
+                df.to_csv(self.path + "today_data_piV1.csv" ,index=False , header = True)
             else: 
-                df.to_csv("today_data_piV1.csv" , mode = 'a' ,index=False , header = False)
+                df.to_csv(self.path +"today_data_piV1.csv" , mode = 'a' ,index=False , header = False)
 
 
     def do_climate_control(self):
