@@ -56,6 +56,7 @@ last_update_path = "/home/carl/Git_Projects/last_update_repo/"
 while True: 
 	filename = "today_data_piV1.csv"
 	df = pd.read_csv(controls_path + filename)
+	print(df.tail(20))
 	tsaved = df["last_save_timestamp"].iloc[-1]
 	
 	push_latest_timestamp_if_needed( tsaved , last_update_path, "pi_V1_incubator_running.txt" , 60*2)
