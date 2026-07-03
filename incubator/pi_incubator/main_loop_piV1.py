@@ -2,6 +2,8 @@
 
 from last_update_pusher import *
 
+abs_path = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/"
+
 
 #incubator controls on pi 
 
@@ -206,7 +208,7 @@ class main_class: #this has all the objects you need
         self.state_dict = init_state_dict()
         
             
-        self.path = "./datalog/"
+        self.path = abs_path+"/datalog/"
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
