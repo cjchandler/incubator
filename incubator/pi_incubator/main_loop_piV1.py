@@ -474,12 +474,15 @@ try:
 
             try: 
                 push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
-            except:
+            except Exception as e:
                 print("--------------------------------------------------------------")
                 print("--------------------------------------------------------------")
                 print("--------------------------------------------------------------")
                 print("--------------------------------------------------------------")
-                print( "push_latest_timestamp_if_needed for last_update_repo now working")
+                print(f"Error Type: {type(e).__name__}")
+                print(f"Error Message: {e}")
+                
+                print( "push_latest_timestamp_if_needed for last_update_repo not working")
                 print("--------------------------------------------------------------")
                 print("--------------------------------------------------------------")
                 print("--------------------------------------------------------------")
