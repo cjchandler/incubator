@@ -1,3 +1,6 @@
+from last_update_pusher import *
+
+
 #incubator controls on pi 
 
 from simple_pid import PID
@@ -462,5 +465,9 @@ while True:
 
         mainC.do_one_cycle()
         print("piV1 main loop")
+        
+
+    
+		push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
     
 
