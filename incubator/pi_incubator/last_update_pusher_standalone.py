@@ -60,7 +60,7 @@ while True:
 	tsaved = df[df.columns[2]].iloc[-1] #2 is the last time saved column
 	
 	push_latest_timestamp_if_needed( tsaved , last_update_path, "pi_V1_incubator_running.txt" , 60*2)
-	
+	time.sleep(30)
 
 	
 
