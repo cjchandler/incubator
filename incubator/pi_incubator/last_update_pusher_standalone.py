@@ -57,7 +57,7 @@ while True:
 	filename = "today_data_piV1.csv"
 	df = pd.read_csv(controls_path + filename)
 	print(df.tail(20))
-	tsaved = df.columns[2].iloc[-1] #2 is the last time saved column
+	tsaved = df[df.columns[2]].iloc[-1] #2 is the last time saved column
 	
 	push_latest_timestamp_if_needed( tsaved , last_update_path, "pi_V1_incubator_running.txt" , 60*2)
 	
