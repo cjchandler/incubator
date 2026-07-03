@@ -1,6 +1,6 @@
 #!/home/carl/Git_Projects/incubator/incubator/pi_incubator/envH/bin/python
 
-from last_update_pusher import *
+
 
 abs_path = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/"
 
@@ -473,23 +473,23 @@ try:
             
 
 
-            try: 
-                print( " path for lastupdate pusher is " , "/home/carl/Git_Projects/last_update_repo/")
+            # ~ try: 
+                # ~ print( " path for lastupdate pusher is " , "/home/carl/Git_Projects/last_update_repo/")
                 
-                push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
-            except Exception as e:
-                print("--------------------------------------------------------------")
-                print("--------------------------------------------------------------")
-                print("--------------------------------------------------------------")
-                print("--------------------------------------------------------------")
-                print(f"Error Type: {type(e).__name__}")
-                print(f"Error Message: {e}")
+                # ~ push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
+            # ~ except Exception as e:
+                # ~ print("--------------------------------------------------------------")
+                # ~ print("--------------------------------------------------------------")
+                # ~ print("--------------------------------------------------------------")
+                # ~ print("--------------------------------------------------------------")
+                # ~ print(f"Error Type: {type(e).__name__}")
+                # ~ print(f"Error Message: {e}")
                 
-                print( "push_latest_timestamp_if_needed for last_update_repo not working")
-                print("--------------------------------------------------------------")
-                print("--------------------------------------------------------------")
-                print("--------------------------------------------------------------")
-                print("--------------------------------------------------------------")
+                # ~ print( "push_latest_timestamp_if_needed for last_update_repo not working")
+                # ~ print("--------------------------------------------------------------")
+                # ~ print("--------------------------------------------------------------")
+                # ~ print("--------------------------------------------------------------")
+                # ~ print("--------------------------------------------------------------")
 except:
     print("whole program crash. starting over")
 
