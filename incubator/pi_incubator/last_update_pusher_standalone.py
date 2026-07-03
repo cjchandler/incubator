@@ -25,12 +25,12 @@ def push_latest_timestamp( path_to_last_update_repo , project_name_txt ):
 
 
 
-def push_latest_timestamp_if_needed( time , path_to_last_update_repo , project_name_txt , push_interval_sec ):
+def push_latest_timestamp_if_needed( timein , path_to_last_update_repo , project_name_txt , push_interval_sec ):
     
     
     #update the project file with current time
     f = open( path_to_last_update_repo + project_name_txt, "w")
-    f.write(str(time))
+    f.write(str(timein))
     f.close()
     
     #when did it last push a git commit to github? it would be on the last commit, so check that: 
