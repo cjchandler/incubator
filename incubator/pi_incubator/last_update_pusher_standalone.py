@@ -43,7 +43,7 @@ def push_latest_timestamp_if_needed( timein , path_to_last_update_repo , project
     last_push_timestamp = float(tpush)
     print("last push was at timestamp: ",last_push_timestamp) 
     print("next push is at :", last_push_timestamp + push_interval_sec)
-    print("time until next push : " ,last_push_timestamp + push_interval_sec - time.time() )
+    print("time until next push : " ,last_push_timestamp + push_interval_sec - tpush )
 
     
     #push if needed now
