@@ -1,3 +1,6 @@
+#!/home/carl/Git_Projects/incubator/incubator/pi_incubator/envH/bin/python
+
+
 #ntfy messaging thing
 import requests
 import time
