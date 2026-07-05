@@ -14,6 +14,6 @@ while True:
     tsaved = df[df.columns[2]].iloc[-1] #2 is the last time saved column
     
     #send that data out as a post
-    requests.post("https://ntfy.sh/incubator_test_b5a5n1", data=tsaved.encode(encoding='utf-8'))   
+    requests.post("https://ntfy.sh/incubator_test_b5a5n1", data=str(tsaved).encode(encoding='utf-8'))   
 
 
