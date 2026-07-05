@@ -1,6 +1,7 @@
 #ntfy messaging thing
 import requests
 import time
+import pandas as pd
 
    
 #send a message saysing all's well, I'm alive, here's the latest timestamp
