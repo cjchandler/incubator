@@ -17,7 +17,7 @@ import time
         # ~ ssr_pin.off()
 
 
-ssr_pinHE = LED(27)
+ssr_pinHE = LED(21)
 def heat_12v(inputval): #0 for no heat, 1 for heat 
     
     
