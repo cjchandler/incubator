@@ -17,7 +17,7 @@ import time
         # ~ ssr_pin.off()
 
 
-ssr_pinHE = LED(21)
+ssr_pinHE = LED(27)
 def heat_12v(inputval): #0 for no heat, 1 for heat 
     
     
@@ -27,8 +27,8 @@ def heat_12v(inputval): #0 for no heat, 1 for heat
         ssr_pinHE.off
 
 while True: 
-	print("heat on 1" )
-	heat_12v(1) 
+	# ~ print("heat on 1" )
+	# ~ heat_12v(1) 
 	time.sleep(5)
 	print( "heat off 0")
 	heat_12v(0) 
