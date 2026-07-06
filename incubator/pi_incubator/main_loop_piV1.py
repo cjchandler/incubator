@@ -208,7 +208,7 @@ class main_class: #this has all the objects you need
         self.state_dict = init_state_dict()
         
             
-        self.path = abs_path+"/datalog/"
+        self.path = abs_path+"datalog/"
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
@@ -450,48 +450,48 @@ class main_class: #this has all the objects you need
 
 
 while True: 
-	 # ~ try: 
-	print("starting mainC")
-	mainC = main_class()
+     # ~ try: 
+    print("starting mainC")
+    mainC = main_class()
 
-	mainC.state_dict['fan_on'] = False
-	mainC.state_dict['humidifyer_on'] = False
-	mainC.state_dict['heater_on'] = False
-	
-	# ~ tilt= 1 #move top towards back wall 
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ mainC.motorTray.runMotor(tilt)
-	# ~ exit()
-
-
-	while True:
-		
-
-		mainC.do_one_cycle()
-		print("piV1 main loop")
-		
+    mainC.state_dict['fan_on'] = False
+    mainC.state_dict['humidifyer_on'] = False
+    mainC.state_dict['heater_on'] = False
+    
+    # ~ tilt= 1 #move top towards back wall 
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ mainC.motorTray.runMotor(tilt)
+    # ~ exit()
 
 
-		# ~ try: 
-			# ~ print( " path for lastupdate pusher is " , "/home/carl/Git_Projects/last_update_repo/")
-			
-			# ~ push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
-		# ~ except Exception as e:
-			# ~ print("--------------------------------------------------------------")
-			# ~ print("--------------------------------------------------------------")
-			# ~ print("--------------------------------------------------------------")
-			# ~ print("--------------------------------------------------------------")
-			# ~ print(f"Error Type: {type(e).__name__}")
-			# ~ print(f"Error Message: {e}")
-			
-			# ~ print( "push_latest_timestamp_if_needed for last_update_repo not working")
-			# ~ print("--------------------------------------------------------------")
-			# ~ print("--------------------------------------------------------------")
-			# ~ print("--------------------------------------------------------------")
-			# ~ print("--------------------------------------------------------------")
+    while True:
+        
+
+        mainC.do_one_cycle()
+        print("piV1 main loop")
+        
+
+
+        # ~ try: 
+            # ~ print( " path for lastupdate pusher is " , "/home/carl/Git_Projects/last_update_repo/")
+            
+            # ~ push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
+        # ~ except Exception as e:
+            # ~ print("--------------------------------------------------------------")
+            # ~ print("--------------------------------------------------------------")
+            # ~ print("--------------------------------------------------------------")
+            # ~ print("--------------------------------------------------------------")
+            # ~ print(f"Error Type: {type(e).__name__}")
+            # ~ print(f"Error Message: {e}")
+            
+            # ~ print( "push_latest_timestamp_if_needed for last_update_repo not working")
+            # ~ print("--------------------------------------------------------------")
+            # ~ print("--------------------------------------------------------------")
+            # ~ print("--------------------------------------------------------------")
+            # ~ print("--------------------------------------------------------------")
 
 
