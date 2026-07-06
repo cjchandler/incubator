@@ -24,11 +24,11 @@ def heat_12v(inputval): #0 for no heat, 1 for heat
     if inputval == 1 :
         ssr_pinHE.on()
     if inputval == 0: 
-        ssr_pinHE.off
+        ssr_pinHE.off()
 
 while True: 
-	# ~ print("heat on 1" )
-	# ~ heat_12v(1) 
+	print("heat on 1" )
+	heat_12v(1) 
 	time.sleep(5)
 	print( "heat off 0")
 	heat_12v(0) 
