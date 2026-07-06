@@ -241,6 +241,9 @@ class main_class: #this has all the objects you need
                 
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
+            # Check if the file already exists
+			today_file_exists = os.path.exists(file_path)
+            
             if now_time.hour == 8 and now_time.minute == 1: 
                 df.to_csv(self.path + "today_data_piV1.csv" ,index=False , header = True)
             else: 
@@ -424,16 +427,16 @@ class main_class: #this has all the objects you need
                 heat_12v( 0  )
                     
                 
-            #open exhuast vent every 3 min          
-            if time.time() - self.state_dict['last_venting_timestamp'] > 60*3:
-                self.state_dict['venting_state'] = True
-                self.state_dict['last_venting_timestamp'] = time.time()
-                
-                
-            #end exhaust fan code 
-            if self.state_dict['venting_state'] == True:
-                if time.time() > self.state_dict['last_venting_timestamp'] + 30:
-                    self.state_dict['venting_state'] = False
+		#open exhuast vent every 3 min          
+		if time.time() - self.state_dict['last_venting_timestamp'] > 60*3:
+			self.state_dict['venting_state'] = True
+			self.state_dict['last_venting_timestamp'] = time.time()
+			
+			
+		#end exhaust fan code 
+		if self.state_dict['venting_state'] == True:
+			if time.time() > self.state_dict['last_venting_timestamp'] + 30:
+				self.state_dict['venting_state'] = False
             
         
             vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
