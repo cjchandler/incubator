@@ -427,16 +427,16 @@ class main_class: #this has all the objects you need
                 heat_12v( 0  )
                     
                 
-        #open exhuast vent every 3 min          
-        if time.time() - self.state_dict['last_venting_timestamp'] > 60*3:
-            self.state_dict['venting_state'] = True
-            self.state_dict['last_venting_timestamp'] = time.time()
-            
-            
-        #end exhaust fan code 
-        if self.state_dict['venting_state'] == True:
-            if time.time() > self.state_dict['last_venting_timestamp'] + 30:
-                self.state_dict['venting_state'] = False
+			#open exhuast vent every 3 min          
+			if time.time() - self.state_dict['last_venting_timestamp'] > 60*3:
+				self.state_dict['venting_state'] = True
+				self.state_dict['last_venting_timestamp'] = time.time()
+				
+				
+			#end exhaust fan code 
+			if self.state_dict['venting_state'] == True:
+				if time.time() > self.state_dict['last_venting_timestamp'] + 30:
+					self.state_dict['venting_state'] = False
             
         
             vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
