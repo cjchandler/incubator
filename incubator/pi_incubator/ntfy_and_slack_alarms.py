@@ -79,7 +79,7 @@ def send_message( message_string):
     return 1
         
         
-def check_turning(df)
+def check_turning(df):
         now = time.time()
         # ~ print(now,"now")
         hrsago = now - 60*60*2.0
