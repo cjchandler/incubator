@@ -107,7 +107,8 @@ def check_turning(df):
    
 #send post ntfy message saysing all's well, I'm alive, here's the latest timestamp. then check parameters and send via slack
 while True: 
-    # ~ try: 
+	df. pd.DataFrame()
+    try: 
         #look up the file:
         filepath = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/datalog/today_data_piV1.csv"
         #look at the pandas thing for last timestamp
@@ -117,7 +118,14 @@ while True:
         
         #send that data out as a post
         requests.post("https://ntfy.sh/incubator_piV1_b5a5n1", data=str(tsaved).encode(encoding='utf-8'))   
+	except:
+        pass 
         
+    time.sleep(10)
+    #now every 2 min, look at the parameters and end alarms 
+    if time.time()%120 == 0:
+		
+        print("checking alarms-------------------------------------------------")
         
         #now we also want to check to see that the temperature and humidity are ok
         humidity_max = 0.8 
@@ -147,8 +155,6 @@ while True:
         if m2 > 0.7 or m2 < 0.3:
             send_message(time.ctime() + "piV1 turning mean 2 = " + str(m1))
 
-        time.sleep(10)
-    # ~ except:
-        # ~ pass 
+    
         
         
