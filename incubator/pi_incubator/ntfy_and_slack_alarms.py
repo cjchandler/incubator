@@ -125,7 +125,7 @@ while True:
     #now every 2 min, look at the parameters and end alarms 
     print( int(time.time())%120 )
     
-    if int(time.time())%120 == 0:
+    if int(time.time())%120 <= 10:
         
         print("checking alarms-------------------------------------------------")
         
