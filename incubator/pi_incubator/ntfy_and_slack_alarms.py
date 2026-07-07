@@ -6,25 +6,19 @@ import requests
 import time
 import pandas as pd
 
-import subprocess as sp
-import os
-import time
+
+
 import pandas as pd
 import csv
-import collections
+
 import datetime
-from twilio.rest import Client
-import sys
-import select
 import numpy as np
-import requests
+
 import json
 
 
-import os
 
 
-alarms_off = False
 
 
 
