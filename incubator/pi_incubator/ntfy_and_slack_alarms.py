@@ -152,10 +152,10 @@ while True:
         print( "turning = " , m1 , m2)
         
         if m1 > 0.7 or m1 < 0.3:
-            send_message(time.ctime() + "piV1 turning mean 1 = " + str(m1))
+            send_message(time.ctime() + "piV1 turning mean 2 = " + str(m2) +" piV1 turning mean 1 = " + str(m1))
         
         if m2 > 0.7 or m2 < 0.3:
-            send_message(time.ctime() + "piV1 turning mean 2 = " + str(m2))
+            send_message(time.ctime() + "piV1 turning mean 2 = " + str(m2) +" piV1 turning mean 1 = " + str(m1))
 
     
         
