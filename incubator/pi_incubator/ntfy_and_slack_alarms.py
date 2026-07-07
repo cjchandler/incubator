@@ -139,6 +139,7 @@ while True:
         
         #we also want to check the turning is working: 
         m1 , m2 = check_turning(df)
+        print( "turning = " , m1 , m2)
         
         if m1 > 0.7 or m2 < 0.3:
             send_message(time.ctime() + "piV1 turning mean 1 = " + str(m1))
