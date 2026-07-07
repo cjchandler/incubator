@@ -36,7 +36,7 @@ class slack_sender:
             # Define email sender and receiver
           
 
-            self.webhook_url_path = "/home/cjchandler/Desktop/slackwebhookurl.txt"
+            self.webhook_url_path = "/home/carl/Desktop/slackwebhookurl.txt"
             self.webhook_url = ""
             with open(self.webhook_url_path, 'r', encoding='utf-8') as f:
                     self.webhook_url = f.read()
