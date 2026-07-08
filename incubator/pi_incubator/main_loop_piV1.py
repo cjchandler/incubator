@@ -100,7 +100,7 @@ def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not ventin
         extend_pin.off()
     
 
-def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is pull to the middle   
+def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is stop   
     
     
     if inputval == -1 :
@@ -111,12 +111,6 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
         swing_far_pin.off()
         
     if inputval == 0: 
-        swing_near_pin.on()
-        swing_far_pin.off()
-        time.sleep(10)
-        swing_far_pin.on()
-        swing_near_pin.off()
-        time.sleep(5)
         swing_far_pin.off()
         swing_near_pin.off()
         
@@ -440,26 +434,30 @@ class main_class: #this has all the objects you need
         
             vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
             
-            if s3.switch_val == 1:
+            if s3.switch_val == 0:
                 # ~ self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
                 # ~ self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
                 #heat_boost( 1)#boost because the lid is open
                 
                 if s2.switch_val == 1: 
-                    tilt = 1
-                    for a in range( 0 , 6):
-                        self.motorTray.runMotor(tilt)
+                    swing(-1)
+                    time.sleep(3)
+                    swing(0)
                  
                 elif s3.switch_val == 1: 
-                    tilt = -1
-                    for a in range( 0 , 6):
-                        self.motorTray.runMotor(tilt)
+                    swing(1)
+                    time.sleep(3)
+                    swing(0)
         
                 while s3.switch_val == 0:
                     if s2.switch_val == 1:
-                        self.motorTray.runMotor(1)
+                        swing(1)
+						time.sleep(1)
+						swing(0)
                     if s3.switch_val == 1:
-                        self.motorTray.runMotor(-1)
+                        swing(-1)
+						time.sleep(1)
+						swing(0)
                         
         
         # ~ self.state_dict['front_turn_switch'] = s2.switch_val
