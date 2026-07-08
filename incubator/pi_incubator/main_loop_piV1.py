@@ -439,6 +439,34 @@ class main_class: #this has all the objects you need
             
         
             vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
+            
+            if s3.switch_val == 0:
+                # ~ self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
+                # ~ self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+                #heat_boost( 1)#boost because the lid is open
+                
+                if s2.switch_val == 1: 
+                    tilt = 1
+                    for a in range( 0 , 6):
+                        self.motorTray.runMotor(tilt)
+                 
+                elif s3.switch_val == 1: 
+                    tilt = -1
+                    for a in range( 0 , 6):
+                        self.motorTray.runMotor(tilt)
+        
+                while s3.switch_val == 0:
+                    if s2.switch_val == 1:
+                        self.motorTray.runMotor(1)
+                    if s3.switch_val == 1:
+                        self.motorTray.runMotor(-1)
+                        
+        
+        # ~ self.state_dict['front_turn_switch'] = s2.switch_val
+        # ~ self.state_dict['rear_turn_switch'] = s1.switch_val
+        # ~ self.state_dict['top_switch'] = s3.switch_val
+   
+        
         
         
             
@@ -481,6 +509,7 @@ while True:
 
         mainC.do_one_cycle()
         print("piV1 main loop")
+        
         
 
 

@@ -13,7 +13,7 @@ v = "_piV1"
 
 #"2026-03-25_state
 
-df = pd.read_csv( path + "2026-07-07_state"+ v+".csv")
+df = pd.read_csv( path + "2026-07-08_state"+ v+".csv")
 df['datetime'] = pd.to_datetime(df['last_save_timestamp'], unit='s')
 df = df.set_index('datetime')
 print(df.columns)
@@ -31,6 +31,7 @@ final_df.drop(final_df.index[:5], inplace=True)
 # ~ final_df = final_df[["temperature_1_C" , "humidity_1", "temperature_2_C" , "humidity_2" , "deltaT" , "deltaTthermocouple", "near_switch" , "far_switch"]].copy()
 
 final_df = final_df[["temperature_1_C" , "humidity_1" , "heater_on","target_temperature", 'front_turn_switch', 'rear_turn_switch', 'top_switch']].copy()
+final_df = final_df[[ 'front_turn_switch', 'rear_turn_switch']].copy()
 # ~ final_df = final_df[["near_switch" ,  "far_switch"]].copy()
 
  # ~ state_dict['heating_proportional_Cf'] = 0.2
