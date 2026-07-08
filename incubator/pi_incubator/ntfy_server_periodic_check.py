@@ -7,44 +7,93 @@ import requests
 from requests.exceptions import Timeout
 import time
 import pandas as pd
-# ~ import asyncio
 
 
-# ~ def check_response( txtin , version):
-    # ~ tstamp = float(txtin)
-    # ~ if tstamp+2*60 < time.time():
-        # ~ sound_alarm(version)
-        # ~ print( "alarm" , tstamp , version)
-    # ~ else: 
-        # ~ print( tstamp , version)
+import csv
+
+import datetime
+import numpy as np
+
+import json
 
 
-# ~ async def main():
-    # ~ loop = asyncio.get_event_loop()
-    # ~ response1 = await loop.run_in_executor(None, requests.get, 'https://ntfy.sh/incubator_piV1_b5a5n1/raw')
-    # ~ response2 = await loop.run_in_executor(None, requests.get, 'https://ntfy.sh/incubator_piV2_b5a5n1/raw')
-    # ~ check_response(response1.text , "V1")
-    # ~ check_response(response2.text , "V2")
-
-# ~ asyncio.run(main())
 
 
+
+
+
+
+class slack_sender:
+    def __init__(self):
+        try: 
+
+            # Define email sender and receiver
+          
+
+            self.webhook_url_path = "/home/cjchandler/Desktop/slackwebhookurl.txt"
+            self.webhook_url = ""
+            with open(self.webhook_url_path, 'r', encoding='utf-8') as f:
+                    self.webhook_url = f.read()
+                    self.webhook_url = self.webhook_url.strip()
+                    print(self.webhook_url)
+
+        except:
+            print("couldn't load slackwebhookurl.txt") 
+            quit()
+            
+    def send_message( self, body):
+        
+        message_data = {
+            "text": body
+        }
+
+        response = requests.post(
+            self.webhook_url,
+            data=json.dumps(message_data),
+            headers={'Content-Type': 'application/json'}
+        )
+
+        if response.status_code == 200:
+            print("Message sent successfully!")
+        else:
+            print(f"Failed to send message. Status code: {response.status_code}, Response: {response.text}")
+        
+        
+
+
+
+
+
+
+def send_message( message_string):
+    global alarms_off
+    SS = slack_sender()
+    SS.send_message(message_string)
+ 
+    return 1
+
+
+
+tstamp = 0 
 while True: 
-    tstamp = 0 
+    
     
     
 
-
+    print(" checking for lastest timestamp on piV1")
     try:
         # 3.5s to connect, 5s to receive data from the server
         # ~ #response = requests.get("https://ntfy.sh/incubator_piV1_b5a5n1/raw", timeout=(3.5, 5)) 
-        response = requests.get("https://ntfy.sh/incubator_piV1_b5a5n1/raw", timeout=(10, 20)) 
+        response = requests.get("https://ntfy.sh/incubator_piV1_b5a5n1/raw",stream = True, timeout=(10, 20)) 
         response.raise_for_status()
+        
+
         
         for line in response.iter_lines():
             if line:
                 print(line)
                 tstamp = float(line)
+                print(tstamp)
             
     except Timeout:
         print("The pi took too long to respond. Bailing out! SEND ALARM, it maybe dead or turned off")
@@ -58,6 +107,8 @@ while True:
             
     if time.time() > tstamp + 60*2:
         print("ALARM")
+        send_message( time.ctime() + "  INCUBATOR piV1 out of contact for " + str(time.time() - tstamp) + " secs. Likley serious problems")
         
-    time.sleep(60*2)
+    print("now sleeping 2 min to save power")
+    time.sleep(2*60)
    

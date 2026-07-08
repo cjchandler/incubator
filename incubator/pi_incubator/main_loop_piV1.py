@@ -427,14 +427,14 @@ class main_class: #this has all the objects you need
                     
                 
             #open exhuast vent every 3 min          
-            if time.time() - self.state_dict['last_venting_timestamp'] > 60*3:
+            if time.time() - self.state_dict['last_venting_timestamp'] > 60*30:
                 self.state_dict['venting_state'] = True
                 self.state_dict['last_venting_timestamp'] = time.time()
                 
                 
             #end exhaust fan code 
             if self.state_dict['venting_state'] == True:
-                if time.time() > self.state_dict['last_venting_timestamp'] + 30:
+                if time.time() > self.state_dict['last_venting_timestamp'] + 3:
                     self.state_dict['venting_state'] = False
             
         
@@ -457,6 +457,15 @@ while True:
     mainC.state_dict['humidifyer_on'] = False
     mainC.state_dict['heater_on'] = False
     
+    tilt= 1 #move top towards back wall 
+    for a in range( 0 , 12):
+		mainC.motorTray.runMotor(tilt)
+    
+    #now time how long to go across: 
+    while s2.switch_val
+    
+    
+    t_start = time.time()
     # ~ tilt= 1 #move top towards back wall 
     # ~ mainC.motorTray.runMotor(tilt)
     # ~ mainC.motorTray.runMotor(tilt)
