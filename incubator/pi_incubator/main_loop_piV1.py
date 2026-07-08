@@ -440,7 +440,7 @@ class main_class: #this has all the objects you need
         
             vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
             
-            if s3.switch_val == 0:
+            if s3.switch_val == 1:
                 # ~ self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
                 # ~ self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
                 #heat_boost( 1)#boost because the lid is open
