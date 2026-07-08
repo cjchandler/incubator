@@ -459,7 +459,7 @@ while True:
     
     tilt= 1 #move top towards back wall 
     for a in range( 0 , 12):
-		mainC.motorTray.runMotor(tilt)
+        mainC.motorTray.runMotor(tilt)
     
     #now time how long to go across: 
     while s2.switch_val
