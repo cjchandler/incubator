@@ -457,12 +457,12 @@ while True:
     mainC.state_dict['humidifyer_on'] = False
     mainC.state_dict['heater_on'] = False
     
-    tilt= 1 #move top towards back wall 
-    for a in range( 0 , 12):
-        mainC.motorTray.runMotor(tilt)
+    # ~ tilt= 1 #move top towards back wall 
+    # ~ for a in range( 0 , 12):
+        # ~ mainC.motorTray.runMotor(tilt)
     
-    #now time how long to go across: 
-    while s2.switch_val
+    # ~ #now time how long to go across: 
+    # ~ while s2.switch_val
     
     
     t_start = time.time()
