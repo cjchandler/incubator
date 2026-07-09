@@ -434,31 +434,7 @@ class main_class: #this has all the objects you need
         
             vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
             
-            if s3.switch_val == 0:
-                # ~ self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
-                # ~ self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
-                #heat_boost( 1)#boost because the lid is open
-                
-                if s2.switch_val == 1: 
-                    swing(-1)
-                    time.sleep(3)
-                    swing(0)
-                 
-                elif s3.switch_val == 1: 
-                    swing(1)
-                    time.sleep(3)
-                    swing(0)
-        
-                while s3.switch_val == 0:
-                    if s2.switch_val == 1:
-                        swing(1)
-                        time.sleep(1)
-                        swing(0)
-                    elif s3.switch_val == 1:
-                        swing(-1)
-                        time.sleep(1)
-                        swing(0)
-                    time.sleep(0.1)  
+            
         
         # ~ self.state_dict['front_turn_switch'] = s2.switch_val
         # ~ self.state_dict['rear_turn_switch'] = s1.switch_val
@@ -472,6 +448,34 @@ class main_class: #this has all the objects you need
             
         #save data as needed:
         self.save_data_state_as_needed()
+
+
+        if s3.switch_val == 0:
+                # ~ self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
+                # ~ self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+                #heat_boost( 1)#boost because the lid is open
+                
+            if s2.switch_val == 1: 
+                swing(-1)
+                time.sleep(3)
+                swing(0)
+             
+            elif s3.switch_val == 1: 
+                swing(1)
+                time.sleep(3)
+                swing(0)
+
+            while s3.switch_val == 0:
+                print("trimming")
+                if s2.switch_val == 1:
+                    swing(1)
+                    time.sleep(1)
+                    swing(0)
+                elif s3.switch_val == 1:
+                    swing(-1)
+                    time.sleep(1)
+                    swing(0)
+                time.sleep(0.1)  
 
 
 while True: 
