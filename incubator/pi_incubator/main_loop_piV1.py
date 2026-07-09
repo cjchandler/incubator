@@ -457,23 +457,23 @@ class main_class: #this has all the objects you need
                 
             if s2.switch_val == 1: 
                 swing(-1)
-                time.sleep(3)
+                time.sleep(9)
                 swing(0)
              
-            elif s3.switch_val == 1: 
+            if s1.switch_val == 1: 
                 swing(1)
-                time.sleep(3)
+                time.sleep(9)
                 swing(0)
 
             while s3.switch_val == 0:
                 print("trimming")
                 if s2.switch_val == 1:
                     swing(1)
-                    time.sleep(1)
+                    time.sleep(3)
                     swing(0)
-                elif s3.switch_val == 1:
+                elif s1.switch_val == 1:
                     swing(-1)
-                    time.sleep(1)
+                    time.sleep(3)
                     swing(0)
                 time.sleep(0.1)  
 
