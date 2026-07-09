@@ -454,11 +454,11 @@ class main_class: #this has all the objects you need
                         swing(1)
                         time.sleep(1)
                         swing(0)
-                    if s3.switch_val == 1:
+                    elif s3.switch_val == 1:
                         swing(-1)
                         time.sleep(1)
                         swing(0)
-                        
+                    time.sleep(0.1)  
         
         # ~ self.state_dict['front_turn_switch'] = s2.switch_val
         # ~ self.state_dict['rear_turn_switch'] = s1.switch_val
