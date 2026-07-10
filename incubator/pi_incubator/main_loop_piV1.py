@@ -451,8 +451,8 @@ class main_class: #this has all the objects you need
 
 
         # ~ if s3.switch_val == 0:
-                self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
-                self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+                ##self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
+                ##self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
                 # ~ #heat_boost( 1)#boost because the lid is open
                 
             # ~ if s2.switch_val == 1: 
