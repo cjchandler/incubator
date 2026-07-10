@@ -421,14 +421,14 @@ class main_class: #this has all the objects you need
                     
                 
             #open exhuast vent every 3 min          
-            if time.time() - self.state_dict['last_venting_timestamp'] > 60*30:
+            if time.time() - self.state_dict['last_venting_timestamp'] > 60*3:
                 self.state_dict['venting_state'] = True
                 self.state_dict['last_venting_timestamp'] = time.time()
                 
                 
             #end exhaust fan code 
             if self.state_dict['venting_state'] == True:
-                if time.time() > self.state_dict['last_venting_timestamp'] + 3:
+                if time.time() > self.state_dict['last_venting_timestamp'] + 30:
                     self.state_dict['venting_state'] = False
             
         

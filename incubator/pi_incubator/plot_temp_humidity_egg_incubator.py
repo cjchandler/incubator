@@ -31,8 +31,7 @@ final_df.drop(final_df.index[:5], inplace=True)
 # ~ final_df = final_df[["temperature_1_C" , "humidity_1", "temperature_2_C" , "humidity_2" , "deltaT" , "deltaTthermocouple", "near_switch" , "far_switch"]].copy()
 
 final_df = final_df[["temperature_1_C" , "humidity_1" , "heater_on","target_temperature", 'front_turn_switch', 'rear_turn_switch', 'top_switch']].copy()
-final_df = final_df[[ 'front_turn_switch', 'rear_turn_switch']].copy()
-# ~ final_df = final_df[["near_switch" ,  "far_switch"]].copy()
+# ~ final_df = final_df[[ 'front_turn_switch', 'rear_turn_switch']].copy()
 
  # ~ state_dict['heating_proportional_Cf'] = 0.2
     # ~ state_dict['heating_integral_Cf'] = 0.00001 #2 p , 0.001i was too big perhaps 
