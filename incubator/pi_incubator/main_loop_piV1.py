@@ -64,10 +64,10 @@ class switch: #0 is open, 1 is closed
         self.switch_val = 0
     def switch_closed(self):
         self.switch_val = 1
-        print("switch closed")
+        print("switch closed", gpio)
     def switch_opened(self):
         self.switch_val = 0
-        print("switch opened")
+        print("switch opened", gpio)
 
     
 s1 = switch(7)
