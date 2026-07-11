@@ -108,7 +108,9 @@ def check_turning(df):
 #send post ntfy message saysing all's well, I'm alive, here's the latest timestamp. then check parameters and send via slack
 while True: 
     df = pd.DataFrame()
-    
+    filepath = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/datalog/today_data_piV1.csv"
+	#look at the pandas thing for last timestamp
+    df = pd.read_csv(filepath)
         
     #now every 2 min, look at the parameters and end alarms 
     print( int(time.time())%120 )
