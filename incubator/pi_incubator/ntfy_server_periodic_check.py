@@ -75,39 +75,54 @@ def send_message( message_string):
 
 
 tstamp = 0 
-while True: 
-    
-    
-    
 
-    print(" checking for lastest timestamp on piV1")
+piv1 = "https://ntfy.sh/incubator_piV1_b5a5n1/raw"
+
+def ntfy_checkup( address ):
+    print(" checking for lastest timestamp on " , address)
+    tstart = time.time()
+    tstamp = 0
     try:
         # 3.5s to connect, 5s to receive data from the server
-        # ~ #response = requests.get("https://ntfy.sh/incubator_piV1_b5a5n1/raw", timeout=(3.5, 5)) 
-        response = requests.get("https://ntfy.sh/incubator_piV1_b5a5n1/raw",stream = True, timeout=(10, 20)) 
+        # ~ #response = requests.get("https://ntfy.sh/incubator_piV1_b5a5n1/raw", timeout=(3.5, 5))
+        response = requests.get(address ,stream = True, timeout=(10, 20))
         response.raise_for_status()
-        
 
-        
+
+
         for line in response.iter_lines():
             if line:
                 print(line)
                 tstamp = float(line)
                 print(tstamp)
-            
-    except Timeout:
-        print("The pi took too long to respond. Bailing out! SEND ALARM, it maybe dead or turned off")
-    except requests.exceptions.RequestException as err:
-        print(f"An error occurred: {err}")
+
+                if time.time() > tstart+ 30:
+                    print( "listened to " , address , "long enough")
+                    response.close()
+                    break
+
+
+    except Exception as e:
+        print(e)
+        print("The pi took too long to respond. Bailing out! SEND ALARM, it maybe dead or turned off" , address)
     
-    
-    
-    
-            
-            
+
+
+
+
+
+
     if time.time() > tstamp + 60*2:
         print("ALARM")
-        send_message( time.ctime() + "  INCUBATOR piV1 out of contact for " + str(time.time() - tstamp) + " secs. Likley serious problems")
+        send_message( time.ctime() + "  INCUBATOR out of contact for " + str(time.time() - tstamp) + " secs. Likley serious problems" + address)
+
+
+while True: 
+    
+    
+    
+    ntfy_checkup(  "https://ntfy.sh/incubator_piV1_b5a5n1/raw" )
+    
         
     print("now sleeping 2 min to save power")
     time.sleep(2*60)

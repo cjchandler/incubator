@@ -118,8 +118,8 @@ while True:
         
         #send that data out as a post
         requests.post("https://ntfy.sh/incubator_piV1_b5a5n1", data=str(tsaved).encode(encoding='utf-8'))   
-    except:
-        pass 
+    except Exception as e:
+        print(e) 
         
     time.sleep(10)
     #now every 2 min, look at the parameters and end alarms 
