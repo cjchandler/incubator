@@ -8,7 +8,6 @@ import pandas as pd
 
 
 
-import pandas as pd
 import csv
 
 import datetime
