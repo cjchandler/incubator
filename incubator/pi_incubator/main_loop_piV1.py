@@ -453,7 +453,7 @@ class main_class: #this has all the objects you need
         self.save_data_state_as_needed()
 
 
-        if s3.switch_val == 0 and self.tstart > time.time() + 30:
+        if s3.switch_val == 0:
                 # ~ ##self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
                 # ~ ##self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
                 #heat_boost( 1)#boost because the lid is open
