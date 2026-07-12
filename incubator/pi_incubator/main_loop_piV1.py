@@ -60,10 +60,10 @@ class switch: #0 is open, 1 is closed
         self.s = Button(gpio, bounce_time=1)
         self.s.when_pressed = self.switch_closed
         self.s.when_released = self.switch_opened
-        if self.s.is_pressed() == True:
+        if self.s.is_pressed == True:
             self.switch_val = 1
         # ~ self.button.when_held = self.on_button_held
-        if self.s.is_pressed() == False:
+        if self.s.is_pressed == False:
             self.switch_val = 0
     def switch_closed(self):
         self.switch_val = 1
@@ -256,9 +256,9 @@ class main_class: #this has all the objects you need
         self.state_dict['temperature_2_C'] = -500
         
         #read switches 
-        self.state_dict['front_turn_switch'] = s2.switch_val
-        self.state_dict['rear_turn_switch'] = s1.switch_val
-        self.state_dict['top_switch'] = s3.switch_val
+        self.state_dict['front_turn_switch'] = s2.s.is_pressed
+        self.state_dict['rear_turn_switch'] = s1.s.is_pressed
+        self.state_dict['top_switch'] = s3.s.is_pressed
    
        
         
