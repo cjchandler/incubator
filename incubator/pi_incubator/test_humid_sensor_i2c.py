@@ -28,8 +28,8 @@ sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
 sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
 # Can also set the mode to enable heater
 # sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
-print("Current mode 1 is: ", adafruit_sht4x.Mode.string[sht.mode])
-print("Current mode 6 is: ", adafruit_sht4x.Mode.string[sht.mode])
+print("Current mode 1 is: ", adafruit_sht4x.Mode.string[sht1.mode])
+print("Current mode 6 is: ", adafruit_sht4x.Mode.string[sht6.mode])
 
 while True:
     temperature, relative_humidity = sht1.measurements
