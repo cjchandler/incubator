@@ -28,18 +28,24 @@ import adafruit_sht4x
 from adafruit_extended_bus import ExtendedI2C as I2C
 
 # Create library object using our Extended Bus I2C port
-i2c = I2C(6)  # Device is /dev/i2c-6
+i2c6 = I2C(6)  # Device is /dev/i2c-6
+i2c1 = I2C(1)  # Device is /dev/i2c-6
 
 ###end of i2c6 stuff
 
 
 
-sht = adafruit_sht4x.SHT4x(i2c)
-print("Found SHT4x with serial number", hex(sht.serial_number))
+sht1 = adafruit_sht4x.SHT4x(i2c1)
+print("Found SHT4x with serial number", hex(sht1.serial_number))
 
-sht.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
-print("Current mode is: ", adafruit_sht4x.Mode.string[sht.mode])
+sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
+print("Current mode is: ", adafruit_sht4x.Mode.string[sht1.mode])
 
+sht6 = adafruit_sht4x.SHT4x(i2c6)
+print("Found SHT4x with serial number", hex(sht6.serial_number))
+
+sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
+print("Current mode is: ", adafruit_sht4x.Mode.string[sht6.mode])
 
 
 
@@ -248,12 +254,12 @@ class main_class: #this has all the objects you need
 
     def do_climate_control(self):
         ##read sensors
-        temperatureC, relative_humidity = sht.measurements
+        
 
         
-        self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
+        self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht6.measurements
+        self.state_dict['temperature_2_C'], humid2 =  sht1.measurements
         self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
-        self.state_dict['temperature_2_C'] = -500
         
         #read switches 
         self.state_dict['front_turn_switch'] = s2.s.is_pressed
