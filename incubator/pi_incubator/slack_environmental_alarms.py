@@ -142,6 +142,11 @@ H2 = df[df.columns[6]].iloc[-1] #6 is the humidity 2 column
 
 if T1 > T_max or T1 < T_min: 
 	send_message(time.ctime() + "piV1 temperature out of range = " + str(T1))
+	
+#chcek the temp are similar
+dT = np.abs(T1 - T2)
+if dT > 0.5:
+	send_message(time.ctime() + "piV1 temperature too spread = " + str(T1) + "  ,  " + str(T2) )
 
 if H1 > humidity_max or H1 < humidity_min: 
 	send_message(time.ctime() + "piV1 humidity out of range = " + str(H1))
