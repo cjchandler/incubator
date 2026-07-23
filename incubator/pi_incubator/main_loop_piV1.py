@@ -20,6 +20,7 @@ import busio
 import board
 
 import adafruit_sht4x
+from adafruit_extended_bus import ExtendedI2C as I2C
 
 #this is the native i2c pins verion:
 #i2c = board.I2C()  # uses board.SCL and board.SDA
