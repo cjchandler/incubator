@@ -23,6 +23,7 @@ sht1 = adafruit_sht4x.SHT4x(i2c1)
 print("Found SHT4x_1 with serial number", hex(sht1.serial_number))
 print("Found SHT4x_6 with serial number", hex(sht6.serial_number))
 
+
 sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
 sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
 # Can also set the mode to enable heater
