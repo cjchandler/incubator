@@ -254,11 +254,17 @@ class main_class: #this has all the objects you need
     def do_climate_control(self):
         ##read sensors
         
+		self.state_dict['temperature_1_C'] = 12.3456789 
+		self.state_dict['humidity_1'] =  12.3456789 
+        self.state_dict['temperature_2_C'] =  12.3456789 
 
-        
-        self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht6.measurements
-        self.state_dict['temperature_2_C'], humid2 =  sht1.measurements
-        self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+
+        try:
+			self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht6.measurements
+			self.state_dict['temperature_2_C'], humid2 =  sht1.measurements
+			self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+		except:
+			pass
         
         #read switches 
         self.state_dict['front_turn_switch'] = s2.s.is_pressed
