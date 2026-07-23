@@ -25,28 +25,26 @@ import adafruit_sht4x
 #i2c = board.I2C()  # uses board.SCL and board.SDA
 
 #this is using i2c6 
-from adafruit_extended_bus import ExtendedI2C as I2C
-
-# Create library object using our Extended Bus I2C port
-i2c6 = I2C(6)  # Device is /dev/i2c-6
 i2c1 = I2C(1)  # Device is /dev/i2c-6
-
-###end of i2c6 stuff
-
+i2c6 = I2C(6)  # Device is /dev/i2c-6
 
 
-sht1 = adafruit_sht4x.SHT4x(i2c1)
-print("Found SHT4x with serial number", hex(sht1.serial_number))
 
-sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
-print("Current mode is: ", adafruit_sht4x.Mode.string[sht1.mode])
 
 sht6 = adafruit_sht4x.SHT4x(i2c6)
-print("Found SHT4x with serial number", hex(sht6.serial_number))
+sht1 = adafruit_sht4x.SHT4x(i2c1)
+print("Found SHT4x_1 with serial number", hex(sht1.serial_number))
+print("Found SHT4x_6 with serial number", hex(sht6.serial_number))
 
+
+sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
 sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
-print("Current mode is: ", adafruit_sht4x.Mode.string[sht6.mode])
+# Can also set the mode to enable heater
+# sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
+print("Current mode 1 is: ", adafruit_sht4x.Mode.string[sht1.mode])
+print("Current mode 6 is: ", adafruit_sht4x.Mode.string[sht6.mode])
 
+###end of i2c stuff
 
 
 
