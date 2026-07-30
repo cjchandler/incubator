@@ -464,23 +464,23 @@ class main_class: #this has all the objects you need
         self.save_data_state_as_needed()
 
 
-        if s3.switch_val == 0:
+        if s3.s.is_pressed == 0:
                 # ~ ##self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
                 # ~ ##self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
                 #heat_boost( 1)#boost because the lid is open
                 
-            if s2.switch_val == 1: 
+            if s2.s.is_pressed == 1: 
                 swing(1)
                 time.sleep(5)
                 swing(0)
              
-            if s1.switch_val == 1: 
+            if s1.s.is_pressed == 1: 
                 swing(-1)
                 time.sleep(5)
                 swing(0)
 
-            while s3.switch_val == 0:
-                print("trimming: s_top = " , s3.switch_val , "s_rear = " , s1.switch_val , "s_front = " , s2.switch_val)
+            while s3.s.is_pressed == 0:
+                print("trimming: s_top = " , s3.s.is_pressed , "s_rear = " , s1.s.is_pressed , "s_front = " , s2.s.is_pressed)
                 time.sleep(0.1)  
 
 
