@@ -474,7 +474,7 @@ class main_class: #this has all the objects you need
                 time.sleep(5)
                 swing(0)
              
-            if s1.s.is_pressed == 1: 
+            elif s1.s.is_pressed == 1: 
                 swing(-1)
                 time.sleep(5)
                 swing(0)
