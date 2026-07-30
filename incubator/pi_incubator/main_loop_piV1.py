@@ -481,15 +481,6 @@ class main_class: #this has all the objects you need
 
             while s3.switch_val == 0:
                 print("trimming: s_top = " , s3.switch_val , "s_rear = " , s1.switch_val , "s_front = " , s2.switch_val)
-            
-                if s2.switch_val == 1:
-                    swing(-1)
-                    time.sleep(0.5)
-                    swing(0)
-                elif s1.switch_val == 1:
-                    swing(1)
-                    time.sleep(0.5)
-                    swing(0)
                 time.sleep(0.1)  
 
 
