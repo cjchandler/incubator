@@ -63,8 +63,7 @@ class switch: #0 is open, 1 is closed
     def __init__(self , gpio):
         self.gpio = gpio
         self.s = Button(gpio, bounce_time=1)
-        self.s.when_pressed = self.switch_closed
-        self.s.when_released = self.switch_opened
+        
         if self.s.is_pressed == True:
             self.switch_val = 1
         # ~ self.button.when_held = self.on_button_held
