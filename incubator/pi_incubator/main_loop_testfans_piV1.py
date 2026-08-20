@@ -27,23 +27,23 @@ from adafruit_extended_bus import ExtendedI2C as I2C
 
 #this is using i2c6 
 i2c1 = I2C(1)  # Device is /dev/i2c-6
-i2c6 = I2C(6)  # Device is /dev/i2c-6
+# ~ i2c6 = I2C(6)  # Device is /dev/i2c-6
 
 
 
 
-sht6 = adafruit_sht4x.SHT4x(i2c6)
+# ~ sht6 = adafruit_sht4x.SHT4x(i2c6)
 sht1 = adafruit_sht4x.SHT4x(i2c1)
 print("Found SHT4x_1 with serial number", hex(sht1.serial_number))
-print("Found SHT4x_6 with serial number", hex(sht6.serial_number))
+# ~ print("Found SHT4x_6 with serial number", hex(sht6.serial_number))
 
 
 sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
-sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
+# ~ sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
 # Can also set the mode to enable heater
 # sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
 print("Current mode 1 is: ", adafruit_sht4x.Mode.string[sht1.mode])
-print("Current mode 6 is: ", adafruit_sht4x.Mode.string[sht6.mode])
+# ~ print("Current mode 6 is: ", adafruit_sht4x.Mode.string[sht6.mode])
 
 ###end of i2c stuff
 
@@ -259,7 +259,8 @@ class main_class: #this has all the objects you need
 
 
         try:
-            self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht6.measurements
+            # ~ self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht6.measurements
+            self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht1.measurements
             self.state_dict['temperature_2_C'], humid2 =  sht1.measurements
             self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
         except:
@@ -462,25 +463,25 @@ class main_class: #this has all the objects you need
         #save data as needed:
         self.save_data_state_as_needed()
 
-
-        if s3.s.is_pressed == False:
-                # ~ ##self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
-                # ~ ##self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
-                #heat_boost( 1)#boost because the lid is open
+###disabled turning centering because switches stopped working
+        # ~ if s3.s.is_pressed == False:
+                ##self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
+                ##self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
+                # ~ #heat_boost( 1)#boost because the lid is open
                 
-            if s2.s.is_pressed == 1: 
-                swing(1)
-                time.sleep(5)
-                swing(0)
+            # ~ if s2.s.is_pressed == 1: 
+                # ~ swing(1)
+                # ~ time.sleep(5)
+                # ~ swing(0)
              
-            elif s1.s.is_pressed == 1: 
-                swing(-1)
-                time.sleep(5)
-                swing(0)
+            # ~ elif s1.s.is_pressed == 1: 
+                # ~ swing(-1)
+                # ~ time.sleep(5)
+                # ~ swing(0)
 
-            while s3.s.is_pressed == False:
-                print("trimming: s_top = " , s3.s.is_pressed , "s_rear = " , s1.s.is_pressed , "s_front = " , s2.s.is_pressed)
-                time.sleep(1)  
+            # ~ while s3.s.is_pressed == False:
+                # ~ print("trimming: s_top = " , s3.s.is_pressed , "s_rear = " , s1.s.is_pressed , "s_front = " , s2.s.is_pressed)
+                # ~ time.sleep(1)  
 
 
 while True: 

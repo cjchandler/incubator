@@ -39,12 +39,12 @@
 
 from gpiozero import Button
 from signal import pause
-
+import time
 
 class switch: #0 is open, 1 is closed
 	def __init__(self , gpio):
 		
-		self.s = Button(gpio)
+		self.s = Button(gpio ,pull_up=True )
 		self.s.when_pressed = self.switch_closed
 		self.s.when_released = self.switch_opened
 		# ~ self.button.when_held = self.on_button_held
@@ -57,20 +57,23 @@ class switch: #0 is open, 1 is closed
 		print("switch opened")
 
 	
-s1 = switch(7)
+#s1 = switch(16)
 
 
+#while True: 
+#	print( s1.s.is_pressed)
+#	time.sleep(1)
 
-print("Waiting for switch events...")
-pause() # Keeps the script running efficiently in the background
+#print("Waiting for switch events...")
+#pause() # Keeps the script running efficiently in the background
 
 
 ##super simple test
 
-# ~ from gpiozero import Button
-# ~ button = Button(7)
+#from gpiozero import Button
+button = Button(20)
 
 
-# ~ button.wait_for_press()
-# ~ print('You pushed me')
+button.wait_for_press()
+print('You pushed me')
 

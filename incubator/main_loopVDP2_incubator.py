@@ -1,155 +1,44 @@
-#!/home/carl/Git_Projects/incubator/incubator/pi_incubator/envH/bin/python
-
-
-
-abs_path = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/"
-
-
-#incubator controls on pi 
-
-from simple_pid import PID
+#2026 VDP or desk style incubator with phidget controls
 import pprint
+
+import os.path as Pathc
 import datetime
 import numpy as np
 import pandas as pd
-import os.path as Pathc
-
-# Initialize the temperature sensor
-import time
-import busio
-import board
-
-import adafruit_sht4x
-from adafruit_extended_bus import ExtendedI2C as I2C
-
-#this is the native i2c pins verion:
-#i2c = board.I2C()  # uses board.SCL and board.SDA
-
-#this is using i2c6 
-i2c1 = I2C(1)  # Device is /dev/i2c-6
-i2c6 = I2C(6)  # Device is /dev/i2c-6
+from pytz import timezone
+utc = timezone('UTC')
+from simple_pid import PID
 
 
+from temperature_and_humidity_classes import *
+from motor_classesVDP import *
+from heater_classV2 import *
+from fan_and_humidifyer_classesV2 import *
 
 
-sht6 = adafruit_sht4x.SHT4x(i2c6)
-sht1 = adafruit_sht4x.SHT4x(i2c1)
-print("Found SHT4x_1 with serial number", hex(sht1.serial_number))
-print("Found SHT4x_6 with serial number", hex(sht6.serial_number))
+from inputimeout import inputimeout , TimeoutOccurred
 
+#all alarms
 
-sht1.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
-sht6.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
-# Can also set the mode to enable heater
-# sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
-print("Current mode 1 is: ", adafruit_sht4x.Mode.string[sht1.mode])
-print("Current mode 6 is: ", adafruit_sht4x.Mode.string[sht6.mode])
+import subprocess as sp
+import os
 
-###end of i2c stuff
+import pandas as pd
+import csv
+import collections
 
+import select
 
-
-
-
-    
-
-
-# Configure the limit switchs. 
-from gpiozero import Button
-from signal import pause
-
-
-class switch: #0 is open, 1 is closed
-    def __init__(self , gpio):
-        self.gpio = gpio
-        self.s = Button(gpio, bounce_time=1)
-        
-        if self.s.is_pressed == True:
-            self.switch_val = 1
-        # ~ self.button.when_held = self.on_button_held
-        if self.s.is_pressed == False:
-            self.switch_val = 0
-    def switch_closed(self):
-        self.switch_val = 1
-        print("switch closed", self.gpio)
-    def switch_opened(self):
-        self.switch_val = 0
-        print("switch opened", self.gpio)
-
-    
-s1 = switch(7)
-s2 = switch(1)
-s3 = switch(20)
+import sys
+last_update_repo_path  = "/home/cjchandler/Git_Projects/last_update_repo/"
+sys.path.append(last_update_repo_path)
+from last_update_pusher import *
 
 
 
 
 
 
-###########MOTOR DRIVERS##################################
-
-from gpiozero import LED
-
-
-retract_pin = LED(13)
-extend_pin = LED(19)    
-swing_near_pin = LED(6)
-swing_far_pin = LED(26)
-
-def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
-    
-    
-    if inputval == 1 :
-        retract_pin.off()
-        extend_pin.on()
-    else: 
-        retract_pin.on()
-        extend_pin.off()
-    
-
-def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is stop   
-    
-    
-    if inputval == -1 :
-        swing_near_pin.off()
-        swing_far_pin.on()
-    if inputval == 1: 
-        swing_near_pin.on()
-        swing_far_pin.off()
-        
-    if inputval == 0: 
-        swing_far_pin.off()
-        swing_near_pin.off()
-        
-###SSR pins
-
-ssr_pinBO = LED(17)    
-def heat_boost(inputval): #0 for no heat, 1 for heat 
-    
-    
-    if inputval == 1 :
-        ssr_pinBO.on()
-    if inputval == 0: 
-        ssr_pinBO.off()
-
-ssr_pinHE = LED(27)
-def heat_12v(inputval): #0 for no heat, 1 for heat 
-    
-    
-    if inputval == 1 :
-        ssr_pinHE.on()
-    if inputval == 0: 
-        ssr_pinHE.off()
-
-ssr_pinHU = LED(4)     
-def humidity(inputval): #0 for no water, 1 for water 
-   
-    
-    if inputval == 1 :
-        ssr_pinHU.on()
-    if inputval == 0: 
-        ssr_pinHU.off()
-        
 
 
 
@@ -162,9 +51,10 @@ def init_state_dict():
     state_dict['save_interval_secs'] = 20
     state_dict['last_save_timestamp'] = 0
    
-    state_dict['temperature_1_C'] = -501
+    state_dict['temperature_1_C'] = -1
     state_dict['humidity_1'] = -0.01
-    state_dict['temperature_2_C'] = -501
+    state_dict['temperature_2_C'] = -1
+    state_dict['humidity_2'] = -0.01
     state_dict['egg_turning_on'] = True
 
     
@@ -173,23 +63,21 @@ def init_state_dict():
     state_dict['cooling_start_temperature'] = 38.6
 
     state_dict['heating_proportional_Cf'] =   .95
-    state_dict['heating_integral_Cf'] = 0.05 #2 p , 0.001i was too big perhaps 
+    state_dict['heating_integral_Cf'] = 0.005 #2 p , 0.001i was too big perhaps 
     state_dict['heating_derivitive_Cf'] = 0.0
     state_dict['target_humidity'] = 0.7
     state_dict['range_humidity'] = 0.03 #can be plus or minus this before we try to fix it  
     state_dict['control_change_minimum_secs'] = 2
     state_dict['last_control_change_timestamp'] = 0
     
+    state_dict['last_fan_on_timestamp'] = 0
     
-    state_dict['front_turn_switch'] = -10
-    state_dict['rear_turn_switch'] = -10
-    state_dict['top_switch'] = -10
-    
-
-    
-    
-    state_dict['venting_state'] = 0 #0 is closed up tight
-    state_dict['last_venting_timestamp'] = 0 
+    state_dict['last_turner_change_timestamp'] = 0
+    state_dict['front_switch'] = -10
+    state_dict['rear_switch'] = -10
+    state_dict['near_switch'] = -10#these are same as front and rear just for monitor there need to be there. not used in program
+    state_dict['far_switch'] = -10
+    # ~ state_dict['directon'] = -0.25
    
     
     state_dict['exhaust_on'] = 0
@@ -200,16 +88,27 @@ def init_state_dict():
 
     
     return state_dict
-    
+        
+        
+
+            
+        
 class main_class: #this has all the objects you need
     
     def __init__(self):
-        self.tstart = time.time()
+        
         self.cycle_seconds = 10 
         self.state_dict = init_state_dict()
+        hubserial = 671958
+
+        self.insideTemperatureHumidity_1 = temperature_humidity_phidget_channel(hubserial, 1)##this is the back one past heaters
+        self.insideTemperatureHumidity_1.startup()
         
+        self.insideTemperatureHumidity_2 = temperature_humidity_phidget_channel(hubserial, 2)
+        self.insideTemperatureHumidity_2.startup()
+
             
-        self.path = abs_path+"datalog/"
+        self.path = "/home/cjchandler/Git_Projects/incubator/incubator/"
        
         self.pid_heat = PID( self.state_dict['heating_proportional_Cf'] , self.state_dict['heating_integral_Cf'],  self.state_dict['heating_derivitive_Cf'], setpoint= self.state_dict['target_temperature'] )
         self.pid_heat.output_limits = (0, 1)
@@ -218,6 +117,19 @@ class main_class: #this has all the objects you need
         
         
  
+        #humidifyer startup
+        self.humidifyer = humidifyer()
+        self.humidifyer.startup(hubserial , 0 , 0)#
+        #heater 
+        self.heater = heater()
+        self.heater.startup( hubserial, 0 , 1 )# 
+        self.heaterBoost = heater()
+        self.heaterBoost.startup( hubserial, 0 , 2 )# 
+       
+        
+        self.motorTray = motor_channel(hubserial,  3 ) #turning linear actuator 
+        self.motorTray.startup()
+
 
 
 
@@ -230,7 +142,7 @@ class main_class: #this has all the objects you need
             
             
             now_time =  datetime.datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_state_piV1.csv"
+            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_stateVDP2.csv"
             
             
             
@@ -242,35 +154,24 @@ class main_class: #this has all the objects you need
                 
             
             #we need a today.csv for alarms, this goes through git. rewrites it everyday. 
-            
-            
             if now_time.hour == 8 and now_time.minute == 1: 
-                df.to_csv(self.path + "today_data_piV1.csv" ,index=False , header = True)
+                df.to_csv("today_dataVDP2.csv" ,index=False , header = True)
             else: 
-                df.to_csv(self.path +"today_data_piV1.csv" , mode = 'a' ,index=False , header = False)
+                df.to_csv("today_dataVDP2.csv" , mode = 'a' ,index=False , header = False)
 
 
     def do_climate_control(self):
         ##read sensors
-        
-        self.state_dict['temperature_1_C'] = 12.3456789 
-        self.state_dict['humidity_1'] =  12.3456789 
-        self.state_dict['temperature_2_C'] =  12.3456789 
-
-
-        try:
-            self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht6.measurements
-            self.state_dict['temperature_2_C'], humid2 =  sht1.measurements
-            self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
-        except:
-            pass
-        
-        #read switches 
-        self.state_dict['front_turn_switch'] = s2.s.is_pressed
-        self.state_dict['rear_turn_switch'] = s1.s.is_pressed
-        self.state_dict['top_switch'] = s3.s.is_pressed
+        self.state_dict['temperature_1_C'] = self.insideTemperatureHumidity_1.getTemperature() 
+        self.state_dict['humidity_1'] = self.insideTemperatureHumidity_1.getHumidity() 
+        self.state_dict['temperature_2_C'] = self.insideTemperatureHumidity_2.getTemperature() 
+        self.state_dict['humidity_2'] = self.insideTemperatureHumidity_2.getHumidity() 
    
-       
+        self.state_dict['front_switch'] = -10
+        self.state_dict['rear_switch'] = -10
+   
+        self.state_dict['near_switch'] = -10
+        self.state_dict['far_switch'] = -10
         
         
         pprint.pprint( self.state_dict, width = 1)
@@ -373,12 +274,12 @@ class main_class: #this has all the objects you need
         
         ###end of fan heat humiditifyer state changes###############################################################  
 
-      
+        #set fan 
         
         #set humidifyer
-        humidity( self.state_dict['humidifyer_on'])
-        heat_boost( self.state_dict['boost_on'] )
-        #duty cycle for heat_12v is later
+        self.humidifyer.command_humidifyer( self.state_dict['humidifyer_on'])
+        #set heater duty cycles, both are 0-1
+       
         
        
 
@@ -389,11 +290,12 @@ class main_class: #this has all the objects you need
         #if the hour is even, tilt near, if off, tilt rear
         now_time =  datetime.datetime.today() 
         #check this every min
-        if now_time.second < 10 :  
+        if now_time.second < 10:  
             if now_time.hour%2 == 0:
-                swing(1)
+                #tilt rear down, rear switch ==0 
+                self.motorTray.runMotorNoStop(1)
             else:
-                swing(-1)
+                self.motorTray.runMotorNoStop(-1)
                 
 
 
@@ -405,7 +307,17 @@ class main_class: #this has all the objects you need
                 
         
                 
-
+    def cycle_fan(self):
+        
+        # ~ if( self.state_dict['fan_on'] == 0):
+            # ~ self.motorVent.runMotorNoStop(-1)
+            # ~ #this leaves time to do something else, like run fan
+            # ~ return
+        # ~ if( self.state_dict['fan_on'] > 0):
+            # ~ self.motorVent.runMotorNoStop(1)
+            # ~ return 
+        
+        return -1 
 
     def do_one_cycle(self):
         print("cycle start")
@@ -421,39 +333,37 @@ class main_class: #this has all the objects you need
         #update the turning once a cycle
         self.turn_eggs_as_needed()
         
-        
+        #update boost once per cycle 
+        self.heaterBoost.command_heater( self.state_dict['boost_on'])
         
         tnow = time.time()
         while tnow <= cycle_end:
             tnow = time.time()
             
             if tnow < heater_flip_off_time :
-                heat_12v( 1  )
+                self.heater.command_heater( 1  )
             if tnow > heater_flip_off_time :
-                heat_12v( 0  )
+                self.heater.command_heater( 0  )
                     
                 
-            #open exhuast vent every 3 min          
-            if time.time() - self.state_dict['last_venting_timestamp'] > 60*300000000:
-                self.state_dict['venting_state'] = True
-                self.state_dict['last_venting_timestamp'] = time.time()
+            self.cycle_fan()
+                #start exhuast fan every 30 min
+            if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
+                self.state_dict['fan_on'] = True
+                self.state_dict['last_fan_on_timestamp'] = time.time()
                 
                 
             #end exhaust fan code 
-            if self.state_dict['venting_state'] == True:
-                if time.time() > self.state_dict['last_venting_timestamp'] + 3:
-                    self.state_dict['venting_state'] = False
+            if self.state_dict['fan_on'] == True:
+                if time.time() > self.state_dict['last_fan_on_timestamp'] + 60*2:
+                    self.state_dict['fan_on'] = False
             
         
-            vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
-            
-            
         
-        # ~ self.state_dict['front_turn_switch'] = s2.switch_val
-        # ~ self.state_dict['rear_turn_switch'] = s1.switch_val
-        # ~ self.state_dict['top_switch'] = s3.switch_val
-   
         
+            
+            # ~ self.motor.stop_motors_on_contact()        
+
         
         
             
@@ -461,81 +371,45 @@ class main_class: #this has all the objects you need
             
         #save data as needed:
         self.save_data_state_as_needed()
+    
+        
+
+    
 
 
-        if s3.s.is_pressed == False:
-                # ~ ##self.state_dict['temperature_1_C'], self.state_dict['humidity_1'] =  sht.measurements
-                # ~ ##self.state_dict['humidity_1'] = self.state_dict['humidity_1']/100.0 
-                #heat_boost( 1)#boost because the lid is open
-                
-            if s2.s.is_pressed == 1: 
-                swing(1)
-                time.sleep(5)
-                swing(0)
-             
-            elif s1.s.is_pressed == 1: 
-                swing(-1)
-                time.sleep(5)
-                swing(0)
-
-            while s3.s.is_pressed == False:
-                print("trimming: s_top = " , s3.s.is_pressed , "s_rear = " , s1.s.is_pressed , "s_front = " , s2.s.is_pressed)
-                time.sleep(1)  
 
 
 while True: 
-     # ~ try: 
-    print("starting mainC")
-    mainC = main_class()
+	
 
-    mainC.state_dict['fan_on'] = False
-    mainC.state_dict['humidifyer_on'] = False
-    mainC.state_dict['heater_on'] = False
-    
-    # ~ tilt= 1 #move top towards back wall 
-    # ~ for a in range( 0 , 12):
-        # ~ mainC.motorTray.runMotor(tilt)
-    
-    # ~ #now time how long to go across: 
-    # ~ while s2.switch_val
-    
-    
-    t_start = time.time()
-    # ~ tilt= 1 #move top towards back wall 
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ exit()
+	
+	
+    # ~ try: 
+	print("starting mainC")
+	mainC = main_class()
+
+	mainC.state_dict['fan_on'] = False
+	mainC.state_dict['humidifyer_on'] = False
+	mainC.state_dict['heater_on'] = False
+	
+	# ~ tilt= 1 #move top towards back wall 
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ mainC.motorTray.runMotor(tilt)
+	# ~ exit()
 
 
-    while True:
-        
+	while True:
+		
 
-        mainC.do_one_cycle()
-        print("piV1 main loop")
-        
-        
-
-
-        # ~ try: 
-            # ~ print( " path for lastupdate pusher is " , "/home/carl/Git_Projects/last_update_repo/")
+		mainC.do_one_cycle()
+		print("VDP main loop")
             
-            # ~ push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V1_incubator_running.txt" , 60*2 )
-        # ~ except Exception as e:
-            # ~ print("--------------------------------------------------------------")
-            # ~ print("--------------------------------------------------------------")
-            # ~ print("--------------------------------------------------------------")
-            # ~ print("--------------------------------------------------------------")
-            # ~ print(f"Error Type: {type(e).__name__}")
-            # ~ print(f"Error Message: {e}")
-            
-            # ~ print( "push_latest_timestamp_if_needed for last_update_repo not working")
-            # ~ print("--------------------------------------------------------------")
-            # ~ print("--------------------------------------------------------------")
-            # ~ print("--------------------------------------------------------------")
-            # ~ print("--------------------------------------------------------------")
-
-
+    # ~ except:
+        # ~ print ("fatal error: restarting")
+        
+        # ~ #send sms alarm 
+        # ~ os.execl(sys.executable, sys.executable, *sys.argv)
