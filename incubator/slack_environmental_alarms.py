@@ -72,14 +72,14 @@ def send_message( message_string):
     return 1
         
         
-def check_turning(df):
+
         
 
    
 while True: 
     df = pd.DataFrame()
     filepath = "/home/cjchandler/Git_Projects/incubator/incubator/today_dataVDP.csv"
-	#look at the pandas thing for last timestamp
+    #look at the pandas thing for last timestamp
     df = pd.read_csv(filepath)
         
     #now every 2 min, look at the parameters and end alarms 
@@ -100,7 +100,7 @@ while True:
     print("checking alarms-------------------------------------------------")
     
     #now we also want to check to see that the temperature and humidity are ok
-    humidity_max = 0.8 
+    humidity_max = 0.81 
     humidity_min = 0.65 
     T_min = 37.25
     T_max = 37.85
