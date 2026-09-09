@@ -181,7 +181,7 @@ class server_monitor:
         self.df_prev = self.df_now
         self.df_now = pd.read_csv("./"+self.today_filename)
 
-        #print(self.df_now.tail(10) )
+        print(self.df_now.tail(10) )
 
         #reset all alarms to off
         for key in self.alarms_active_dict:
@@ -229,7 +229,8 @@ class server_monitor:
             self.alarms_active_dict['temperature alarm'] = True
             self.alarm_message_dict[  'temperature alarm'] = self.today_filename+"incubator temperature is high " + str(temp)
 
-        # ~ print(temp , "temp" , self.today_filename)
+        print(temp , "temp" , self.today_filename)
+        print(humidity , "humidity" , self.today_filename)
 
 
         try:

@@ -72,7 +72,7 @@ def send_message( message_string):
     return 1
         
         
-def check_turning(df):
+
         
 
    

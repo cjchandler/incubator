@@ -58,7 +58,7 @@ def init_state_dict():
     state_dict['egg_turning_on'] = True
 
     
-    state_dict['target_temperature'] =37.5
+    state_dict['target_temperature'] =37.6
     state_dict['boost_temperature'] =36.5 #turn on the big heater if it's below boost temperature. Then the little heater is just fine tuning with pid controls
     state_dict['cooling_start_temperature'] = 38.6
 
@@ -350,14 +350,14 @@ class main_class: #this has all the objects you need
                 
             self.cycle_fan()
                 #start exhuast fan every 30 min
-            if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*3:
+            if time.time() - self.state_dict['last_fan_on_timestamp'] > 60*10000:
                 self.state_dict['fan_on'] = True
                 self.state_dict['last_fan_on_timestamp'] = time.time()
                 
                 
             #end exhaust fan code 
             if self.state_dict['fan_on'] == True:
-                if time.time() > self.state_dict['last_fan_on_timestamp'] + 60*2:
+                if time.time() > self.state_dict['last_fan_on_timestamp'] + 0:
                     self.state_dict['fan_on'] = False
             
         
