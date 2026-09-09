@@ -71,7 +71,7 @@ class switch: #0 is open, 1 is closed
 ##super simple test
 
 #from gpiozero import Button
-button = Button(20)
+button = Button(7)
 
 
 button.wait_for_press()
