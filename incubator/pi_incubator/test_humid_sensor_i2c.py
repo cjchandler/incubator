@@ -53,7 +53,7 @@ from adafruit_extended_bus import ExtendedI2C as I2C
 ####TEST ONE ONLY 
 
 # Create library object using our Extended Bus I2C port
-i2c1 = I2C(6)  # Device is /dev/i2c-6
+i2c1 = I2C(1)  # Device is /dev/i2c-6
 
 
 
