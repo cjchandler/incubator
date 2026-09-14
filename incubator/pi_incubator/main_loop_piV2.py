@@ -448,7 +448,8 @@ class main_class: #this has all the objects you need
                     self.state_dict['venting_state'] = False
             
         
-            vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
+            # ~ vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
+            vent(0)#actually commanding vent via motor driver 
             
             
         
