@@ -18,23 +18,23 @@ import time
 
 
 
-ssr_pinBO = LED(17)    
-def heat_boost(inputval): #0 for no heat, 1 for heat 
+# ~ ssr_pinBO = LED(17)    
+# ~ def heat_boost(inputval): #0 for no heat, 1 for heat 
     
     
-    if inputval == 1 :
-        ssr_pinBO.on()
-    if inputval == 0: 
-        ssr_pinBO.off()
+    # ~ if inputval == 1 :
+        # ~ ssr_pinBO.on()
+    # ~ if inputval == 0: 
+        # ~ ssr_pinBO.off()
 
-ssr_pinHE = LED(27)
-def heat_12v(inputval): #0 for no heat, 1 for heat 
+# ~ ssr_pinHE = LED(27)
+# ~ def heat_12v(inputval): #0 for no heat, 1 for heat 
     
     
-    if inputval == 1 :
-        ssr_pinHE.on()
-    if inputval == 0: 
-        ssr_pinHE.off()
+    # ~ if inputval == 1 :
+        # ~ ssr_pinHE.on()
+    # ~ if inputval == 0: 
+        # ~ ssr_pinHE.off()
 
 ssr_pinHU = LED(4)     
 def humidity(inputval): #0 for no water, 1 for water 
@@ -48,12 +48,12 @@ def humidity(inputval): #0 for no water, 1 for water
 while True: 
 	print("heat on 1" )
 	
-	heat_12v(1) 
-	heat_boost(1) 
+	# ~ heat_12v(1) 
+	# ~ heat_boost(1) 
 	humidity(1) 
 	time.sleep(5)
 	print( "heat off 0")
-	heat_12v(0) 
+	# ~ heat_12v(0) 
 	time.sleep(5)
 
 		
