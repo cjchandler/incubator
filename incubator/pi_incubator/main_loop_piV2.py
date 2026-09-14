@@ -106,8 +106,8 @@ def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not ventin
         retract_pin.off()
         extend_pin.off()
     else: 
-        retract_pin.on()
-        extend_pin.off()
+        retract_pin.off()
+        extend_pin.on()
     
 
 def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing front, 0 is stop   
