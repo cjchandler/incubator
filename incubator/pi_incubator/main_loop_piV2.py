@@ -99,7 +99,7 @@ swing_far_pin = LED(26)
 def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
     
     
-    if inputval == 1 :
+    if inputval == 0 :
         retract_pin.off()
         extend_pin.on()
     else: 
