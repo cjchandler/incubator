@@ -81,7 +81,7 @@ s1 = switch(7)
 s2 = switch(1)
 s3 = switch(20)
 
-
+print("switches are inialized")
 
 
 
@@ -121,6 +121,8 @@ def swing( inputval ): #motor driver 2, input value -1 is swing back, 1 is swing
         swing_far_pin.off()
         swing_near_pin.off()
         
+print("motor drivers are initalized")        
+
 ###SSR pins
 
 ssr_pinBO = LED(17)    
@@ -141,15 +143,16 @@ def heat_12v(inputval): #0 for no heat, 1 for heat
     if inputval == 0: 
         ssr_pinHE.off()
 
-ssr_pinHU = LED(4)     
-def humidity(inputval): #0 for no water, 1 for water 
+# ~ ssr_pinHU = LED(4)     
+# ~ def humidity(inputval): #0 for no water, 1 for water 
    
     
-    if inputval == 1 :
-        ssr_pinHU.on()
-    if inputval == 0: 
-        ssr_pinHU.off()
+    # ~ if inputval == 1 :
+        # ~ ssr_pinHU.on()
+    # ~ if inputval == 0: 
+        # ~ ssr_pinHU.off()
         
+print( "ssrs are initailized")
 
 
 
