@@ -101,7 +101,7 @@ def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not ventin
     
     if inputval == 0 :
         retract_pin.off()
-        extend_pin.on()
+        extend_pin.off()
     else: 
         retract_pin.on()
         extend_pin.off()
