@@ -143,14 +143,14 @@ def heat_12v(inputval): #0 for no heat, 1 for heat
     if inputval == 0: 
         ssr_pinHE.off()
 
-# ~ ssr_pinHU = LED(4)     
-# ~ def humidity(inputval): #0 for no water, 1 for water 
+ssr_pinHU = LED(4)     
+def humidity(inputval): #0 for no water, 1 for water 
    
     
-    # ~ if inputval == 1 :
-        # ~ ssr_pinHU.on()
-    # ~ if inputval == 0: 
-        # ~ ssr_pinHU.off()
+    if inputval == 1 :
+        ssr_pinHU.on()
+    if inputval == 0: 
+        ssr_pinHU.off()
         
 print( "ssrs are initailized")
 
