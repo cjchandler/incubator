@@ -25,10 +25,17 @@ carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ python3 -m 
 carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ source ./envH/bin/activate
 (envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install rpi-lgpio
 (envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install adafruit-blinka
-(envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install adafruit_sht4x
+(envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install adafruit_sht4x----SKIP?
 (envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-dht
 envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-sht4x
 envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-extended-bus
 
+
+Enable I2C Bus 6
+Open the configuration file in a terminal using a text editor like nano: sudo nano /boot/firmware/config.txt 
+Make sure the main ARM I2C interface is enabled by adding or uncommenting:dtparam=i2c_arm=on
+Add the specific overlay for bus 6 on a new line:dtoverlay=i2c6
+Save the file and exit the editor (press Ctrl+O, Enter, then Ctrl+X).
+Restart your Raspberry Pi to apply the changes: sudo reboot. 
 
 
