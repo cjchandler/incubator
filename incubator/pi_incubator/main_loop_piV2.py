@@ -427,7 +427,6 @@ class main_class: #this has all the objects you need
         #update the turning once a cycle
         self.turn_eggs_as_needed()
         
-        vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
         
         
         tnow = time.time()
@@ -441,7 +440,7 @@ class main_class: #this has all the objects you need
                     
                 
             #open exhuast vent every 3 min          
-            if time.time() - self.state_dict['last_venting_timestamp'] > 60*60*24*29:
+            if time.time() - self.state_dict['last_venting_timestamp'] > 15:#60*60*24*29:
                 self.state_dict['venting_state'] = True
                 self.state_dict['last_venting_timestamp'] = time.time()
                 
@@ -452,7 +451,8 @@ class main_class: #this has all the objects you need
                     self.state_dict['venting_state'] = False
             
         
-        
+            vent(self.state_dict['venting_state'])#actually commanding vent via motor driver 
+
             # ~ vent(1)#actually commanding vent via motor driver 
             
             
