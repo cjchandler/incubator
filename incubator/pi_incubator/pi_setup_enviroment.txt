@@ -9,8 +9,26 @@ dtoverlay=w1-gpio,gpioin=10
 pip install RPi.GPIO
 #this is needed for gpizero library -- but I'm not sure it worked. I mean the library works but it's using a naive fall back? .... not too worried
 
+#might need to do this if the adafruit thing doesn't work:
+sudo apt install swig python3-dev build-essential
+
 pip3 install adafruit-circuitpython-dht
 #this is needed for the humidity sensor
 
 #i could not get the onewire interface to work... It was intermitant showing dead / unpowered sensors and trying other pull up did not help. 
+
+
+#fresh on 11 sep 2026, the key is intall the lgpio first not in virtual env, then make virtual env that uses sytem packages
+
+carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ sudo apt install python3-lgpio
+carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ python3 -m venv --system-site-packages envH
+carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ source ./envH/bin/activate
+(envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install rpi-lgpio
+(envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install adafruit-blinka
+(envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip install adafruit_sht4x
+(envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-dht
+envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-sht4x
+envH) carl@incubatorVpi2:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-extended-bus
+
+
 
