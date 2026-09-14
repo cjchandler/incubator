@@ -440,7 +440,7 @@ class main_class: #this has all the objects you need
                     
                 
             #open exhuast vent every 3 min          
-            if time.time() - self.state_dict['last_venting_timestamp'] > 15:#60*60*24*29:
+            if time.time() - self.state_dict['last_venting_timestamp'] > 60.0*60*24*29:
                 self.state_dict['venting_state'] = True
                 self.state_dict['last_venting_timestamp'] = time.time()
                 
