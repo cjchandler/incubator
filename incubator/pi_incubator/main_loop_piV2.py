@@ -91,10 +91,13 @@ print("switches are inialized")
 from gpiozero import LED
 
 
-retract_pin = LED(13)
-extend_pin = LED(19)    
-swing_near_pin = LED(6)
-swing_far_pin = LED(26)
+
+retract_pin = LED(6)
+extend_pin = LED(26) 
+
+   
+swing_near_pin = LED(13)
+swing_far_pin = LED(19)
 
 def vent( inputval ): #motor driver 1, input value 1 is venting, 0 is not venting 
     
