@@ -5,7 +5,7 @@ import board
 import adafruit_sht4x
 
 # ~ #this is the native i2c pins verion:
-i2c = board.I2C()  # uses board.SCL and board.SDA
+# ~ i2c = board.I2C()  # uses board.SCL and board.SDA
 
 # ~ #this is useing i2c6 
 from adafruit_extended_bus import ExtendedI2C as I2C
