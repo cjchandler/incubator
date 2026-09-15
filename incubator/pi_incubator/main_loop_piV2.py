@@ -509,14 +509,10 @@ while True:
     
     
     t_start = time.time()
-    # ~ tilt= 1 #move top towards back wall 
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ mainC.motorTray.runMotor(tilt)
-    # ~ exit()
+    tilt= 1 #move top towards back wall 
+    mainC.motorTray.runMotor(tilt)
+    mainC.motorTray.runMotor(tilt)
+    exit()
 
 
     while True:
