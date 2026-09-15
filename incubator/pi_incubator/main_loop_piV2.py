@@ -509,10 +509,7 @@ while True:
     
     
     t_start = time.time()
-    swing(1)
-    time.sleep(2)
-    swing(0)
-    exit()
+    
 
 
     while True:
@@ -522,6 +519,13 @@ while True:
         print("piV2 main loop")
         
         
+
+		swing(1)
+		print("swinging")
+        time.sleep(2.0)
+        swing(0)
+        print("done swing")
+        exit()
 
 
         # ~ try: 
