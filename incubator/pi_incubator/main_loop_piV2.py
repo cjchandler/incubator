@@ -509,7 +509,7 @@ while True:
     
     
     t_start = time.time()
-    swing(-1)
+    swing(1)
     time.sleep(2)
     swing(0)
     exit()
