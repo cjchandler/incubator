@@ -520,8 +520,8 @@ while True:
         
         
 
-		swing(1)
-		print("swinging")
+        swing(1)
+        print("swinging")
         time.sleep(2.0)
         swing(0)
         print("done swing")
