@@ -79,7 +79,7 @@ class switch: #0 is open, 1 is closed
     
 s1 = switch(7)
 s2 = switch(1)
-s3 = switch(20)
+s3 = switch(16)
 
 print("switches are inialized")
 
