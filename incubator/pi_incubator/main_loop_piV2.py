@@ -394,12 +394,12 @@ class main_class: #this has all the objects you need
         
         #if the hour is even, tilt near, if off, tilt rear
         now_time =  datetime.datetime.today() 
-        #check this every min
-        if now_time.second < 10 :  
-            if now_time.hour%2 == 0:
-                swing(1)
-            else:
-                swing(-1)
+        #check this every cycle
+         
+		if now_time.hour%2 == 0:
+			swing(1)
+		else:
+			swing(-1)
                 
 
 
