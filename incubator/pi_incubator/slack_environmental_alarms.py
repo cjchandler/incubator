@@ -99,6 +99,10 @@ def check_turning(df):
                 sumnear += valsnear[a]
                 n += 1.0
 
+        if n == 0: 
+            print("not enough data for turning alarm to work, time on today_data file = " ,times[-1] - times[0])
+            return( 0.511111111111111 , 0.5111111111111111111)
+
         mean = sumval/n
         meannear = sumnear/n
         # ~ print( " meanfar, meannear " , mean , meannear , n   )
