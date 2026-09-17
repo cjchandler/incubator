@@ -520,12 +520,12 @@ while True:
         
         
 
-        # ~ swing(1)
-        # ~ print("swinging")
-        # ~ time.sleep(4.0)
-        # ~ swing(0)
-        # ~ print("done swing")
-        # ~ exit()
+        swing(1)
+        print("swinging")
+        time.sleep(4.0)
+        swing(0)
+        print("done swing")
+        exit()
 
 
         # ~ try: 
