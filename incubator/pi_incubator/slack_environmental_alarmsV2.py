@@ -113,7 +113,7 @@ def check_turning(df):
    
 
 df = pd.DataFrame()
-filepath = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/datalog/today_data_piV1.csv"
+filepath = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/datalog/today_data_piV2.csv"
 #look at the pandas thing for last timestamp
 df = pd.read_csv(filepath)
     
@@ -129,7 +129,7 @@ minute = dt_object.minute
 print(hour, minute)
 
 if hour == 9 and minute < 3:
-    send_message(time.ctime() + "piV1 still alive and monitoring the temperature, humdity, and turning")
+    send_message(time.ctime() + "piV2 still alive and monitoring the temperature, humdity, and turning")
 
     
 print("checking alarms-------------------------------------------------")
@@ -147,25 +147,25 @@ T2 = df[df.columns[5]].iloc[-1] #5 is the temp 2  column
 H2 = df[df.columns[6]].iloc[-1] #6 is the humidity 2 column
 
 if T1 > T_max or T1 < T_min: 
-    send_message(time.ctime() + "piV1 temperature out of range = " + str(T1))
+    send_message(time.ctime() + "piV2 temperature out of range = " + str(T1))
     
 #chcek the temp are similar
 dT = np.abs(T1 - T2)
 if dT > 0.5:
-    send_message(time.ctime() + "piV1 temperature too spread = " + str(T1) + "  ,  " + str(T2) )
+    send_message(time.ctime() + "piV2 temperature too spread = " + str(T1) + "  ,  " + str(T2) )
 
 if H1 > humidity_max or H1 < humidity_min: 
-    send_message(time.ctime() + "piV1 humidity out of range = " + str(H1))
+    send_message(time.ctime() + "piV2 humidity out of range = " + str(H1))
 
 #we also want to check the turning is working: 
 m1 , m2 = check_turning(df)
 print( "turning = " , m1 , m2)
 
 if m1 > 0.7 or m1 < 0.3:
-    send_message(time.ctime() + "piV1 turning mean 2 = " + str(m2) +" piV1 turning mean 1 = " + str(m1))
+    send_message(time.ctime() + "piV2 turning mean 2 = " + str(m2) +" piV2 turning mean 1 = " + str(m1))
 
 if m2 > 0.7 or m2 < 0.3:
-        send_message(time.ctime() + "piV1 turning mean 2 = " + str(m2) +" piV1 turning mean 1 = " + str(m1))
+        send_message(time.ctime() + "piV2 turning mean 2 = " + str(m2) +" piV2 turning mean 1 = " + str(m1))
             
 
 
