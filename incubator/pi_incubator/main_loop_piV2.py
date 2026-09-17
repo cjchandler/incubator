@@ -396,10 +396,10 @@ class main_class: #this has all the objects you need
         now_time =  datetime.datetime.today() 
         #check this every cycle
          
-		if now_time.hour%2 == 0:
-			swing(1)
-		else:
-			swing(-1)
+        if now_time.hour%2 == 0:
+            swing(1)
+        else:
+            swing(-1)
                 
 
 
