@@ -83,6 +83,7 @@ def check_turning(df):
         times = df[df.columns[2]].to_numpy()
 
         print( "time" , times[-1] - times[0])
+        print(times)
 
         if times[-1] - times[0] < 60*60*2:
             print("not enough data for turning alarm to work, time on today_data file = " ,times[-1] - times[0])
