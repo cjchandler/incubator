@@ -82,6 +82,8 @@ def check_turning(df):
         valsnear = df[df.columns[18]].to_numpy()
         times = df[df.columns[2]].to_numpy()
 
+		print( "time" , times[-1] - times[0])
+
         if times[-1] - times[0] < 60*60*2:
             print("not enough data for turning alarm to work, time on today_data file = " ,times[-1] - times[0])
             return( 0.511111111111111 , 0.5111111111111111111)  
@@ -129,8 +131,8 @@ if hour == 9 and minute < 3:
 print("checking alarms-------------------------------------------------")
 
 #now we also want to check to see that the temperature and humidity are ok
-humidity_max = 0.8 
-humidity_min = 0.65 
+humidity_max = 0.7 
+humidity_min = 0.5 
 T_min = 37.25
 T_max = 37.85
 
