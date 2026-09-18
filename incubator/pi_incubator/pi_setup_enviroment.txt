@@ -38,4 +38,83 @@ Add the specific overlay for bus 6 on a new line:dtoverlay=i2c6
 Save the file and exit the editor (press Ctrl+O, Enter, then Ctrl+X).
 Restart your Raspberry Pi to apply the changes: sudo reboot. 
 
+Ok, now you got it running but you want it to autostart, and restart if there is some wierd problem that crashes the main loop
+1) make is executable. first make sure the shebang is correct, then (for whatever the main loop name is in this version)
+$chmod +x main_loop_piV2.py 
 
+2) put that in chrontab:
+sudo crontab -e
+
+then add these lines:
+
+#this is sorting out the path... not really sure why needed but it is...
+PATH=/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+#this is just a test
+* * * * * env > /home/carl/env.output
+
+
+#this runs the enviromental alarms every 2 min (make  sure you chmod +x the alarms program)
+2 * * * * /home/carl/Git_Projects/incubator/incubator/pi_incubator/slack_environmental_alarmsV2.py
+
+#the crontab just didn't always work... So moved the main loop to systemd. 
+
+#used this command: 
+sudo nano /etc/systemd/system/myscript.service 
+
+#then filled file like this: 
+
+[Unit]
+Description=main loop Script
+After=multi-user.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/home/carl/Git_Projects/incubator/incubator/pi_incubator/main_loop_piV2.py
+Restart=always
+RestartSec = 10
+
+[Install]
+WantedBy=multi-user.target
+
+#then run these commands to start it: 
+sudo systemctl daemon-reload
+sudo systemctl enable myscript.service
+sudo systemctl start myscript.service
+
+#then check status with 
+ sudo systemctl status myscript.service
+ 
+
+###the auto updater can't run as root, that makes it harder
+so to do this, make a dir 
+mkdir -p ~/.config/systemd/user/
+
+#then edit a file in it 
+~/.config/systemd/user/auto_git_push.service
+
+#file should look like:
+[Unit]
+Description=auto push last update v2 via git
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/carl/Git_Projects/last_update_piv2/auto_push_timestamps.py
+Restart=always
+RestartSec = 10
+
+[Install]
+WantedBy=default.target
+
+#then you activate it with a --user flag 
+systemctl --user daemon-reload
+systemctl --user start auto_git_push.service
+systemctl --user enable auto_git_push.service
+
+#can check it's working with this
+systemctl --user status auto_git_push.service
+
+#scraps here
+/home/carl/Git_Projects/last_update_piv2/auto_push_timestamps.py
