@@ -38,12 +38,12 @@ scd4x.start_periodic_measurement()
 print("Waiting for first measurement...")
 
 def get_CO2_data(): 
-	
-	ppmCO2 = scd4x.CO2
-	T = scd4x.temperature
-	H = scd4x.relative_humidity 
+    
+    ppmCO2 = scd4x.CO2
+    T = scd4x.temperature
+    H = scd4x.relative_humidity 
 
-	return ppmCO2 , T , H 
+    return ppmCO2 , T , H 
 
 
 
@@ -275,10 +275,10 @@ class main_class: #this has all the objects you need
 
 
         try:
-			CO2 , T , H = get_CO2_data()
-			T1 = Tsensor.temperature
-			H1 = Tsensor.relative_humidity
-		
+            CO2 , T , H = get_CO2_data()
+            T1 = Tsensor.temperature
+            H1 = Tsensor.relative_humidity
+        
 
             self.state_dict['temperature_1_C'] = T1
             self.state_dict['humidity_1'] =  H1/100.0
