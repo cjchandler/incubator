@@ -31,5 +31,11 @@ sudo raspi-config
 
 
 #ok at this point, put the pcb into the incubator and see that you can run the main loop manually
+make a last_update_piv3 repo
+put in the timestamp.txt file and auto_push_timestamps.py file
+put clone in /Git_Projects on the pi
 
+#make python venv for it on pi by: 
+$python3 -m venv --system-site-packages envH
 
+$source ./envH/bin/activate
