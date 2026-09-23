@@ -246,7 +246,7 @@ class main_class: #this has all the objects you need
             
             
             now_time =  datetime.datetime.today() 
-            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_state_piV2.csv"
+            filename = self.path+ now_time.strftime('%Y-%m-%d') + "_state_piV3.csv"
             
             
             
@@ -261,9 +261,9 @@ class main_class: #this has all the objects you need
             
             
             if now_time.hour == 8 and now_time.minute == 1: 
-                df.to_csv(self.path + "today_data_piV2.csv" ,index=False , header = True)
+                df.to_csv(self.path + "today_data_piV3.csv" ,index=False , header = True)
             else: 
-                df.to_csv(self.path +"today_data_piV2.csv" , mode = 'a' ,index=False , header = False)
+                df.to_csv(self.path +"today_data_piV3.csv" , mode = 'a' ,index=False , header = False)
 
 
     def do_climate_control(self):
@@ -533,7 +533,7 @@ while True:
         
 
         mainC.do_one_cycle()
-        print("piV2 main loop")
+        print("piV3 main loop")
         
         
 
@@ -548,7 +548,7 @@ while True:
         # ~ try: 
             # ~ print( " path for lastupdate pusher is " , "/home/carl/Git_Projects/last_update_repo/")
             
-            # ~ push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V2_incubator_running.txt" , 60*2 )
+            # ~ push_latest_timestamp_if_needed( "/home/carl/Git_Projects/last_update_repo/" , "pi_V3_incubator_running.txt" , 60*2 )
         # ~ except Exception as e:
             # ~ print("--------------------------------------------------------------")
             # ~ print("--------------------------------------------------------------")
