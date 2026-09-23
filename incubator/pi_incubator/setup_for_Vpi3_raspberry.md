@@ -21,8 +21,10 @@ carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ source ./en
 envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-sht4x
 envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-sht31d
 envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-scd4x
-
-pip3 install adafruit_bh1750
+envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip install simple_pid
+pip3 install adafruit-circuitpython-bh1750
 
 #i2c enable 
 sudo raspi-config
+
+
