@@ -481,12 +481,12 @@ class main_class: #this has all the objects you need
                 
                 if s2.s.is_pressed == 1: 
                     swing(-1)
-                    time.sleep(4.3)
+                    time.sleep(4.7)
                     swing(0)
                  
                 elif s1.s.is_pressed == 1: 
                     swing(1)
-                    time.sleep(4.3)
+                    time.sleep(4.7)
                     swing(0)
 
                 while s3.s.is_pressed == True:
