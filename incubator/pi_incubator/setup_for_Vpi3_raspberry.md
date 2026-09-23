@@ -22,9 +22,14 @@ envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 
 envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-sht31d
 envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip3 install adafruit-circuitpython-scd4x
 envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip install simple_pid
+envH) carl@incubatorVpi3:~/Git_Projects/incubator/incubator/pi_incubator $ pip install pandas
+
 pip3 install adafruit-circuitpython-bh1750
 
 #i2c enable 
 sudo raspi-config
+
+
+#ok at this point, put the pcb into the incubator and see that you can run the main loop manually
 
 
