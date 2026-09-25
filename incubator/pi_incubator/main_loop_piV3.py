@@ -279,8 +279,8 @@ class main_class: #this has all the objects you need
             CO2 , T , H = get_CO2_data()
             T1 = Tsensor.temperature
             H1 = Tsensor.relative_humidity
-			
-			T2 = T2sensor.temperature
+            
+            T2 = T2sensor.temperature
             H2 = T2sensor.relative_humidity
         
 
