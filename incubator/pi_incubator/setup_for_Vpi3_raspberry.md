@@ -33,9 +33,28 @@ sudo raspi-config
 #ok at this point, put the pcb into the incubator and see that you can run the main loop manually
 make a last_update_piv3 repo
 put in the timestamp.txt file and auto_push_timestamps.py file
-put clone in /Git_Projects on the pi
+put clone in /Git_Projects on the pi via ssh 
 
 #make python venv for it on pi by: 
 $python3 -m venv --system-site-packages envH
 
 $source ./envH/bin/activate
+
+#setup git 
+git config --global user.email "carljosephchandler@gmail.com"
+git config --global user.name "Carl Chandler"
+git config pull.rebase false #this does merging 
+
+#on desktop make the slackwebhookurl.txt file 
+copy and base from home pc, no git for security 
+
+#test the alarms in .../pi_incubator/
+
+#next we take the 3 processes and make them executable, pay attention to the shebang on first lines!
+chmod +x slack_environmental_alarmsV3.py
+
+chmod +x main_loop_piV3.py 
+
+#make sure you are in the envH for last_update_piv3 first. Use "deactivate" then source ./envH/bin/activate in this directory
+pip install pandas 
+chmod +x auto_push_timestamps.py 
