@@ -25,6 +25,7 @@ i2c = board.I2C()
 
 # Create sensor object (default I2C address is 0x44; use address=0x45 if needed)
 Tsensor = adafruit_sht31d.SHT31D(i2c)
+T2sensor = adafruit_sht31d.SHT31D(i2c ,address=0x45)
 
 #    temperature_c = Tsensor.temperature
 #    humidity = Tsensor.relative_humidity
@@ -278,12 +279,15 @@ class main_class: #this has all the objects you need
             CO2 , T , H = get_CO2_data()
             T1 = Tsensor.temperature
             H1 = Tsensor.relative_humidity
+			
+			T2 = T2sensor.temperature
+            H2 = T2sensor.relative_humidity
         
 
             self.state_dict['temperature_1_C'] = T1
             self.state_dict['humidity_1'] =  H1/100.0
-            self.state_dict['temperature_2_C'] = T
-            self.state_dict['humidity_1'] = H / 100.0  
+            self.state_dict['temperature_2_C'] = T2
+            self.state_dict['humidity_1'] = H2 / 100.0  
             self.state_dict['CO2ppm'] = CO2
         except:
             pass
