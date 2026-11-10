@@ -175,7 +175,7 @@ def init_state_dict():
 
     
     state_dict['target_temperature'] =37.5
-    state_dict['boost_temperature'] =36.5 #turn on the big heater if it's below boost temperature. Then the little heater is just fine tuning with pid controls
+    state_dict['boost_temperature'] =36.9 #turn on the big heater if it's below boost temperature. Then the little heater is just fine tuning with pid controls
     state_dict['cooling_start_temperature'] = 38.6
 
     state_dict['heating_proportional_Cf'] =   .95
