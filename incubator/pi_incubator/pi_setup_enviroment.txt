@@ -118,3 +118,4 @@ systemctl --user status auto_git_push.service
 
 #scraps here
 /home/carl/Git_Projects/last_update_piv2/auto_push_timestamps.py
+/home/carl/Git_Projects/incubator/incubator/pi_incubator/slack_environmental_alarmsV2.py

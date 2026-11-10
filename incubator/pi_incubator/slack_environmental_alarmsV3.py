@@ -1,0 +1,175 @@
+#!/home/carl/Git_Projects/incubator/incubator/pi_incubator/envH/bin/python
+
+
+#ntfy messaging thing
+import requests
+import time
+import pandas as pd
+
+
+
+import pandas as pd
+import csv
+
+import datetime
+import numpy as np
+
+import json
+
+
+
+
+
+
+
+
+class slack_sender:
+    def __init__(self):
+        try: 
+
+            # Define email sender and receiver
+          
+
+            self.webhook_url_path = "/home/carl/Desktop/slackwebhookurl.txt"
+            self.webhook_url = ""
+            with open(self.webhook_url_path, 'r', encoding='utf-8') as f:
+                    self.webhook_url = f.read()
+                    self.webhook_url = self.webhook_url.strip()
+                    print(self.webhook_url)
+
+        except:
+            print("couldn't load webhook url") 
+            quit()
+            
+    def send_message( self, body):
+        
+        message_data = {
+            "text": body
+        }
+
+        response = requests.post(
+            self.webhook_url,
+            data=json.dumps(message_data),
+            headers={'Content-Type': 'application/json'}
+        )
+
+        if response.status_code == 200:
+            print("Message sent successfully!")
+        else:
+            print(f"Failed to send message. Status code: {response.status_code}, Response: {response.text}")
+        
+        
+
+
+
+
+
+
+def send_message( message_string):
+    global alarms_off
+    SS = slack_sender()
+    SS.send_message(message_string)
+ 
+    return 1
+        
+        
+def check_turning(df):
+        now = time.time()
+        # ~ print(now,"now")
+        hrsago = now - 60*60*2.0
+
+        vals = df[df.columns[17]].to_numpy()
+        valsnear = df[df.columns[18]].to_numpy()
+        times = df[df.columns[2]].to_numpy()
+
+        print( "time" , times[-1] - times[0])
+        # ~ print(times)
+
+        if times[-1] - times[0] < 60*60*2:
+            print("not enough data for turning alarm to work, time on today_data file = " ,times[-1] - times[0])
+            return( 0.511111111111111 , 0.5111111111111111111)  
+
+        sumval = 0
+        sumnear = 0
+        n = 0
+        assert( len(vals) == len(times))
+        for a in range( 0 , len(vals)):
+            if times[a]> hrsago:
+
+                sumval += vals[a]
+                sumnear += valsnear[a]
+                n += 1.0
+
+        if n == 0: 
+            print("not enough data for turning alarm to work, no times on today_data file within the past 2 hrs" )
+            return( 0.511111111111111 , 0.5111111111111111111)
+
+        mean = sumval/n
+        meannear = sumnear/n
+        # ~ print( " meanfar, meannear " , mean , meannear , n   )
+
+        #test if egg turning was working, 2 hr window
+        return mean , meannear
+
+   
+while True: 
+    df = pd.DataFrame()
+    filepath = "/home/carl/Git_Projects/incubator/incubator/pi_incubator/datalog/today_data_piV3.csv"
+    #look at the pandas thing for last timestamp
+    df = pd.read_csv(filepath)
+        
+    #now every 2 min, look at the parameters and end alarms 
+    print( int(time.time())%120 )
+
+
+    dt_object = datetime.datetime.fromtimestamp(time.time())
+
+    # Extract hour and minute
+    hour = dt_object.hour
+    minute = dt_object.minute
+    print(hour, minute)
+
+    if hour == 9 and minute < 3:
+        send_message(time.ctime() + "piV3 still alive and monitoring the temperature, humdity, and turning")
+
+        
+    print("checking alarms-------------------------------------------------")
+
+    #now we also want to check to see that the temperature and humidity are ok
+    humidity_max = 0.7 
+    humidity_min = 0.5 
+    T_min = 37.25
+    T_max = 37.85
+
+
+    T1 = df[df.columns[3]].iloc[-1] #3 is the temperature column
+    H1 = df[df.columns[4]].iloc[-1] #4 is the humidity column
+    T2 = df[df.columns[5]].iloc[-1] #5 is the temp 2  column
+    H2 = df[df.columns[6]].iloc[-1] #6 is the humidity 2 column
+
+    if T1 > T_max or T1 < T_min: 
+        send_message(time.ctime() + "piV3 temperature out of range = " + str(T1))
+        
+    #chcek the temp are similar
+    dT = np.abs(T1 - T2)
+    if dT > 0.5:
+        send_message(time.ctime() + "piV3 temperature too spread = " + str(T1) + "  ,  " + str(T2) )
+
+    if H1 > humidity_max or H1 < humidity_min: 
+        send_message(time.ctime() + "piV3 humidity out of range = " + str(H1))
+
+    #we also want to check the turning is working: 
+    m1 , m2 = check_turning(df)
+    print( "turning = " , m1 , m2)
+
+    if m1 > 0.7 or m1 < 0.3:
+        send_message(time.ctime() + "piV3 turning mean 2 = " + str(m2) +" piV3 turning mean 1 = " + str(m1))
+
+    if m2 > 0.7 or m2 < 0.3:
+            send_message(time.ctime() + "piV3 turning mean 2 = " + str(m2) +" piV3 turning mean 1 = " + str(m1))
+                
+
+
+    time.sleep(2*60)
+        
+        
