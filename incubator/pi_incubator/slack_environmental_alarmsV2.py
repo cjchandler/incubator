@@ -154,6 +154,8 @@ while True:
     dT = np.abs(T1 - T2)
     if dT > 0.5:
         send_message(time.ctime() + "piV2 temperature too spread = " + str(T1) + "  ,  " + str(T2) )
+    if T2 > T1 + 0.15:
+        send_message(time.ctime() + "piV2 temperature T2 too big  T1 = " + str(T1) + "  ,T2 =  " + str(T2) )
 
     if H1 > humidity_max or H1 < humidity_min: 
         send_message(time.ctime() + "piV2 humidity out of range = " + str(H1))
