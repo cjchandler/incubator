@@ -296,6 +296,10 @@ class main_class: #this has all the objects you need
         self.state_dict['front_turn_switch'] = s2.s.is_pressed
         self.state_dict['rear_turn_switch'] = s1.s.is_pressed
         self.state_dict['top_switch'] = s3.s.is_pressed
+        if CO2 > 4000: 
+            self.state_dict['venting_state'] = True
+        else:
+            self.state_dict['venting_state'] = False
    
        
         
